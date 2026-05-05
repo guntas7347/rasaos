@@ -80,7 +80,8 @@ export const login = async (req: Request, res: Response) => {
   res.cookie("token", token, {
     httpOnly: process.env.NODE_ENV === "production",
     secure: process.env.NODE_ENV === "production",
-    sameSite: process.env.NODE_ENV === "production" ? "strict" : "lax",
+    sameSite: "none",
+    domain: ".rasaos.com",
     maxAge: 24 * 60 * 60 * 1000,
   });
 
@@ -194,7 +195,11 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
-    return success(res, null, "If that email exists, a reset link will be sent.");
+    return success(
+      res,
+      null,
+      "If that email exists, a reset link will be sent.",
+    );
   }
 
   const resetLink = crypto.randomUUID();

@@ -6,11 +6,7 @@ import { success } from "./lib/helpers";
 
 const app = express();
 
-const allowedOrigins = [
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://192.168.1.16:5173",
-];
+const allowedOrigins = process.env.CORS_ORIGINS.split(",");
 
 app.use(
   cors({
