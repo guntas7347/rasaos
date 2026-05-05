@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dynamic Order Checkout Form</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec7f13",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col max-w-[480px] mx-auto bg-background-light dark:bg-background-dark shadow-xl overflow-x-hidden">
+<!-- Header -->
+<div class="sticky top-0 z-10 flex items-center bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md p-4 border-b border-primary/10">
+<div class="text-slate-900 dark:text-slate-100 flex size-10 shrink-0 items-center justify-center rounded-full hover:bg-primary/10 transition-colors">
+<span class="material-symbols-outlined">arrow_back</span>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">Checkout</h2>
+</div>
+<div class="flex-1 overflow-y-auto pb-32">
+<!-- Order Summary Preview -->
+<div class="px-4 pt-6 pb-2">
+<div class="bg-primary/5 dark:bg-primary/10 rounded-xl p-4 border border-primary/10">
+<div class="flex justify-between items-center mb-2">
+<span class="text-sm font-medium text-slate-600 dark:text-slate-400">Order from</span>
+<span class="text-sm font-bold text-primary">The Golden Fork</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-2xl font-bold">$42.50</span>
+<span class="text-xs font-medium bg-primary/20 text-primary px-2 py-1 rounded-full">3 Items</span>
+</div>
+</div>
+</div>
+<!-- Order Type Selection -->
+<div class="px-4 pt-6">
+<h3 class="text-base font-bold leading-tight tracking-tight pb-3">Order Type</h3>
+<div class="flex bg-slate-200/50 dark:bg-slate-800/50 rounded-xl p-1.5 gap-1">
+<label class="flex cursor-pointer h-10 flex-1 items-center justify-center overflow-hidden rounded-lg transition-all has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:shadow-sm has-[:checked]:text-primary text-slate-500 dark:text-slate-400 text-sm font-semibold">
+<span class="truncate">Dine-in</span>
+<input checked="" class="sr-only" name="order-type" type="radio" value="dine-in"/>
+</label>
+<label class="flex cursor-pointer h-10 flex-1 items-center justify-center overflow-hidden rounded-lg transition-all has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:shadow-sm has-[:checked]:text-primary text-slate-500 dark:text-slate-400 text-sm font-semibold">
+<span class="truncate">Takeaway</span>
+<input class="sr-only" name="order-type" type="radio" value="takeaway"/>
+</label>
+<label class="flex cursor-pointer h-10 flex-1 items-center justify-center overflow-hidden rounded-lg transition-all has-[:checked]:bg-white dark:has-[:checked]:bg-slate-700 has-[:checked]:shadow-sm has-[:checked]:text-primary text-slate-500 dark:text-slate-400 text-sm font-semibold">
+<span class="truncate">Delivery</span>
+<input class="sr-only" name="order-type" type="radio" value="delivery"/>
+</label>
+</div>
+</div>
+<!-- Mandatory Fields -->
+<div class="px-4 pt-6 space-y-5">
+<!-- Mobile Number -->
+<div class="flex flex-col">
+<div class="flex justify-between items-center pb-2">
+<label class="text-sm font-semibold">Mobile Number</label>
+<span class="text-[10px] uppercase tracking-wider font-bold text-primary">Required</span>
+</div>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">smartphone</span>
+<input class="flex w-full rounded-xl text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 h-14 pl-12 pr-4 text-base font-normal transition-all" placeholder="+1 (555) 000-0000" type="tel"/>
+</div>
+</div>
+<!-- Table Number (Shown for Dine-in) -->
+<div class="flex flex-col animate-in fade-in slide-in-from-top-2">
+<div class="flex justify-between items-center pb-2">
+<label class="text-sm font-semibold">Table Number</label>
+<span class="text-[10px] uppercase tracking-wider font-bold text-primary">Required</span>
+</div>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-400 text-xl">restaurant</span>
+<input class="flex w-full rounded-xl text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 h-14 pl-12 pr-4 text-base font-normal transition-all" placeholder="e.g. 12" type="number"/>
+</div>
+</div>
+<!-- Delivery Address (Hidden initially, shown for Delivery) -->
+<div class="hidden flex-col space-y-3">
+<div class="flex justify-between items-center pb-2">
+<label class="text-sm font-semibold">Delivery Address</label>
+<span class="text-[10px] uppercase tracking-wider font-bold text-primary">Required</span>
+</div>
+<div class="relative">
+<span class="absolute left-4 top-4 material-symbols-outlined text-slate-400 text-xl">location_on</span>
+<textarea class="flex w-full rounded-xl text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 pl-12 pr-4 py-3 text-base font-normal transition-all resize-none" placeholder="Enter your full street address, apartment, or suite number" rows="3"></textarea>
+</div>
+</div>
+<!-- Special Instructions -->
+<div class="flex flex-col">
+<label class="text-sm font-semibold pb-2">Special Instructions</label>
+<textarea class="flex w-full rounded-xl text-slate-900 dark:text-slate-100 focus:ring-2 focus:ring-primary/20 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 px-4 py-3 text-sm font-normal transition-all resize-none" placeholder="Allergies, door codes, or specific requests..." rows="2"></textarea>
+</div>
+</div>
+<!-- Total Section -->
+<div class="px-4 py-8 border-t border-slate-100 dark:border-slate-800 mt-8 space-y-3">
+<div class="flex justify-between text-sm text-slate-500 dark:text-slate-400">
+<span>Subtotal</span>
+<span>$38.00</span>
+</div>
+<div class="flex justify-between text-sm text-slate-500 dark:text-slate-400">
+<span>Tax &amp; Fees</span>
+<span>$4.50</span>
+</div>
+<div class="flex justify-between text-lg font-bold pt-2">
+<span>Total Amount</span>
+<span>$42.50</span>
+</div>
+</div>
+</div>
+<!-- Sticky Footer with Primary Action -->
+<div class="fixed bottom-16 left-0 right-0 max-w-[480px] mx-auto p-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-slate-100 dark:border-slate-800">
+<!-- Disabled State: bg-slate-200 dark:bg-slate-700 text-slate-400 cursor-not-allowed -->
+<!-- Active State: bg-primary text-white -->
+<button class="w-full h-14 bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 font-bold rounded-xl flex items-center justify-center gap-2 cursor-not-allowed transition-all">
+<span>Place Order</span>
+<span class="material-symbols-outlined">send</span>
+</button>
+<p class="text-[10px] text-center text-slate-400 mt-2 uppercase tracking-widest font-bold">Please fill all required fields</p>
+</div>
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto flex gap-2 border-t border-slate-100 dark:border-slate-800 bg-background-light/95 dark:bg-background-dark/95 px-4 pb-5 pt-2 z-50">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">restaurant_menu</span>
+</div>
+<p class="text-[10px] font-bold leading-normal tracking-wide uppercase">Menu</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">receipt_long</span>
+</div>
+<p class="text-[10px] font-bold leading-normal tracking-wide uppercase">Checkout</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-slate-400 dark:text-slate-500 hover:text-primary transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="text-[10px] font-bold leading-normal tracking-wide uppercase">Profile</p>
+</a>
+</div>
+</div>
+</body></html>

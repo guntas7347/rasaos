@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec7f13",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-icon {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen flex flex-col">
+<!-- Header Section -->
+<header class="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
+<div class="flex items-center p-4 justify-between">
+<button class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">arrow_back_ios_new</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight">Main Courses</h1>
+<button class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+<!-- Horizontal Categories/Filters -->
+<div class="flex gap-3 px-4 pb-4 overflow-x-auto no-scrollbar">
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary text-white px-5 shadow-sm shadow-primary/20">
+<p class="text-sm font-semibold">All</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary/10 dark:bg-primary/20 text-slate-700 dark:text-slate-200 px-5">
+<span class="material-symbols-outlined text-sm">local_fire_department</span>
+<p class="text-sm font-medium">Popular</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary/10 dark:bg-primary/20 text-slate-700 dark:text-slate-200 px-5">
+<span class="material-symbols-outlined text-sm">eco</span>
+<p class="text-sm font-medium">Vegan</p>
+</div>
+<div class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary/10 dark:bg-primary/20 text-slate-700 dark:text-slate-200 px-5">
+<span class="material-symbols-outlined text-sm">set_meal</span>
+<p class="text-sm font-medium">Seafood</p>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<main class="flex-1 px-4 py-2 space-y-3">
+<!-- Item Card 1 (Popular) -->
+<div class="group relative flex items-center gap-4 bg-white dark:bg-white/5 p-3 rounded-xl border border-primary/5 shadow-sm">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-24 shadow-sm" data-alt="A gourmet salmon salad with fresh greens" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAb8YQ4rCUFvK9cCPATtccBiWZEeglRqMnETQ0uIKJwFqSzilOyS6MVw5D1zYDIYj6us7KbFDzsT11QVDIxXUbeqhwEDnz1XI5NH0mpPOVO13CwPSfDstRTYPrgkciTn3qbjVvTnn1i41qYEdkwvnOSXR_fHSSAmHa2PE2swyWfw1G-pCxjxI6ZKsa7rabQf4wXZSKVeUi7gPHnJj4E4cj-bNlrj3izejuvnyDf3NIN488rUzhkFf6oLCSy5pQ429brwkX3ByXSma8");'></div>
+<div class="absolute -top-2 -left-2 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md uppercase tracking-wider">Popular</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-base font-bold leading-tight line-clamp-1">Grilled Atlantic Salmon</p>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1 leading-snug line-clamp-2">Pan-seared salmon with lemon butter sauce and seasonal greens.</p>
+<div class="flex items-center justify-between mt-auto pt-2">
+<p class="text-primary font-bold text-lg">$24.50</p>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-full p-1.5 flex items-center justify-center shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined !text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item Card 2 -->
+<div class="group relative flex items-center gap-4 bg-white dark:bg-white/5 p-3 rounded-xl border border-primary/5 shadow-sm">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-24 shadow-sm" data-alt="Tender slow cooked beef ribs with glaze" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDZvWgOEPqUKvKtZ5lj4oIIHD5V_KLDgKk_AqLjppzPU6Wjlclo96te2WQjbpNou1pk5o1xzs0c7a6shPMoX3xnMES0TDMOKAbuC7AjuSIS7U-FePQhzLifFaaW9hXjI4fdtwbg1nnnVO_QXAz0NuC_E0JB-2RYqdvomuNivQgX89UQcg_PqhVEQTRvgUzc1ao-u9ipNW8mB1D69T5sRO1V-6BkKBdmQOoRRs2D6N1rBoUTgajHLJ8ULBA57h3myA0QPoUnQwv03mE");'></div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-base font-bold leading-tight line-clamp-1">Braised Short Ribs</p>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1 leading-snug line-clamp-2">12-hour slow cooked beef with creamy mashed potatoes.</p>
+<div class="flex items-center justify-between mt-auto pt-2">
+<p class="text-primary font-bold text-lg">$28.00</p>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-full p-1.5 flex items-center justify-center shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined !text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item Card 3 (Popular Tag) -->
+<div class="group relative flex items-center gap-4 bg-white dark:bg-white/5 p-3 rounded-xl border border-primary/5 shadow-sm">
+<div class="relative">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-24 shadow-sm" data-alt="Classic Italian pasta with tomato and basil" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAaP6RfZ9pkxxKbE6wdSsh-3apLh5e0X5x8zuIGnF17EnIPWU1uOFLLmnzMl1TzZkffblnFlOojiTqVSlW3ZMN9qYlrTJXaUv9sMjo8dLn1lMo67X2Ce42B9QGYuQBEbOqPVinv97FLlXjuu2fZg4_QYqx4BOyMfFlDvvJSMDJjHIyJeWWmNZBkYIG4Z0ZMNaYGoWW7HpIMXEX1qBduwBML5u3RoO2y93M6gpHCySC-Fos-7qWpIyleiuR6XzyE8aIG8vcbbrqMrYs");'></div>
+<div class="absolute -top-2 -left-2 bg-primary text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-md uppercase tracking-wider">Popular</div>
+</div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-base font-bold leading-tight line-clamp-1">Pasta Alla Norma</p>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1 leading-snug line-clamp-2">Sicilian pasta dish with sautéed eggplant and ricotta salata.</p>
+<div class="flex items-center justify-between mt-auto pt-2">
+<p class="text-primary font-bold text-lg">$19.00</p>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-full p-1.5 flex items-center justify-center shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined !text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item Card 4 -->
+<div class="group relative flex items-center gap-4 bg-white dark:bg-white/5 p-3 rounded-xl border border-primary/5 shadow-sm">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-24 shadow-sm" data-alt="Juicy double cheeseburger with fries" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBbGJfoNtrqs82N2cgIdAPIfRKmm4ALiGqJrofZGRm-ffSVQKWiPFZax4xa-rij0zBmaE6zO0c-1dQRH75mf2Kr0cMV-kUwuh9aGa6DS4vHdFLvQ4ctGjTEXaAKf2d-iwbrfOE5O6rjYAvzXCKcz-AusKUY7o_HTYbxUYoX8M0pE6FjsR-t5GKwJ-Nn1i1WL7sDsHytdvVZ3wJO5ni5cHttLgI6_nMeIYC9YyWEIKn3J2N5eP_u-WH7TNAms-_zmh2pHBy07k3n0wU");'></div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-base font-bold leading-tight line-clamp-1">The Signature Burger</p>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1 leading-snug line-clamp-2">Wagyu beef patty, aged cheddar, and house-made aioli.</p>
+<div class="flex items-center justify-between mt-auto pt-2">
+<p class="text-primary font-bold text-lg">$21.50</p>
+<button class="bg-primary hover:bg-primary/90 text-white rounded-full p-1.5 flex items-center justify-center shadow-lg shadow-primary/30">
+<span class="material-symbols-outlined !text-[20px]">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Item Card 5 -->
+<div class="group relative flex items-center gap-4 bg-white dark:bg-white/5 p-3 rounded-xl border border-primary/5 shadow-sm opacity-60">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-24 grayscale" data-alt="Grilled trout fillet" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBEHU6yqMrfMg8OTdm8Uj6Q4m64nRM-HePo1hOOT0SPkoyUSnpiIUPXmW0zG2Ekh4EPjDDwYpqM_LfJC5vq-cLgtHaqHdD41cSb1HWeG_0u1drSzHRMwzduF9heMwmkoykeeN06mvH6E55BhnBeH8c1ArqbNKXefKbE1N88Rf5y974bHwXSsrnArC5qa-3snVtVsx8yLoDBsLrlbrZM0kS1Vyq5cJp5Mq665EiAE0bAS1Wh3tlW_FQnIc7zaKXWG_Mi2gwpPvpE7mE");'></div>
+<div class="flex flex-col flex-1 min-w-0">
+<div class="flex justify-between items-start">
+<p class="text-base font-bold leading-tight line-clamp-1">Wild Mountain Trout</p>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1 leading-snug line-clamp-2">Locally sourced trout, toasted almonds, and butter sauce.</p>
+<div class="flex items-center justify-between mt-auto pt-2">
+<p class="text-slate-400 font-bold text-lg">Sold Out</p>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="sticky bottom-0 bg-white dark:bg-background-dark border-t border-primary/10 px-6 pb-6 pt-3 flex items-center justify-between">
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined active-icon">restaurant_menu</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest">Menu</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">search</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest">Search</p>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500 relative" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">receipt_long</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest">Orders</p>
+<div class="absolute -top-1 -right-1 bg-primary text-white text-[8px] size-4 flex items-center justify-center rounded-full font-bold">2</div>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined">person</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-widest">Profile</p>
+</a>
+</nav>
+<!-- Cart Floating Action Trigger (Optional visual flourish) -->
+<div class="fixed bottom-24 right-6">
+<button class="bg-primary text-white rounded-full h-14 w-14 flex items-center justify-center shadow-2xl shadow-primary/40">
+<span class="material-symbols-outlined !text-2xl">shopping_bag</span>
+</button>
+</div>
+</body></html>

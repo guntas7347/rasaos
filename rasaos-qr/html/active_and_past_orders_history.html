@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>My Orders - QR Ordering</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec7f13",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased font-display">
+<div class="relative flex min-h-screen w-full max-w-md mx-auto flex-col overflow-x-hidden border-x border-slate-200 dark:border-slate-800 shadow-xl bg-background-light dark:bg-background-dark">
+<!-- Header -->
+<header class="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
+<div class="flex items-center p-4 justify-between">
+<button class="flex size-10 items-center justify-center rounded-full bg-white dark:bg-slate-800 shadow-sm">
+<span class="material-symbols-outlined text-slate-900 dark:text-slate-100">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold leading-tight tracking-tight flex-1 text-center pr-10">My Orders</h1>
+</div>
+<!-- Tabs -->
+<div class="px-4">
+<div class="flex border-b border-slate-200 dark:border-slate-800">
+<button class="flex flex-col items-center justify-center border-b-[3px] border-primary text-primary pb-3 pt-2 flex-1 font-bold text-sm">
+                        Active
+                    </button>
+<button class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-slate-500 dark:text-slate-400 pb-3 pt-2 flex-1 font-bold text-sm">
+                        Past
+                    </button>
+</div>
+</div>
+</header>
+<!-- Content -->
+<main class="flex-1 overflow-y-auto pb-24">
+<!-- Active Section -->
+<section class="p-4 space-y-4">
+<h2 class="text-base font-bold text-slate-900 dark:text-slate-100">Active Orders</h2>
+<!-- Order Card: Preparing -->
+<div class="flex flex-col gap-4 rounded-xl bg-white dark:bg-slate-800 p-4 shadow-sm border border-slate-100 dark:border-slate-700">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<span class="text-primary text-xs font-bold uppercase tracking-wider">Preparing</span>
+<p class="text-slate-900 dark:text-slate-100 text-lg font-bold">Order #4829</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Today, 12:45 PM • 2 items</p>
+</div>
+<div class="h-16 w-16 bg-slate-100 dark:bg-slate-700 rounded-lg bg-cover bg-center" data-alt="Close up of a gourmet cheeseburger" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAYNg82QyUns5Ow9MkpcQinWCNwz1rSp7apS-zckK9xkyaoq0wjmps1a9uSDUYfvlRKLrK5wVWqpFfZcfZQTMoIBiKzMbU2OLYSuzaCC0vMSVqVX3LsHkVr4QXAhyfWjbKT4ghSx0bUKEF4nwUKTYh1g8CWO-Qzk0YQgWTRosXR7JTWufAxm74kT49e3RefV-Z8lkmNbO__b2keSava7kDAX3v4Fyvo2q7MLh-rz_VVAqiEUORZXEzI1_Jcngis9juhlyXwP6YEnWc');"></div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 h-10 rounded-lg bg-primary text-white text-sm font-bold shadow-sm shadow-primary/20">
+                            Track Order
+                        </button>
+<button class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+<span class="material-symbols-outlined text-[20px]">help</span>
+</button>
+</div>
+</div>
+<!-- Order Card: Out for Delivery -->
+<div class="flex flex-col gap-4 rounded-xl bg-white dark:bg-slate-800 p-4 shadow-sm border border-slate-100 dark:border-slate-700">
+<div class="flex justify-between items-start">
+<div class="flex flex-col gap-1">
+<span class="text-green-600 dark:text-green-400 text-xs font-bold uppercase tracking-wider">Out for Delivery</span>
+<p class="text-slate-900 dark:text-slate-100 text-lg font-bold">Order #4812</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm">Today, 11:30 AM • 1 item</p>
+</div>
+<div class="h-16 w-16 bg-slate-100 dark:bg-slate-700 rounded-lg bg-cover bg-center" data-alt="Pepperoni pizza slice on a wooden board" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBkrxWINdCedZY2ESSarHhpc1wI3smIXkIvt5QcJkbq7SbctOf8POf-vJsK4GCSbEJG_npYNxZDkwu4Wcu42uk4FAaQclBbgvJmnuMX_8FOMOB6jRo5JKCHxRdXJyJdqZlhxgiDY7wWzZTLWSyxdeFsE0SyFqi52STpUiyvCZdOSJ2gMXy0g9RyppH_aGXoLyHd0A1UT_nSUKmOgxvQGoY8H6iqDG0nOZouP8XF76WO_YEVL9wlNAt5Z3WTtxYWQ2M3VRy92I-bq30');"></div>
+</div>
+<div class="flex gap-2">
+<button class="flex-1 h-10 rounded-lg bg-primary text-white text-sm font-bold shadow-sm shadow-primary/20">
+                            Track Order
+                        </button>
+</div>
+</div>
+</section>
+<!-- Past Orders Section -->
+<section class="p-4 space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-base font-bold text-slate-900 dark:text-slate-100">Past Orders</h2>
+<button class="text-primary text-sm font-bold">View all</button>
+</div>
+<!-- Simple History Item -->
+<div class="flex items-center gap-4 py-3 border-b border-slate-100 dark:border-slate-800">
+<div class="h-12 w-12 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">restaurant</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">The Burger House</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Oct 12 • $24.50 • Completed</p>
+</div>
+<button class="h-8 px-3 rounded-full border border-primary/30 text-primary text-xs font-bold">
+                        Reorder
+                    </button>
+</div>
+<div class="flex items-center gap-4 py-3 border-b border-slate-100 dark:border-slate-800">
+<div class="h-12 w-12 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">local_pizza</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">Pizza Palace</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Oct 08 • $18.90 • Completed</p>
+</div>
+<button class="h-8 px-3 rounded-full border border-primary/30 text-primary text-xs font-bold">
+                        Reorder
+                    </button>
+</div>
+<div class="flex items-center gap-4 py-3">
+<div class="h-12 w-12 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400">coffee</span>
+</div>
+<div class="flex-1">
+<p class="text-sm font-bold text-slate-900 dark:text-slate-100">Morning Brew</p>
+<p class="text-xs text-slate-500 dark:text-slate-400">Oct 05 • $6.20 • Completed</p>
+</div>
+<button class="h-8 px-3 rounded-full border border-primary/30 text-primary text-xs font-bold">
+                        Reorder
+                    </button>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg px-6 pb-6 pt-3 flex items-center justify-between z-30">
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Menu</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Cart</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined fill-1">receipt_long</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Orders</span>
+</a>
+</nav>
+</div>
+</body></html>

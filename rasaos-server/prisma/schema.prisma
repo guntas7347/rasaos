@@ -1,0 +1,253 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/////////////////////////////////////////////////
+// ENUMS
+/////////////////////////////////////////////////
+
+enum Role {
+  OWNER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PREPARING
+  READY
+  COMPLETED
+  CANCELLED
+}
+
+enum OrderType {
+  DINE_IN
+  TAKEAWAY
+  DELIVERY
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  CASH
+  STRIPE
+  RAZORPAY
+}
+
+enum TaxMode {
+  INCLUSIVE
+  EXCLUSIVE
+}
+
+/////////////////////////////////////////////////
+// USER + RESTAURANT
+/////////////////////////////////////////////////
+
+model User {
+  id           String  @id @default(uuid())
+  restaurantId String?
+  email        String  @unique
+  password     String
+  role         Role
+
+  resetLink     String?
+  resetlinkdate DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  restaurant Restaurant? @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+}
+
+model Restaurant {
+  id        String  @id @default(uuid())
+  name      String
+  slug      String  @unique
+  isActive  Boolean @default(true)
+  isBlocked Boolean @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  currency            String               @default("INR")
+  taxRate             Decimal              @default(0)
+  taxMode             TaxMode              @default(INCLUSIVE)
+  orders              Order[]
+  menu                Menu?
+  users               User[]
+  subscriptionHistory SubscriptionPeriod[]
+}
+
+/////////////////////////////////////////////////
+// SUBSCRIPTION
+/////////////////////////////////////////////////
+
+model SubscriptionPeriod {
+  id           String @id @default(uuid())
+  restaurantId String
+
+  plan        String
+  periodStart DateTime
+  periodEnd   DateTime
+
+  createdAt DateTime @default(now())
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantId])
+  @@index([periodStart])
+}
+
+/////////////////////////////////////////////////
+// MENU STRUCTURE
+/////////////////////////////////////////////////
+
+model Menu {
+  id           String  @id @default(uuid())
+  restaurantId String  @unique
+  isActive     Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  categories Category[]
+
+  @@index([restaurantId])
+}
+
+model Category {
+  id       String  @id @default(uuid())
+  menuId   String
+  name     String
+  order    Int?
+  imageUrl String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  menu  Menu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  items Item[]
+
+  @@index([menuId])
+}
+
+model Item {
+  id          String  @id @default(uuid())
+  categoryId  String
+  name        String
+  description String?
+  imageUrl    String?
+  isActive    Boolean @default(true)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  category Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  variants Variant[]
+
+  @@index([categoryId])
+}
+
+model Variant {
+  id     String @id @default(uuid())
+  itemId String
+  name   String
+  price  Int
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+  @@index([itemId])
+}
+
+/////////////////////////////////////////////////
+// ORDER
+/////////////////////////////////////////////////
+
+model Order {
+  id           String @id @default(uuid())
+  restaurantId String
+
+  type   OrderType
+  status OrderStatus @default(PENDING)
+
+  subtotal    Int
+  totalAmount Int
+
+  pricingBreakdown Json? // explanation only
+
+  customerName    String?
+  customerMobile  String?
+  customerAddress String?
+  note            String?
+  tableNumber     String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+
+  items      OrderItem[]
+  payment    Payment?
+  customerId String?
+
+  @@index([restaurantId])
+  @@index([createdAt])
+}
+
+model OrderItem {
+  id      String @id @default(uuid())
+  orderId String
+
+  variantName  String
+  variantPrice Int
+  quantity     Int
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([orderId])
+}
+
+/////////////////////////////////////////////////
+// PAYMENT
+/////////////////////////////////////////////////
+
+model Payment {
+  id      String  @id @default(uuid())
+  orderId String? @unique
+
+  amount   Int
+  status   PaymentStatus   @default(PENDING)
+  provider PaymentProvider
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  order Order? @relation(fields: [orderId], references: [id])
+}

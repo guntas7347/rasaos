@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec7f13",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden pb-32">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-primary/10">
+<button class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h2 class="text-slate-900 dark:text-slate-100 text-lg font-bold leading-tight tracking-tight flex-1 text-center">Item Details</h2>
+<div class="flex w-10 items-center justify-end">
+<button class="flex size-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">share</span>
+</button>
+</div>
+</div>
+<!-- Hero Image -->
+<div class="@container">
+<div class="px-0 sm:px-4 py-0 sm:py-3">
+<div class="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden aspect-[4/3] sm:rounded-xl shadow-lg" data-alt="Juicy gourmet wagyu burger with melting cheese" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBZ2LQiOS0L8jhqTZPY9N7t791Duif_px82Ur-wXz1OIjLkIPql-2fzEmhwIlGasBWI-mUgrlDyB-UUVdCHtBU3MXVKNNhLwRkJhHVQzbqQ4uUaFego3WsmOt6SBwbiWkyt5HUXSOdz0rNFrHvGAfAEPl2agmeENDKQOzOWe4eIBY-x3mrIVmxYIW1te4uHPeiE-B_5mCzO99apUoZeBECP_vPPY000ZbbnOoX3v_rDR1XACfKnM7O5oPaSJMJeeS9q4G49IjNwhgU");'>
+</div>
+</div>
+</div>
+<!-- Content -->
+<div class="px-4">
+<div class="flex justify-between items-start pt-6 pb-2">
+<h1 class="text-slate-900 dark:text-slate-100 text-3xl font-bold leading-tight">Truffle Wagyu Burger</h1>
+<span class="text-primary text-2xl font-bold">$24.00</span>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-base font-normal leading-relaxed pb-6">
+                Premium Wagyu beef patty, black truffle aioli, aged gruyère, and wild arugula on a toasted brioche bun. Served with a side of sea salt fries.
+            </p>
+<!-- Required Section -->
+<div class="mb-6">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold">Select Doneness</h3>
+<span class="bg-primary/20 text-primary text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Required</span>
+</div>
+<div class="space-y-3">
+<label class="flex items-center justify-between p-4 bg-white dark:bg-slate-800/50 border border-primary/10 rounded-xl cursor-pointer">
+<span class="text-slate-800 dark:text-slate-200 font-medium">Medium Rare</span>
+<input checked="" class="w-5 h-5 text-primary focus:ring-primary border-primary/30" name="doneness" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-4 bg-white dark:bg-slate-800/50 border border-primary/10 rounded-xl cursor-pointer">
+<span class="text-slate-800 dark:text-slate-200 font-medium">Medium</span>
+<input class="w-5 h-5 text-primary focus:ring-primary border-primary/30" name="doneness" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-4 bg-white dark:bg-slate-800/50 border border-primary/10 rounded-xl cursor-pointer">
+<span class="text-slate-800 dark:text-slate-200 font-medium">Medium Well</span>
+<input class="w-5 h-5 text-primary focus:ring-primary border-primary/30" name="doneness" type="radio"/>
+</label>
+</div>
+</div>
+<!-- Optional Section -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-3">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold">Extra Add-ons</h3>
+<span class="text-slate-500 text-sm font-medium">Optional</span>
+</div>
+<div class="space-y-3">
+<label class="flex items-center justify-between p-4 bg-white dark:bg-slate-800/50 border border-primary/10 rounded-xl cursor-pointer">
+<div class="flex flex-col">
+<span class="text-slate-800 dark:text-slate-200 font-medium">Extra Truffle Aioli</span>
+<span class="text-primary text-sm">+$1.50</span>
+</div>
+<input class="w-5 h-5 rounded text-primary focus:ring-primary border-primary/30" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between p-4 bg-white dark:bg-slate-800/50 border border-primary/10 rounded-xl cursor-pointer">
+<div class="flex flex-col">
+<span class="text-slate-800 dark:text-slate-200 font-medium">Crispy Bacon</span>
+<span class="text-primary text-sm">+$2.50</span>
+</div>
+<input class="w-5 h-5 rounded text-primary focus:ring-primary border-primary/30" type="checkbox"/>
+</label>
+<label class="flex items-center justify-between p-4 bg-white dark:bg-slate-800/50 border border-primary/10 rounded-xl cursor-pointer">
+<div class="flex flex-col">
+<span class="text-slate-800 dark:text-slate-200 font-medium">Fried Egg</span>
+<span class="text-primary text-sm">+$2.00</span>
+</div>
+<input class="w-5 h-5 rounded text-primary focus:ring-primary border-primary/30" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Special Instructions -->
+<div class="mb-10">
+<h3 class="text-slate-900 dark:text-slate-100 text-lg font-bold mb-3">Special Instructions</h3>
+<textarea class="w-full p-4 bg-white dark:bg-slate-800/50 border border-primary/10 rounded-xl focus:ring-primary focus:border-primary text-slate-800 dark:text-slate-200" placeholder="e.g. No onions, sauce on the side..." rows="3"></textarea>
+</div>
+</div>
+<!-- Sticky Bottom Bar -->
+<div class="fixed bottom-0 left-0 right-0 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-lg border-t border-primary/10 p-4 pb-8 z-50">
+<div class="max-w-md mx-auto flex items-center gap-4">
+<!-- Quantity Stepper -->
+<div class="flex items-center bg-primary/10 rounded-xl h-14 px-2">
+<button class="flex size-10 items-center justify-center text-primary hover:bg-primary/20 rounded-lg transition-colors">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<span class="w-10 text-center font-bold text-slate-900 dark:text-slate-100">1</span>
+<button class="flex size-10 items-center justify-center text-primary hover:bg-primary/20 rounded-lg transition-colors">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+<!-- Add to Cart Button -->
+<button class="flex-1 bg-primary text-white h-14 rounded-xl font-bold text-lg flex items-center justify-center gap-2 active:scale-95 transition-transform shadow-lg shadow-primary/20">
+<span>Add to Cart</span>
+<span class="h-1.5 w-1.5 rounded-full bg-white/40"></span>
+<span>$24.00</span>
+</button>
+</div>
+</div>
+</div>
+</body></html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Your Shopping Cart</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec7f13",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display">
+<div class="relative flex min-h-screen w-full max-w-[430px] mx-auto flex-col bg-background-light dark:bg-background-dark overflow-x-hidden pb-40">
+<header class="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pt-6 pb-4">
+<div class="flex items-center justify-between">
+<button class="flex size-10 items-center justify-center rounded-full bg-slate-200/50 dark:bg-slate-800/50">
+<span class="material-symbols-outlined">arrow_back_ios_new</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight">Your Cart</h1>
+<button class="text-sm font-semibold text-primary">Clear</button>
+</div>
+</header>
+<main class="flex-1 px-4 space-y-6 overflow-y-auto hide-scrollbar">
+<div class="space-y-4">
+<div class="flex items-center gap-4 bg-white dark:bg-slate-900/40 p-3 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-20 shrink-0" data-alt="Gourmet truffle burger with melted cheese" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBcLAN3BqoQe2t0bduBx4VbKJP6X7yT_pfce21E0q8jH8Q8urlRvddnsT_bkrvi9rzz8IpYvgSLE6JFpFObMfFnJ32Wnr71Ssm3LQrsj9qk1mIXhjO7YdeCZ8FI36L-bvIHOmLrCvoR8T3cgs0sKlNigcGnrU9eiJYxzjhxuW-m4lDunuadVVYU4rXBKBBHG9Vv1mXkm45JQvBVTRJVGCad9RBa7ERFnuh6uD4uBjSMG1YisS6p0WAGF62-v2I3P0gigUtTW0_HJ-s");'></div>
+<div class="flex flex-col flex-1 justify-between py-1">
+<div>
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold leading-tight">Truffle Burger</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Medium Rare, No Onions</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<p class="text-primary text-base font-bold">$18.00</p>
+<div class="flex items-center gap-3 px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800">
+<button class="size-6 flex items-center justify-center rounded-full bg-white dark:bg-slate-700 shadow-sm">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-sm font-bold w-4 text-center">1</span>
+<button class="size-6 flex items-center justify-center rounded-full bg-primary text-white shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-slate-900/40 p-3 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-20 shrink-0" data-alt="Crispy golden parmesan fries in bowl" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDRfO0liGoH-PjvQMlRrLzeLYRXtIGvziFZhlTvMV0QXw1ueFQTcOoKTpFrp4aYISKCU-lLkDmDGp6mrMZvXE7ES7ymuSgj8YtcNKTU2kWkbW_6yrOgbyVLTNT77wUfUUfJbys4Ujp_anMDQ1j5R7C-UGRBo0K1sNiQLQN4AfPZGCkOln7oRYZRh3Jlmv1yXgySIQwpWcU1Aaf3RQzW-3vxyFN_-Jxzbe3xFSDMyh9ABZiucdlLBziz6F5LqzMzk_RDp8YU4JbFGCo");'></div>
+<div class="flex flex-col flex-1 justify-between py-1">
+<div>
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold leading-tight">Parmesan Fries</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Extra dipping sauce</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<p class="text-primary text-base font-bold">$24.00</p>
+<div class="flex items-center gap-3 px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800">
+<button class="size-6 flex items-center justify-center rounded-full bg-white dark:bg-slate-700 shadow-sm">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-sm font-bold w-4 text-center">2</span>
+<button class="size-6 flex items-center justify-center rounded-full bg-primary text-white shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-white dark:bg-slate-900/40 p-3 rounded-xl shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-20 shrink-0" data-alt="Iced matcha green tea latte with foam" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA0_Pl34mcVB9epLO-N6Qm7TCSLZmO_e2Q8WmJMqP3nP0VJlS_bg2gHN5xlsmFZrvI2xs5m7aV1H9UQmPSrHZ3WqZSulaN-_5XdP3hC7axbwpNv6ROhg45tLg_l5ZVxxRuZ0l-DgSUeaNCTa2mDwkFLVdxAtJEX96B28Odx7Bw7_KkYrYhiMOqVP4WJsGI5f7bWUObEp3nduR4lOiOE9FOK_4bajereSPIura7kz_PBB6wDqiJaAvb0ukulQaCHc0IIWOM_FXi9JJM");'></div>
+<div class="flex flex-col flex-1 justify-between py-1">
+<div>
+<p class="text-slate-900 dark:text-slate-100 text-base font-bold leading-tight">Iced Matcha Latte</p>
+<p class="text-slate-500 dark:text-slate-400 text-xs mt-1">Oat Milk, Less Ice</p>
+</div>
+<div class="flex items-center justify-between mt-2">
+<p class="text-primary text-base font-bold">$6.50</p>
+<div class="flex items-center gap-3 px-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800">
+<button class="size-6 flex items-center justify-center rounded-full bg-white dark:bg-slate-700 shadow-sm">
+<span class="material-symbols-outlined text-sm">remove</span>
+</button>
+<span class="text-sm font-bold w-4 text-center">1</span>
+<button class="size-6 flex items-center justify-center rounded-full bg-primary text-white shadow-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="pt-4 pb-8 space-y-3">
+<div class="flex justify-between items-center text-slate-500 dark:text-slate-400">
+<p class="text-sm">Subtotal</p>
+<p class="text-sm font-medium">$48.50</p>
+</div>
+<div class="flex justify-between items-center text-slate-500 dark:text-slate-400">
+<p class="text-sm">Service Fee (5%)</p>
+<p class="text-sm font-medium">$2.42</p>
+</div>
+<div class="flex justify-between items-center text-slate-500 dark:text-slate-400">
+<p class="text-sm">Tax (8%)</p>
+<p class="text-sm font-medium">$3.88</p>
+</div>
+<div class="h-px bg-slate-200 dark:bg-slate-800 my-2"></div>
+<div class="flex justify-between items-center">
+<p class="text-lg font-bold">Total</p>
+<p class="text-2xl font-bold text-primary">$54.80</p>
+</div>
+</div>
+</main>
+<footer class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] z-30">
+<div class="bg-background-light dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 p-4 pb-0">
+<button class="w-full bg-primary text-white py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/20 flex items-center justify-center gap-3">
+                    Proceed to Checkout
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<nav class="flex gap-2 bg-background-light dark:bg-background-dark px-4 pb-8 pt-4">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<p class="text-[10px] font-bold uppercase tracking-wider">Menu</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">search</span>
+<p class="text-[10px] font-bold uppercase tracking-wider">Search</p>
+</a>
+<a class="relative flex flex-1 flex-col items-center justify-center gap-1 text-primary" href="#">
+<div class="relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1">shopping_cart</span>
+<span class="absolute -top-2 -right-2 bg-primary text-white text-[10px] font-bold size-4 flex items-center justify-center rounded-full border-2 border-background-light dark:border-background-dark">4</span>
+</div>
+<p class="text-[10px] font-bold uppercase tracking-wider">Cart</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<p class="text-[10px] font-bold uppercase tracking-wider">Orders</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined">person</span>
+<p class="text-[10px] font-bold uppercase tracking-wider">Profile</p>
+</a>
+</nav>
+<div class="h-2 bg-background-light dark:bg-background-dark"></div>
+</footer>
+</div>
+</body></html>

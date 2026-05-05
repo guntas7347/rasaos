@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Search &amp; Filter Items</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec7f13",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-300">
+<div class="relative flex h-screen w-full flex-col overflow-hidden max-w-md mx-auto border-x border-slate-200 dark:border-slate-800">
+<!-- Header & Search Input -->
+<header class="flex flex-col gap-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md pt-6 px-4 pb-2 z-20">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center size-10 rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-xl font-bold tracking-tight">Search</h1>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="relative w-full">
+<div class="flex w-full items-center rounded-xl bg-slate-100 dark:bg-slate-800 border-2 border-transparent focus-within:border-primary transition-all">
+<div class="flex items-center justify-center pl-4 text-slate-400">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input autofocus="" class="flex-1 bg-transparent border-none focus:ring-0 text-base font-medium py-3 px-3 placeholder:text-slate-400" placeholder="Search dishes, drinks, extras..." type="text" value="Truffle"/>
+<button class="pr-4 text-slate-400 hover:text-primary">
+<span class="material-symbols-outlined">cancel</span>
+</button>
+</div>
+</div>
+<!-- Quick Filter Chips -->
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-primary text-white text-sm font-semibold shadow-sm">All</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium">Pasta</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium">Burgers</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium">Sides</button>
+<button class="whitespace-nowrap px-4 py-2 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 text-sm font-medium">Gluten Free</button>
+</div>
+</header>
+<!-- Search Results Scroll Area -->
+<main class="flex-1 overflow-y-auto px-4 pt-2 pb-24">
+<div class="flex flex-col gap-4">
+<p class="text-sm font-bold text-slate-400 uppercase tracking-widest">3 Results found</p>
+<!-- Result Item 1 -->
+<div class="group flex gap-4 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm active:scale-95 transition-transform">
+<div class="size-24 rounded-lg overflow-hidden shrink-0 bg-slate-200">
+<img alt="Truffle Pasta" class="size-full object-cover" data-alt="Creamy truffle pasta with mushrooms and herbs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAkcojwr_D_m6cBU1ellz9g3sfwzRYJdjXKmf7rn6wYIPXt3yESkSxWHcQ9jMDrtAbKoDZvAhMG6hS_V3VDc0CIXfyO3cndKcpXUjmqN9jdZRnemq2F1gnJfZA9K1cJusr7_Z6FqrxWTF5xxSl0LunAphhOM0513Sf4apEeVCGxjSlzxjUInz1T3ga0eV_P5xyMjcRb1gqXcz-3qsAfJa4P5ukrgqHZLvXXfUqZo_fl65nOUKkuE9R8mnoeevEBKO0RzRg0Y3VY59I"/>
+</div>
+<div class="flex flex-col justify-between py-1 flex-1">
+<div>
+<h3 class="font-bold text-lg leading-tight">Truffle Tagliatelle</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-1">Wild mushrooms, creamy truffle oil, parmesan</p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold text-lg">$24.50</span>
+<button class="size-8 rounded-full bg-primary text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-base">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Result Item 2 -->
+<div class="group flex gap-4 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm active:scale-95 transition-transform">
+<div class="size-24 rounded-lg overflow-hidden shrink-0 bg-slate-200">
+<img alt="Truffle Burger" class="size-full object-cover" data-alt="Gourmet beef burger with truffle mayo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDp924opQqa7kcDuiwE43yE6Y47uCkPe0ffVq6HWniiNT1M63Jcy8Q3RjKmBmRiHm0PlZeduZMUzCKZXNb2Dx92WM0eQuXwQIyUCUe5rsFY1lJBgRaHD2ChxFN7MvqD5yJZ8xF754foLrgRcjlKv_VRb8DZw2K_3rnesCN-QuQw88F2biTXu6szbxYrBh2n0mQq52YZ4cEXqp87JZPYx0GsKXUFNoSLCT0bg-Zr2OH5JwEKgGHgJUydQ5izCx5HFAsxNMWq-0RS28M"/>
+</div>
+<div class="flex flex-col justify-between py-1 flex-1">
+<div>
+<h3 class="font-bold text-lg leading-tight">Black Truffle Burger</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-1">Angus beef, truffle aioli, provolone</p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold text-lg">$19.00</span>
+<button class="size-8 rounded-full bg-primary text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-base">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Result Item 3 -->
+<div class="group flex gap-4 p-3 rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm active:scale-95 transition-transform">
+<div class="size-24 rounded-lg overflow-hidden shrink-0 bg-slate-200">
+<img alt="Truffle Fries" class="size-full object-cover" data-alt="Golden french fries with truffle oil" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBH97nhqfPikKrimJRtk3Kd0OuuS0Hj5rTHkAzADmugjyTtTcxTvzDP1k1ZyRicYKyil9mK-dFpIoeyMEmu11kReb3sH3hKVFs5GwlcpOlMlh3c5kHAhNeo0lW5qdEg0XHt7rclviLQWdFhJGICFhnU2H0nv5rxDArYQ5KipPE8VkdvqefKMHWXlBWJQUf68j6jUXx1BmUtNfJqZmLMelpf9S6U6LMPEVBQ7YcpG8q9D47IgDrlWov6idPAADBFH59Smtuk0_RvDwU"/>
+</div>
+<div class="flex flex-col justify-between py-1 flex-1">
+<div>
+<h3 class="font-bold text-lg leading-tight">Truffle Parmesan Fries</h3>
+<p class="text-sm text-slate-500 dark:text-slate-400 line-clamp-1">Hand-cut fries with truffle zest</p>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-primary font-bold text-lg">$9.50</span>
+<button class="size-8 rounded-full bg-primary text-white flex items-center justify-center">
+<span class="material-symbols-outlined text-base">add</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Recommended Header -->
+<div class="mt-4">
+<h2 class="text-lg font-bold mb-4">Recommended for you</h2>
+<div class="flex gap-4 overflow-x-auto hide-scrollbar pb-4">
+<div class="min-w-[160px] bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="h-28 w-full bg-slate-200">
+<img alt="Short Ribs" class="size-full object-cover" data-alt="Slow roasted beef short ribs" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCcMpVDEWN9zW-6gR7FKIi1QIfCeVEDsvTwZz5tItCzIdA1Tyr12wNtTBMP4IPh5B020xq2ZFNkZ_ROf92AXagInvo8ipb1Gcl3ElwyysDnnvEcp7O0ypEFc9Xo3lSYwZxMTwldWqCrOPfTPaNbrUnzP8jpzq6ldv_zgT8cdprUH7cI2FtX2xI-YFwx8NN76xnldto-g6N5ReZMWwMOdOYjwmZfSMG_NXlVAqaq24bG6epZnvpUsmE8HlUkdlSwN8MYaGtqIzkOxvk"/>
+</div>
+<div class="p-3">
+<p class="font-bold text-sm">Short Ribs</p>
+<p class="text-primary font-bold">$28</p>
+</div>
+</div>
+<div class="min-w-[160px] bg-white dark:bg-slate-900 rounded-xl overflow-hidden shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="h-28 w-full bg-slate-200">
+<img alt="Pizza" class="size-full object-cover" data-alt="Wood fired margherita pizza" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCST2uVWskPyG7LNkiFhg-iMeQ_EYtv5JCDsBhl-cH0LWuCQDDge9UmyVvbHP5b1eBdHvVoIvy_oLqLlb91VwPH9nxTrrcwUIz-e5z8uNf18CQDLFdv4re891p4qv-Qk2aj1vDEJa_DwrKONmd2aucVGGIdzcaukLUE-9SzzOJ0lxB1TpxoUf8dgEvZ1AtfFGWuJTkpOrHyLYvBYPmdVIL4orfSDlILaokhOwXIFHaCSSNJ3OjfrByhR7hGwmeJ3hZPJUx23osehTc"/>
+</div>
+<div class="p-3">
+<p class="font-bold text-sm">Margherita</p>
+<p class="text-primary font-bold">$16</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Bottom Navigation Bar -->
+<nav class="absolute bottom-0 left-0 right-0 border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-xl px-4 pb-8 pt-3 z-30">
+<div class="flex justify-between items-center max-w-sm mx-auto">
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">restaurant_menu</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Menu</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary" href="#">
+<span class="material-symbols-outlined fill-1">search</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Search</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400 relative" href="#">
+<span class="material-symbols-outlined">shopping_bag</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Cart</span>
+<div class="absolute -top-1 -right-1 size-4 bg-primary text-white text-[8px] flex items-center justify-center rounded-full border-2 border-white dark:border-slate-900 font-bold">2</div>
+</a>
+<a class="flex flex-col items-center gap-1 text-slate-400" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Profile</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

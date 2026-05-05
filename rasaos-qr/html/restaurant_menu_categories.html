@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Restaurant Menu Categories</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#ec7f13",
+                        "background-light": "#f8f7f6",
+                        "background-dark": "#221910",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.5rem",
+                        "lg": "1rem",
+                        "xl": "1.5rem",
+                        "2xl": "1.25rem", /* Equivalent to 20px */
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .active-tab .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 antialiased">
+<!-- Header Section -->
+<header class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between border-b border-primary/10">
+<div class="flex items-center gap-3">
+<div class="bg-primary/10 p-2 rounded-lg">
+<span class="material-symbols-outlined text-primary">restaurant</span>
+</div>
+<div>
+<h1 class="text-lg font-bold leading-tight">Gourmet Garden</h1>
+<p class="text-xs text-slate-500 dark:text-slate-400">Table 12 • QR Order</p>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+<span class="material-symbols-outlined text-slate-600 dark:text-slate-300">notifications</span>
+</button>
+</header>
+<main class="pb-24">
+<!-- Hero / Promotion Section -->
+<div class="px-4 pt-6 pb-2">
+<div class="relative w-full h-40 rounded-2xl overflow-hidden shadow-lg shadow-primary/10">
+<div class="absolute inset-0 bg-gradient-to-r from-primary to-orange-600 opacity-90"></div>
+<div class="absolute inset-0 flex flex-col justify-center px-6 text-white">
+<span class="text-xs font-bold uppercase tracking-wider bg-white/20 w-max px-2 py-0.5 rounded-md mb-2">Special Offer</span>
+<h2 class="text-2xl font-extrabold leading-tight">20% Off All<br/>Signature Pizzas</h2>
+<p class="text-sm opacity-90 mt-1">Valid until 9:00 PM tonight</p>
+</div>
+<div class="absolute right-[-20px] bottom-[-20px] opacity-20">
+<span class="material-symbols-outlined text-[120px]">local_pizza</span>
+</div>
+</div>
+</div>
+<!-- Categories Section -->
+<div class="px-4 pt-6">
+<div class="flex items-center justify-between mb-4">
+<h2 class="text-xl font-bold tracking-tight">Menu Categories</h2>
+<span class="text-sm font-medium text-primary">View All</span>
+</div>
+<!-- Vertical List of Categories -->
+<div class="flex flex-col gap-4">
+<!-- Category Item 1 -->
+<div class="group relative h-48 w-full rounded-2xl overflow-hidden shadow-md transition-transform active:scale-95">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Fresh mediterranean appetizer platter with olives and bread" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB9KTFRw0p2QCcZ2eYZI5d4Z48YSfsH8jsU-P4A_V_MGvl9MW3KJ_zAIHaiY8GzahKYTBfGBH25zOrJ8TzhRivmQFZWOqcDgLILMBRa6ZptaxuZfAqn5iHgtG4tTJ87hAmgOooP5WCIT5elnzJmkK64f4PD-cZj4ZIIEGDjdRN_UfVPQyBVH_Ddhbn0x8f0ZBc7LJpTqNkCp98K_OZrKSu46lm-kqkSnFFpmgQL-6MKvPWAhasILrxDEMIbVnOihrrebIqrG_1OPfs');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-4 left-5">
+<h3 class="text-white text-xl font-bold">Appetizers</h3>
+<p class="text-white/70 text-sm">Light bites &amp; starters</p>
+</div>
+<div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30">
+<span class="text-white text-xs font-bold">12 Items</span>
+</div>
+</div>
+<!-- Category Item 2 -->
+<div class="group relative h-48 w-full rounded-2xl overflow-hidden shadow-md transition-transform active:scale-95">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Vibrant healthy salad bowl with fresh greens" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCKeH2KISC1Ns3xQRTclPewR4FTdFA5cnKeKQJHAJUNbfLIDiwlH6t_klqypvx1mbdjY4LPNT4tr9zqcsOngK3a5Cn5RRPkzr8cDnHbxt9WZ2Sw-muq1iFMQlyL2JOCWLghM3pvraVCIs-ufocosBqroccHtpeXBkAYszxPg7mmnm8_iJlXKUugnTtXNqrDnWT7D5RzJZ51WLzeW2wT29gYwskblZvdDfLhaWZ0pSaO7yOvR_ItXSw_VHUEcFbXNj_vu-J0BGfEDfc');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-4 left-5">
+<h3 class="text-white text-xl font-bold">Salads &amp; Bowls</h3>
+<p class="text-white/70 text-sm">Fresh &amp; nutritious</p>
+</div>
+<div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30">
+<span class="text-white text-xs font-bold">8 Items</span>
+</div>
+</div>
+<!-- Category Item 3 -->
+<div class="group relative h-48 w-full rounded-2xl overflow-hidden shadow-md transition-transform active:scale-95">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Succulent grilled steak with roasted vegetables" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAmH3YMKIz6z4WafNyOQFGFmwmkh6mts2WWrh9si5bMhZ5m7-YtaFMRcn9Rj928DPikwGZQ-gSwpXWaieOCcj0BalEIbNPz2q6N5Bhb5qcXVzgkZe4e8_3SKHAnh3zHnoTRrq-qM2FACFCRqWDTbOa-Rf2WT2GXSrZicnMs03Uady-VLAYo9g0-8-rTe8xuBA83DB1B24svMOCp0_b7p7xJpInQ-Pnqw5biMpfMLWNxrXwqYETHQJ_5VTdrFA-LcHseLibG4QWBMII');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-4 left-5">
+<h3 class="text-white text-xl font-bold">Main Courses</h3>
+<p class="text-white/70 text-sm">Hearty &amp; delicious</p>
+</div>
+<div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30">
+<span class="text-white text-xs font-bold">15 Items</span>
+</div>
+</div>
+<!-- Category Item 4 -->
+<div class="group relative h-48 w-full rounded-2xl overflow-hidden shadow-md transition-transform active:scale-95">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Fluffy pancakes with syrup and berries" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB78XZ-g0VxBNMmKYT3dhhxRMHhFzb6bKgA1sdsrWYc0aG9WlziR5oTMV43dzjmBaEJ_iy_3PlMwhJqlUzsFFRbP8SBfmhDWvS3EKwDgC6PGsp9WQBCINMcJ-uwD3ckiPMVg5c6Yr8GgirnULA_cxHs_5fL6oWexy4Pf9sEHXU_0RNO6_A1_cdNWSx8gJHPDACwOmbw7ZYDRECSNhqo1tb5V29o0ewimJ3IKbjEWBfjmP_WTNWULQ6G3Beqe0WrJ-yoNRHksmXmopo');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-4 left-5">
+<h3 class="text-white text-xl font-bold">Desserts</h3>
+<p class="text-white/70 text-sm">Sweet treats &amp; pastries</p>
+</div>
+<div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30">
+<span class="text-white text-xs font-bold">6 Items</span>
+</div>
+</div>
+<!-- Category Item 5 -->
+<div class="group relative h-48 w-full rounded-2xl overflow-hidden shadow-md transition-transform active:scale-95">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Artisanal cocktails and refreshing beverages" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC-dF2PeDId2mGG8m_dk9p50cOTjEFZcF7tmyduRUDOOMhLXHsEcmVzlBKsHfllnTHHi0rereMTSlqYDit2i2uLLRH-prp9VtnAFqwAv-7cLv5iijxrIch-pZf9-0ERMTAqnEJ25FkwSNOE5AdXQJScVoAk_1jzZt9ZLB0I1wcvcyE1BuFymWVbEBqUZc7bQvHxlUBoNWdEwleU7senk2FbM5Y4ZVmD3PVBNOmrt2v6cyi6Gu3t5sHOrzH11PIkGlYMhPfwTww5ZGA');"></div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+<div class="absolute bottom-4 left-5">
+<h3 class="text-white text-xl font-bold">Beverages</h3>
+<p class="text-white/70 text-sm">Craft drinks &amp; soda</p>
+</div>
+<div class="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30">
+<span class="text-white text-xs font-bold">20 Items</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Fixed Bottom Navigation Bar -->
+<nav class="fixed bottom-0 left-0 right-0 bg-background-light dark:bg-background-dark border-t border-slate-200 dark:border-slate-800 px-6 pb-6 pt-3 z-50">
+<div class="flex items-center justify-between max-w-lg mx-auto">
+<a class="active-tab flex flex-col items-center gap-1 group" href="#">
+<div class="text-primary flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">restaurant_menu</span>
+</div>
+<p class="text-primary text-[10px] font-bold leading-normal uppercase tracking-widest">Menu</p>
+</a>
+<a class="flex flex-col items-center gap-1 group text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">search</span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase tracking-widest">Search</p>
+</a>
+<a class="flex flex-col items-center gap-1 group relative text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">shopping_basket</span>
+<!-- Badge -->
+<span class="absolute top-0 -right-2 bg-primary text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center border-2 border-background-light dark:border-background-dark">
+                        3
+                    </span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase tracking-widest">Cart</p>
+</a>
+<a class="flex flex-col items-center gap-1 group text-slate-400 dark:text-slate-500" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-[28px]">person</span>
+</div>
+<p class="text-[10px] font-bold leading-normal uppercase tracking-widest">Profile</p>
+</a>
+</div>
+</nav>
+<!-- iOS style Home Indicator area spacer -->
+<div class="h-8 bg-background-light dark:bg-background-dark"></div>
+</body></html>
