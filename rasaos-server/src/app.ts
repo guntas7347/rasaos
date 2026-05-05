@@ -3,10 +3,11 @@ import cors from "cors";
 import { errorHandler } from "./middlewares/errorHandler";
 import cookieParser from "cookie-parser";
 import { success } from "./lib/helpers";
+import { env } from "./config/env";
 
 const app = express();
 
-const allowedOrigins = (process.env.CORS_ORIGINS || "").split(",");
+const allowedOrigins = env.CORS_ORIGINS;
 
 app.use(
   cors({

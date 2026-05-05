@@ -77,7 +77,7 @@ export const login = async (req: Request, res: Response) => {
     { expiresIn: "1d" },
   );
 
-  const isProd = process.env.NODE_ENV === "production";
+  const isProd = env.NODE_ENV === "production";
 
   res.cookie("token", token, {
     httpOnly: isProd,
