@@ -8,6 +8,7 @@ import { Loader2, ListOrdered, RefreshCw, Filter } from "lucide-react";
 import { OrderCard } from "../../../components/order/OrderCard";
 import { OrderDetailsModal } from "../../../components/order/OrderDetailsModal";
 import { OrderFiltersModal } from "../../../components/order/OrderFiltersModal";
+import { db } from "../../../lib/dexie/dexie";
 
 export default function ViewOrdersPage() {
   const { restaurant } = useAuth();
@@ -25,8 +26,41 @@ export default function ViewOrdersPage() {
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchOrders = async () => {
-    setIsLoading(true);
+  const loadOrdersFromDB = async () => {
+    let collection = db.orders.orderBy("createdAt").reverse();
+
+    if (dateFilter) {
+      collection = collection.filter((o) => {
+        if (o.date) return o.date === dateFilter;
+        if (o.createdAt) {
+          return (
+            new Date(o.createdAt).toISOString().split("T")[0] === dateFilter
+          );
+        }
+        return false;
+      });
+    }
+
+    if (orderIdFilter) {
+      collection = collection.filter(
+        (o) =>
+          o.id === orderIdFilter ||
+          o.server_id === orderIdFilter ||
+          o.client_id === orderIdFilter,
+      );
+    }
+
+    const result = await collection
+      .offset((page - 1) * 20)
+      .limit(20)
+      .toArray();
+
+    setOrders(result);
+    return result;
+  };
+
+  const syncOrders = async () => {
+    const toastId = toast.loading("Syncing orders...");
     const params = new URLSearchParams();
     params.append("page", page.toString());
     if (dateFilter) params.append("date", dateFilter);
@@ -48,10 +82,43 @@ export default function ViewOrdersPage() {
           parsedOrders = data.data.orders;
         }
       }
-      setOrders(parsedOrders);
+
+      const validOrders = parsedOrders
+        .filter((o) => o && o.id)
+        .map((o) => ({
+          ...o,
+          client_id: o.client_id || o.id,
+        }));
+      if (validOrders.length > 0) {
+        try {
+          await db.orders.bulkPut(validOrders);
+        } catch (error) {
+          console.error("Dexie bulkPut failed", error);
+        }
+      }
+
+      await loadOrdersFromDB();
+      toast.success("Orders synced", { id: toastId });
+    } else {
+      toast.error("Failed to sync orders", { id: toastId });
     }
-    
+
     setIsLoading(false);
+  };
+
+  const loadInitial = async () => {
+    setIsLoading(true);
+    try {
+      const result = await loadOrdersFromDB();
+      if (result.length === 0) {
+        await syncOrders();
+      } else {
+        setIsLoading(false);
+      }
+    } catch (error) {
+      console.error("Error loading from Dexie:", error);
+      await syncOrders();
+    }
   };
 
   const updateOrderStatus = async (
@@ -65,6 +132,29 @@ export default function ViewOrdersPage() {
 
     if (response.success) {
       toast.success("Order updated successfully");
+
+      try {
+        const existingOrder = await db.orders.get(orderId);
+        if (existingOrder) {
+          const newOrder = { ...existingOrder };
+          if (updates.status) newOrder.status = updates.status;
+          if (updates.paymentStatus) {
+            if (!newOrder.payment)
+              newOrder.payment = {
+                provider: "CASH",
+                status: updates.paymentStatus,
+              };
+            else
+              newOrder.payment = {
+                ...newOrder.payment,
+                status: updates.paymentStatus,
+              };
+          }
+          await db.orders.put(newOrder);
+        }
+      } catch (e) {
+        console.error("Failed to update dexie", e);
+      }
 
       setOrders((prevOrders) =>
         prevOrders.map((order) => {
@@ -112,13 +202,19 @@ export default function ViewOrdersPage() {
 
   const deleteOrder = async (orderId: string) => {
     if (!window.confirm("Are you sure you want to delete this order?")) return;
-    
+
     const response = await callServer(`/order/${orderId}`, {
       method: "DELETE",
     });
 
     if (response.success) {
       toast.success("Order deleted successfully");
+
+      try {
+        await db.orders.delete(orderId);
+      } catch (e) {
+        console.error("Failed to delete from dexie", e);
+      }
 
       setOrders((prevOrders) =>
         prevOrders.filter((order) => order.id !== orderId),
@@ -136,7 +232,7 @@ export default function ViewOrdersPage() {
 
   useEffect(() => {
     if (restaurant) {
-      fetchOrders();
+      loadInitial();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [restaurant, page, dateFilter, orderIdFilter]);
@@ -176,13 +272,13 @@ export default function ViewOrdersPage() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => {
-              fetchOrders();
+              syncOrders();
             }}
             className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors shadow-sm"
             disabled={isLoading}
           >
             <RefreshCw size={16} className={isLoading ? "animate-spin" : ""} />
-            <span className="hidden sm:inline">Refresh</span>
+            <span className="hidden sm:inline">Sync</span>
           </button>
 
           <button

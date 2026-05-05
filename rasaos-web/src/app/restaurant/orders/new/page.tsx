@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useAuth } from "../../../../contexts/AuthContext";
 import { callServer } from "../../../../lib/helpers";
 import toast from "react-hot-toast";
@@ -38,9 +38,8 @@ export interface CartItem {
 }
 
 export default function CreateOrderPage() {
-  const { restaurant } = useAuth();
-  const [menu, setMenu] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { menu } = useAuth();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Cart State
@@ -53,7 +52,7 @@ export default function CreateOrderPage() {
     mode: AdjustmentMode;
     value: string;
   }>({
-    label: "",
+    label: "Discount",
     type: "DISCOUNT",
     mode: "FIXED",
     value: "",
@@ -61,33 +60,6 @@ export default function CreateOrderPage() {
 
   // Selection State
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
-
-  useEffect(() => {
-    if (restaurant) {
-      fetchMenuData();
-    }
-  }, [restaurant]);
-
-  const fetchMenuData = async () => {
-    setIsLoading(true);
-    const response = await callServer("/menu");
-
-    if (!response.success) {
-      if (response.status === 404) {
-        setMenu(null);
-      }
-      setIsLoading(false);
-      return;
-    }
-
-    const menuData = response.data?.data || response.data || null;
-    setMenu(menuData);
-
-    if (menuData && menuData.categories?.length > 0) {
-      setSelectedCategory(menuData.categories[0]);
-    }
-    setIsLoading(false);
-  };
 
   // Cart Operations
   const handleAddItem = (item: any, variant?: any) => {
@@ -113,7 +85,6 @@ export default function CreateOrderPage() {
       };
       setCartItems([...cartItems, newItem]);
     }
-    toast.success(`Added ${item.name} to cart`);
   };
 
   const updateQuantity = (id: string, delta: number) => {
@@ -243,14 +214,6 @@ export default function CreateOrderPage() {
     }
     setIsSubmitting(false);
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex-1 flex items-center justify-center p-12">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
 
   return (
     <div className="flex h-[calc(100vh-theme(spacing.16))] -m-4 sm:-m-6 lg:-m-8">

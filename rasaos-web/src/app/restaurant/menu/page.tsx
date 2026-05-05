@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { callServer } from "../../../lib/helpers";
 import toast from "react-hot-toast";
@@ -20,9 +20,9 @@ import { BulkUploadModal } from "../../../components/menu/BulkUploadModal";
 import { CurrencyIcon } from "../../../components/ui/CurrencyIcon";
 
 export default function MenuManagementPage() {
-  const { restaurant } = useAuth();
-  const [menu, setMenu] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const { menu: initialMenu } = useAuth();
+  const [menu, setMenu] = useState<any>(initialMenu);
+  const [isLoading, setIsLoading] = useState(false);
 
   // Modal States
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
@@ -63,12 +63,6 @@ export default function MenuManagementPage() {
     setMenu(response.data?.data || response.data || null);
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    if (restaurant) {
-      fetchMenuData();
-    }
-  }, [restaurant]);
 
   // Menu Actions
   const handleCreateMenu = async () => {

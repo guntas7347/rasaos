@@ -17,7 +17,6 @@ import ResetPasswordPage from "./app/login/reset-password/page";
 import SignupPage from "./app/signup/page";
 import RestaurantLayout from "./app/restaurant/layout";
 import RestaurantPage from "./app/restaurant/page";
-import AddRestaurantPage from "./app/restaurant/new/page";
 import MenuManagementPage from "./app/restaurant/menu/page";
 import CreateOrderPage from "./app/restaurant/orders/new/page";
 import ViewOrdersPage from "./app/restaurant/orders/page";
@@ -68,7 +67,6 @@ const App = () => {
             <Route path="restaurant">
               <Route element={<RestaurantLayout />}>
                 <Route index element={<RestaurantPage />} />
-                <Route path="new" element={<AddRestaurantPage />} />
                 <Route path="menu" element={<MenuManagementPage />} />
                 <Route path="orders" element={<ViewOrdersPage />} />
                 <Route path="orders/new" element={<CreateOrderPage />} />
