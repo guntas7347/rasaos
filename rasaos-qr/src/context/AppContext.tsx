@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import type { ReactNode } from "react";
-import { env } from "../env";
 
 export type Variant = {
   id: string;
@@ -102,6 +101,8 @@ type AppContextType = {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+import { callServer } from "../lib/helpers";
+
 export function AppProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -145,15 +146,11 @@ export function AppProvider({ children }: { children: ReactNode }) {
       setIsLoading(true);
       setError(null);
       try {
-        const endpoint = `${env.API_URL}/menu/public/${slug}`;
+        const res = await callServer(`/menu/public/${slug}`);
+        if (!res.success)
+          throw new Error(res.message || "Failed to fetch restaurant menu");
 
-        const res = await fetch(endpoint, {
-          method: "GET",
-          credentials: "include",
-        });
-        if (!res.ok) throw new Error("Failed to fetch restaurant menu");
-
-        const data = await res.json();
+        const data = res.data;
         setRestaurant(data.restaurant);
         setMenu(data.menu || null);
         return true;

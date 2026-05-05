@@ -8,7 +8,7 @@ import type {
   Variant,
 } from "../../../../context/AppContext";
 import { CurrencyIcon } from "../../../../components/CurrencyIcon";
-import { formatCurrency } from "../../../../utils/currency";
+import { formatCurrency } from "../../../../lib/currency";
 
 export default function ItemDetailsPage() {
   const navigate = useNavigate();

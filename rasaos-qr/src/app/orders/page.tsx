@@ -3,8 +3,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CurrencyIcon } from "../../components/CurrencyIcon";
 import { Spinner } from "../../components/Spinner";
-import { env } from "../../env";
-import { formatCurrency } from "../../utils/currency";
+import { formatCurrency } from "../../lib/currency";
+
+import { callServer } from "../../lib/helpers";
 
 export default function OrdersPage() {
   const navigate = useNavigate();
@@ -13,23 +14,15 @@ export default function OrdersPage() {
 
   useEffect(() => {
     const fetchOrders = async () => {
-      try {
-        const response = await fetch(`${env.API_URL}/order/customer`, {
-          credentials: "include",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          const fetchedOrders = data.orders || data.data || data;
-          setOrders(Array.isArray(fetchedOrders) ? fetchedOrders : []);
-        } else {
-          setOrders([]);
-        }
-      } catch (error) {
-        console.error("Failed to fetch orders:", error);
+      const result = await callServer("/order/customer");
+      if (result.success) {
+        const data = result.data;
+        const fetchedOrders = data.orders || data.data || data;
+        setOrders(Array.isArray(fetchedOrders) ? fetchedOrders : []);
+      } else {
         setOrders([]);
-      } finally {
-        setIsLoading(false);
       }
+      setIsLoading(false);
     };
 
     fetchOrders();

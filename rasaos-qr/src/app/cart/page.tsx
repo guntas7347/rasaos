@@ -2,7 +2,7 @@ import { ChevronLeft, Plus, Minus, ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { CurrencyIcon } from "../../components/CurrencyIcon";
-import { formatCurrency } from "../../utils/currency";
+import { formatCurrency } from "../../lib/currency";
 
 export default function CartPage() {
   const navigate = useNavigate();

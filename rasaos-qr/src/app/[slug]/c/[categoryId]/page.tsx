@@ -3,7 +3,7 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppContext } from "../../../../context/AppContext";
 import { CurrencyIcon } from "../../../../components/CurrencyIcon";
-import { formatCurrency } from "../../../../utils/currency";
+import { formatCurrency } from "../../../../lib/currency";
 import { SearchModal } from "../../../../components/SearchModal";
 
 export default function CategoryItemList() {

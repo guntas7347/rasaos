@@ -3,7 +3,7 @@ import { Search, X, ChevronRight } from "lucide-react";
 import { useAppContext } from "../context/AppContext";
 import { Link, useParams } from "react-router-dom";
 import { CurrencyIcon } from "./CurrencyIcon";
-import { formatCurrency } from "../utils/currency";
+import { formatCurrency } from "../lib/currency";
 
 export function SearchModal({
   isOpen,

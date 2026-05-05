@@ -3,8 +3,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppContext } from "../../context/AppContext";
 import { CurrencyIcon } from "../../components/CurrencyIcon";
-import { env } from "../../env";
-import { formatCurrency } from "../../utils/currency";
+import { formatCurrency } from "../../lib/currency";
+
+import { callServer } from "../../lib/helpers";
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -66,18 +67,13 @@ export default function CheckoutPage() {
         })),
       };
 
-      const response = await fetch(`${env.API_URL}/order`, {
+      const result = await callServer("/order", {
         method: "POST",
-        credentials: "include",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
+        data: payload,
       });
 
-      if (!response.ok) {
-        throw new Error("Failed to place order");
+      if (!result.success) {
+        throw new Error(result.message || "Failed to place order");
       }
 
       setOrderSuccess(true);
@@ -86,7 +82,7 @@ export default function CheckoutPage() {
       }, 2000);
     } catch (error) {
       console.error(error);
-      alert("Failed to place order. Please try again.");
+      // alert("Failed to place order. Please try again."); // Removed alert as callServer already toasts
     } finally {
       setIsSubmitting(false);
     }
