@@ -10,8 +10,6 @@ import {
   Trash2,
   ChevronRight,
   ChevronDown,
-  Copy,
-  Check,
   Power,
 } from "lucide-react";
 
@@ -78,7 +76,7 @@ export default function MenuManagementPage() {
     const response = await callServer("/menu", {
       method: "POST",
     });
-    
+
     if (response.success) {
       toast.success("Menu created successfully");
       fetchMenuData();
@@ -106,7 +104,7 @@ export default function MenuManagementPage() {
       method: "PATCH",
       data: { isActive: !menu.isActive },
     });
-    
+
     if (response.success) {
       toast.success(
         `Menu ${menu.isActive ? "deactivated" : "activated"} successfully`,

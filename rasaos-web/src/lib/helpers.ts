@@ -50,16 +50,26 @@ export const callServer = async <T = any>(
       if (response.status !== 404) {
         toast.error(message);
       }
-      return { success: false, data: null as any, message, status: response.status };
+      return {
+        success: false,
+        data: null as any,
+        message,
+        status: response.status,
+      };
     }
 
     // If backend is already standardized
     if (result && typeof result.success === "boolean") {
       return { ...result, status: response.status } as ApiResponse<T>;
     }
-    
+
     // Wrap non-standardized responses
-    return { success: true, data: result as T, message: "Success", status: response.status };
+    return {
+      success: true,
+      data: result as T,
+      message: "Success",
+      status: response.status,
+    };
   } catch (error: any) {
     const message = error.message || "Network error";
     toast.error(message);

@@ -217,46 +217,48 @@ export default function SettingsPage() {
                   </td>
                 </tr>
               ) : (
-                restaurant?.subscriptionHistory?.map((sub, index) => (
-                  <tr
-                    key={index}
-                    className="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2">
-                        <ShieldCheck size={18} className="text-blue-500" />
-                        <span className="font-medium text-neutral-900 dark:text-white">
-                          {sub.plan}
+                restaurant?.subscriptionHistory?.map(
+                  (sub: any, index: number) => (
+                    <tr
+                      key={index}
+                      className="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2">
+                          <ShieldCheck size={18} className="text-blue-500" />
+                          <span className="font-medium text-neutral-900 dark:text-white">
+                            {sub.plan}
+                          </span>
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <span
+                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            sub.status === "ACTIVE"
+                              ? "bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400"
+                              : sub.status === "FUTURE"
+                                ? "bg-blue-100 text-blue-800 dark:bg-blue-500/10 dark:text-blue-400"
+                                : "bg-red-100 text-red-800 dark:bg-red-500/10 dark:text-red-400"
+                          }`}
+                        >
+                          {sub.status}
                         </span>
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                          sub.status === "ACTIVE"
-                            ? "bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400"
-                            : sub.status === "FUTURE"
-                              ? "bg-blue-100 text-blue-800 dark:bg-blue-500/10 dark:text-blue-400"
-                              : "bg-red-100 text-red-800 dark:bg-red-500/10 dark:text-red-400"
-                        }`}
-                      >
-                        {sub.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300 text-sm">
-                        <Calendar size={14} />
-                        {new Date(sub.periodStart).toLocaleDateString()}
-                      </div>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300 text-sm">
-                        <Clock size={14} />
-                        {new Date(sub.periodEnd).toLocaleDateString()}
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300 text-sm">
+                          <Calendar size={14} />
+                          {new Date(sub.periodStart).toLocaleDateString()}
+                        </div>
+                      </td>
+                      <td className="px-6 py-4">
+                        <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300 text-sm">
+                          <Clock size={14} />
+                          {new Date(sub.periodEnd).toLocaleDateString()}
+                        </div>
+                      </td>
+                    </tr>
+                  ),
+                )
               )}
             </tbody>
           </table>

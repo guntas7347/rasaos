@@ -27,6 +27,7 @@ export interface Restaurant {
 interface AuthContextType {
   user: User | null;
   restaurant: Restaurant | null;
+  menu: any | null;
   isLoading: boolean;
   error: string | null;
   refreshContext: () => Promise<void>;
@@ -94,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     const menuRes = await callServer("/menu");
-    console.log("menuRes", menuRes);
+    setMenu(menuRes.data);
 
     setIsLoading(false);
   };
@@ -116,6 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         user,
         restaurant,
+        menu,
         isLoading,
         error,
         refreshContext: fetchAuthData,
