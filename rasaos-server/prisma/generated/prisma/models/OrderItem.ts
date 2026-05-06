@@ -27,21 +27,27 @@ export type AggregateOrderItem = {
 }
 
 export type OrderItemAvgAggregateOutputType = {
-  variantPrice: number | null
+  unitPrice: number | null
   quantity: number | null
+  lineTotal: number | null
 }
 
 export type OrderItemSumAggregateOutputType = {
-  variantPrice: number | null
+  unitPrice: number | null
   quantity: number | null
+  lineTotal: number | null
 }
 
 export type OrderItemMinAggregateOutputType = {
   id: string | null
   orderId: string | null
+  itemId: string | null
+  variantId: string | null
+  itemName: string | null
   variantName: string | null
-  variantPrice: number | null
+  unitPrice: number | null
   quantity: number | null
+  lineTotal: number | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -50,9 +56,13 @@ export type OrderItemMinAggregateOutputType = {
 export type OrderItemMaxAggregateOutputType = {
   id: string | null
   orderId: string | null
+  itemId: string | null
+  variantId: string | null
+  itemName: string | null
   variantName: string | null
-  variantPrice: number | null
+  unitPrice: number | null
   quantity: number | null
+  lineTotal: number | null
   createdAt: Date | null
   updatedAt: Date | null
   deletedAt: Date | null
@@ -61,9 +71,13 @@ export type OrderItemMaxAggregateOutputType = {
 export type OrderItemCountAggregateOutputType = {
   id: number
   orderId: number
+  itemId: number
+  variantId: number
+  itemName: number
   variantName: number
-  variantPrice: number
+  unitPrice: number
   quantity: number
+  lineTotal: number
   createdAt: number
   updatedAt: number
   deletedAt: number
@@ -72,21 +86,27 @@ export type OrderItemCountAggregateOutputType = {
 
 
 export type OrderItemAvgAggregateInputType = {
-  variantPrice?: true
+  unitPrice?: true
   quantity?: true
+  lineTotal?: true
 }
 
 export type OrderItemSumAggregateInputType = {
-  variantPrice?: true
+  unitPrice?: true
   quantity?: true
+  lineTotal?: true
 }
 
 export type OrderItemMinAggregateInputType = {
   id?: true
   orderId?: true
+  itemId?: true
+  variantId?: true
+  itemName?: true
   variantName?: true
-  variantPrice?: true
+  unitPrice?: true
   quantity?: true
+  lineTotal?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -95,9 +115,13 @@ export type OrderItemMinAggregateInputType = {
 export type OrderItemMaxAggregateInputType = {
   id?: true
   orderId?: true
+  itemId?: true
+  variantId?: true
+  itemName?: true
   variantName?: true
-  variantPrice?: true
+  unitPrice?: true
   quantity?: true
+  lineTotal?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -106,9 +130,13 @@ export type OrderItemMaxAggregateInputType = {
 export type OrderItemCountAggregateInputType = {
   id?: true
   orderId?: true
+  itemId?: true
+  variantId?: true
+  itemName?: true
   variantName?: true
-  variantPrice?: true
+  unitPrice?: true
   quantity?: true
+  lineTotal?: true
   createdAt?: true
   updatedAt?: true
   deletedAt?: true
@@ -204,9 +232,13 @@ export type OrderItemGroupByArgs<ExtArgs extends runtime.Types.Extensions.Intern
 export type OrderItemGroupByOutputType = {
   id: string
   orderId: string
-  variantName: string
-  variantPrice: number
+  itemId: string | null
+  variantId: string | null
+  itemName: string
+  variantName: string | null
+  unitPrice: number
   quantity: number
+  lineTotal: number
   createdAt: Date
   updatedAt: Date
   deletedAt: Date | null
@@ -238,9 +270,13 @@ export type OrderItemWhereInput = {
   NOT?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   id?: Prisma.StringFilter<"OrderItem"> | string
   orderId?: Prisma.StringFilter<"OrderItem"> | string
-  variantName?: Prisma.StringFilter<"OrderItem"> | string
-  variantPrice?: Prisma.IntFilter<"OrderItem"> | number
+  itemId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  variantId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  itemName?: Prisma.StringFilter<"OrderItem"> | string
+  variantName?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  unitPrice?: Prisma.IntFilter<"OrderItem"> | number
   quantity?: Prisma.IntFilter<"OrderItem"> | number
+  lineTotal?: Prisma.IntFilter<"OrderItem"> | number
   createdAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"OrderItem"> | Date | string | null
@@ -250,9 +286,13 @@ export type OrderItemWhereInput = {
 export type OrderItemOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  variantName?: Prisma.SortOrder
-  variantPrice?: Prisma.SortOrder
+  itemId?: Prisma.SortOrderInput | Prisma.SortOrder
+  variantId?: Prisma.SortOrderInput | Prisma.SortOrder
+  itemName?: Prisma.SortOrder
+  variantName?: Prisma.SortOrderInput | Prisma.SortOrder
+  unitPrice?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  lineTotal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -265,9 +305,13 @@ export type OrderItemWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.OrderItemWhereInput[]
   NOT?: Prisma.OrderItemWhereInput | Prisma.OrderItemWhereInput[]
   orderId?: Prisma.StringFilter<"OrderItem"> | string
-  variantName?: Prisma.StringFilter<"OrderItem"> | string
-  variantPrice?: Prisma.IntFilter<"OrderItem"> | number
+  itemId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  variantId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  itemName?: Prisma.StringFilter<"OrderItem"> | string
+  variantName?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  unitPrice?: Prisma.IntFilter<"OrderItem"> | number
   quantity?: Prisma.IntFilter<"OrderItem"> | number
+  lineTotal?: Prisma.IntFilter<"OrderItem"> | number
   createdAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"OrderItem"> | Date | string | null
@@ -277,9 +321,13 @@ export type OrderItemWhereUniqueInput = Prisma.AtLeast<{
 export type OrderItemOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
-  variantName?: Prisma.SortOrder
-  variantPrice?: Prisma.SortOrder
+  itemId?: Prisma.SortOrderInput | Prisma.SortOrder
+  variantId?: Prisma.SortOrderInput | Prisma.SortOrder
+  itemName?: Prisma.SortOrder
+  variantName?: Prisma.SortOrderInput | Prisma.SortOrder
+  unitPrice?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  lineTotal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -296,9 +344,13 @@ export type OrderItemScalarWhereWithAggregatesInput = {
   NOT?: Prisma.OrderItemScalarWhereWithAggregatesInput | Prisma.OrderItemScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
   orderId?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
-  variantName?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
-  variantPrice?: Prisma.IntWithAggregatesFilter<"OrderItem"> | number
+  itemId?: Prisma.StringNullableWithAggregatesFilter<"OrderItem"> | string | null
+  variantId?: Prisma.StringNullableWithAggregatesFilter<"OrderItem"> | string | null
+  itemName?: Prisma.StringWithAggregatesFilter<"OrderItem"> | string
+  variantName?: Prisma.StringNullableWithAggregatesFilter<"OrderItem"> | string | null
+  unitPrice?: Prisma.IntWithAggregatesFilter<"OrderItem"> | number
   quantity?: Prisma.IntWithAggregatesFilter<"OrderItem"> | number
+  lineTotal?: Prisma.IntWithAggregatesFilter<"OrderItem"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"OrderItem"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"OrderItem"> | Date | string
   deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"OrderItem"> | Date | string | null
@@ -306,11 +358,15 @@ export type OrderItemScalarWhereWithAggregatesInput = {
 
 export type OrderItemCreateInput = {
   id?: string
-  variantName: string
-  variantPrice: number
+  itemId?: string | null
+  variantId?: string | null
+  itemName?: string
+  variantName?: string | null
+  unitPrice?: number
   quantity: number
+  lineTotal?: number
   createdAt?: Date | string
-  updatedAt?: Date | string
+  updatedAt: Date | string
   deletedAt?: Date | string | null
   order: Prisma.OrderCreateNestedOneWithoutItemsInput
 }
@@ -318,19 +374,27 @@ export type OrderItemCreateInput = {
 export type OrderItemUncheckedCreateInput = {
   id?: string
   orderId: string
-  variantName: string
-  variantPrice: number
+  itemId?: string | null
+  variantId?: string | null
+  itemName?: string
+  variantName?: string | null
+  unitPrice?: number
   quantity: number
+  lineTotal?: number
   createdAt?: Date | string
-  updatedAt?: Date | string
+  updatedAt: Date | string
   deletedAt?: Date | string | null
 }
 
 export type OrderItemUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  variantName?: Prisma.StringFieldUpdateOperationsInput | string
-  variantPrice?: Prisma.IntFieldUpdateOperationsInput | number
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  variantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitPrice?: Prisma.IntFieldUpdateOperationsInput | number
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  lineTotal?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -340,9 +404,13 @@ export type OrderItemUpdateInput = {
 export type OrderItemUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  variantName?: Prisma.StringFieldUpdateOperationsInput | string
-  variantPrice?: Prisma.IntFieldUpdateOperationsInput | number
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  variantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitPrice?: Prisma.IntFieldUpdateOperationsInput | number
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  lineTotal?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -351,19 +419,27 @@ export type OrderItemUncheckedUpdateInput = {
 export type OrderItemCreateManyInput = {
   id?: string
   orderId: string
-  variantName: string
-  variantPrice: number
+  itemId?: string | null
+  variantId?: string | null
+  itemName?: string
+  variantName?: string | null
+  unitPrice?: number
   quantity: number
+  lineTotal?: number
   createdAt?: Date | string
-  updatedAt?: Date | string
+  updatedAt: Date | string
   deletedAt?: Date | string | null
 }
 
 export type OrderItemUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  variantName?: Prisma.StringFieldUpdateOperationsInput | string
-  variantPrice?: Prisma.IntFieldUpdateOperationsInput | number
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  variantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitPrice?: Prisma.IntFieldUpdateOperationsInput | number
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  lineTotal?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -372,9 +448,13 @@ export type OrderItemUpdateManyMutationInput = {
 export type OrderItemUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.StringFieldUpdateOperationsInput | string
-  variantName?: Prisma.StringFieldUpdateOperationsInput | string
-  variantPrice?: Prisma.IntFieldUpdateOperationsInput | number
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  variantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitPrice?: Prisma.IntFieldUpdateOperationsInput | number
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  lineTotal?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -393,25 +473,34 @@ export type OrderItemOrderByRelationAggregateInput = {
 export type OrderItemCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  itemId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
+  itemName?: Prisma.SortOrder
   variantName?: Prisma.SortOrder
-  variantPrice?: Prisma.SortOrder
+  unitPrice?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  lineTotal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
 }
 
 export type OrderItemAvgOrderByAggregateInput = {
-  variantPrice?: Prisma.SortOrder
+  unitPrice?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  lineTotal?: Prisma.SortOrder
 }
 
 export type OrderItemMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  itemId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
+  itemName?: Prisma.SortOrder
   variantName?: Prisma.SortOrder
-  variantPrice?: Prisma.SortOrder
+  unitPrice?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  lineTotal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
@@ -420,17 +509,22 @@ export type OrderItemMaxOrderByAggregateInput = {
 export type OrderItemMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  itemId?: Prisma.SortOrder
+  variantId?: Prisma.SortOrder
+  itemName?: Prisma.SortOrder
   variantName?: Prisma.SortOrder
-  variantPrice?: Prisma.SortOrder
+  unitPrice?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  lineTotal?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   deletedAt?: Prisma.SortOrder
 }
 
 export type OrderItemSumOrderByAggregateInput = {
-  variantPrice?: Prisma.SortOrder
+  unitPrice?: Prisma.SortOrder
   quantity?: Prisma.SortOrder
+  lineTotal?: Prisma.SortOrder
 }
 
 export type OrderItemCreateNestedManyWithoutOrderInput = {
@@ -477,21 +571,29 @@ export type OrderItemUncheckedUpdateManyWithoutOrderNestedInput = {
 
 export type OrderItemCreateWithoutOrderInput = {
   id?: string
-  variantName: string
-  variantPrice: number
+  itemId?: string | null
+  variantId?: string | null
+  itemName?: string
+  variantName?: string | null
+  unitPrice?: number
   quantity: number
+  lineTotal?: number
   createdAt?: Date | string
-  updatedAt?: Date | string
+  updatedAt: Date | string
   deletedAt?: Date | string | null
 }
 
 export type OrderItemUncheckedCreateWithoutOrderInput = {
   id?: string
-  variantName: string
-  variantPrice: number
+  itemId?: string | null
+  variantId?: string | null
+  itemName?: string
+  variantName?: string | null
+  unitPrice?: number
   quantity: number
+  lineTotal?: number
   createdAt?: Date | string
-  updatedAt?: Date | string
+  updatedAt: Date | string
   deletedAt?: Date | string | null
 }
 
@@ -527,9 +629,13 @@ export type OrderItemScalarWhereInput = {
   NOT?: Prisma.OrderItemScalarWhereInput | Prisma.OrderItemScalarWhereInput[]
   id?: Prisma.StringFilter<"OrderItem"> | string
   orderId?: Prisma.StringFilter<"OrderItem"> | string
-  variantName?: Prisma.StringFilter<"OrderItem"> | string
-  variantPrice?: Prisma.IntFilter<"OrderItem"> | number
+  itemId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  variantId?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  itemName?: Prisma.StringFilter<"OrderItem"> | string
+  variantName?: Prisma.StringNullableFilter<"OrderItem"> | string | null
+  unitPrice?: Prisma.IntFilter<"OrderItem"> | number
   quantity?: Prisma.IntFilter<"OrderItem"> | number
+  lineTotal?: Prisma.IntFilter<"OrderItem"> | number
   createdAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"OrderItem"> | Date | string
   deletedAt?: Prisma.DateTimeNullableFilter<"OrderItem"> | Date | string | null
@@ -537,19 +643,27 @@ export type OrderItemScalarWhereInput = {
 
 export type OrderItemCreateManyOrderInput = {
   id?: string
-  variantName: string
-  variantPrice: number
+  itemId?: string | null
+  variantId?: string | null
+  itemName?: string
+  variantName?: string | null
+  unitPrice?: number
   quantity: number
+  lineTotal?: number
   createdAt?: Date | string
-  updatedAt?: Date | string
+  updatedAt: Date | string
   deletedAt?: Date | string | null
 }
 
 export type OrderItemUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  variantName?: Prisma.StringFieldUpdateOperationsInput | string
-  variantPrice?: Prisma.IntFieldUpdateOperationsInput | number
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  variantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitPrice?: Prisma.IntFieldUpdateOperationsInput | number
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  lineTotal?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -557,9 +671,13 @@ export type OrderItemUpdateWithoutOrderInput = {
 
 export type OrderItemUncheckedUpdateWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  variantName?: Prisma.StringFieldUpdateOperationsInput | string
-  variantPrice?: Prisma.IntFieldUpdateOperationsInput | number
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  variantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitPrice?: Prisma.IntFieldUpdateOperationsInput | number
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  lineTotal?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -567,9 +685,13 @@ export type OrderItemUncheckedUpdateWithoutOrderInput = {
 
 export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  variantName?: Prisma.StringFieldUpdateOperationsInput | string
-  variantPrice?: Prisma.IntFieldUpdateOperationsInput | number
+  itemId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  variantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  itemName?: Prisma.StringFieldUpdateOperationsInput | string
+  variantName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unitPrice?: Prisma.IntFieldUpdateOperationsInput | number
   quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  lineTotal?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -580,9 +702,13 @@ export type OrderItemUncheckedUpdateManyWithoutOrderInput = {
 export type OrderItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  itemId?: boolean
+  variantId?: boolean
+  itemName?: boolean
   variantName?: boolean
-  variantPrice?: boolean
+  unitPrice?: boolean
   quantity?: boolean
+  lineTotal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -592,9 +718,13 @@ export type OrderItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type OrderItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  itemId?: boolean
+  variantId?: boolean
+  itemName?: boolean
   variantName?: boolean
-  variantPrice?: boolean
+  unitPrice?: boolean
   quantity?: boolean
+  lineTotal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -604,9 +734,13 @@ export type OrderItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type OrderItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   orderId?: boolean
+  itemId?: boolean
+  variantId?: boolean
+  itemName?: boolean
   variantName?: boolean
-  variantPrice?: boolean
+  unitPrice?: boolean
   quantity?: boolean
+  lineTotal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
@@ -616,15 +750,19 @@ export type OrderItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ext
 export type OrderItemSelectScalar = {
   id?: boolean
   orderId?: boolean
+  itemId?: boolean
+  variantId?: boolean
+  itemName?: boolean
   variantName?: boolean
-  variantPrice?: boolean
+  unitPrice?: boolean
   quantity?: boolean
+  lineTotal?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   deletedAt?: boolean
 }
 
-export type OrderItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "variantName" | "variantPrice" | "quantity" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["orderItem"]>
+export type OrderItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "orderId" | "itemId" | "variantId" | "itemName" | "variantName" | "unitPrice" | "quantity" | "lineTotal" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["orderItem"]>
 export type OrderItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   order?: boolean | Prisma.OrderDefaultArgs<ExtArgs>
 }
@@ -643,9 +781,13 @@ export type $OrderItemPayload<ExtArgs extends runtime.Types.Extensions.InternalA
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     orderId: string
-    variantName: string
-    variantPrice: number
+    itemId: string | null
+    variantId: string | null
+    itemName: string
+    variantName: string | null
+    unitPrice: number
     quantity: number
+    lineTotal: number
     createdAt: Date
     updatedAt: Date
     deletedAt: Date | null
@@ -1075,9 +1217,13 @@ export interface Prisma__OrderItemClient<T, Null = never, ExtArgs extends runtim
 export interface OrderItemFieldRefs {
   readonly id: Prisma.FieldRef<"OrderItem", 'String'>
   readonly orderId: Prisma.FieldRef<"OrderItem", 'String'>
+  readonly itemId: Prisma.FieldRef<"OrderItem", 'String'>
+  readonly variantId: Prisma.FieldRef<"OrderItem", 'String'>
+  readonly itemName: Prisma.FieldRef<"OrderItem", 'String'>
   readonly variantName: Prisma.FieldRef<"OrderItem", 'String'>
-  readonly variantPrice: Prisma.FieldRef<"OrderItem", 'Int'>
+  readonly unitPrice: Prisma.FieldRef<"OrderItem", 'Int'>
   readonly quantity: Prisma.FieldRef<"OrderItem", 'Int'>
+  readonly lineTotal: Prisma.FieldRef<"OrderItem", 'Int'>
   readonly createdAt: Prisma.FieldRef<"OrderItem", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"OrderItem", 'DateTime'>
   readonly deletedAt: Prisma.FieldRef<"OrderItem", 'DateTime'>

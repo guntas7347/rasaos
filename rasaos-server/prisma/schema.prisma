@@ -200,15 +200,19 @@ model Order {
   tableNumber     String?
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime
   deletedAt DateTime?
 
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
 
-  items      OrderItem[]
-  payment    Payment?
-  customerId String?
+  items         OrderItem[]
+  payment       Payment?
+  customerId    String?
+  clientOrderId String?     @unique
+  syncStatus    String?     @default("SYNCED")
+  syncError     String?
 
+  @@unique([restaurantId, clientOrderId])
   @@index([restaurantId])
   @@index([createdAt])
 }
@@ -217,12 +221,18 @@ model OrderItem {
   id      String @id @default(uuid())
   orderId String
 
-  variantName  String
-  variantPrice Int
-  quantity     Int
+  itemId    String?
+  variantId String?
+
+  itemName    String  @default("Unknown")
+  variantName String?
+
+  unitPrice Int @default(0)
+  quantity  Int
+  lineTotal Int @default(0)
 
   createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  updatedAt DateTime
   deletedAt DateTime?
 
   order Order @relation(fields: [orderId], references: [id], onDelete: Cascade)

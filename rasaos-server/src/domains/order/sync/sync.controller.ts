@@ -94,10 +94,19 @@ export const syncStaffOrder = async (req: any, res: Response) => {
             tableNumber,
             note,
             updatedAt: new Date(clientUpdatedAt), // Sync the actual edit time
+
+            // FIX 3: Use upsert to prevent crashes if payment record is missing
             payment: {
-              update: {
-                status:
-                  paymentStatus || existingOrder.payment?.status || "PENDING",
+              upsert: {
+                create: {
+                  amount: existingOrder.totalAmount,
+                  status: paymentStatus || "PENDING",
+                  provider: "CASH",
+                },
+                update: {
+                  status:
+                    paymentStatus || existingOrder.payment?.status || "PENDING",
+                },
               },
             },
           },
@@ -122,6 +131,12 @@ export const syncStaffOrder = async (req: any, res: Response) => {
     }
 
     // 3. Creation Logic (If order doesn't exist)
+
+    // FIX 1: Guard against missing items on creation
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return error(res, 400, "Items are required to create a new order");
+    }
+
     const restaurant = await prisma.restaurant.findUnique({
       where: { id: restaurantId },
     });
@@ -140,12 +155,13 @@ export const syncStaffOrder = async (req: any, res: Response) => {
         unitPrice: item.unitPrice,
         quantity: item.quantity,
         lineTotal: itemTotal,
+        // FIX 2: Provide the required updatedAt timestamp
+        updatedAt: new Date(clientUpdatedAt),
       };
     });
 
-    // ... (Calculate adjustments, taxes etc based on your previous logic)
-    // For brevity, using a simple total calculation here:
-    const finalTotal = subtotal; // Apply your full tax/adjustment logic here
+    // ... Apply your full tax/adjustment logic here
+    const finalTotal = subtotal;
 
     const newOrder = await prisma.order.create({
       data: {
