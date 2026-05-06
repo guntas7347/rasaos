@@ -1,6 +1,8 @@
 import { ArrowLeft, HelpCircle, ShoppingBag } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../../lib/dexie/dexie";
 import { CurrencyIcon } from "../../components/CurrencyIcon";
 import { Spinner } from "../../components/Spinner";
 import { formatCurrency } from "../../lib/currency";
@@ -9,8 +11,12 @@ import { callServer } from "../../lib/helpers";
 
 export default function OrdersPage() {
   const navigate = useNavigate();
-  const [orders, setOrders] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  const localOrders = useLiveQuery(() =>
+    db.orders.orderBy("createdAt").reverse().toArray(),
+  );
+  const orders = localOrders || [];
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -18,9 +24,10 @@ export default function OrdersPage() {
       if (result.success) {
         const data = result.data;
         const fetchedOrders = data.orders || data.data || data;
-        setOrders(Array.isArray(fetchedOrders) ? fetchedOrders : []);
-      } else {
-        setOrders([]);
+        const validOrders = Array.isArray(fetchedOrders) ? fetchedOrders : [];
+        if (validOrders.length > 0) {
+          await db.orders.bulkPut(validOrders);
+        }
       }
       setIsLoading(false);
     };
@@ -29,7 +36,7 @@ export default function OrdersPage() {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-76px)] bg-background-light dark:bg-background-dark">
+    <div className="flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md">
         <div className="flex items-center p-4 justify-between border-b border-slate-200 dark:border-slate-800">
@@ -49,7 +56,7 @@ export default function OrdersPage() {
       </header>
 
       {/* Content */}
-      <main className="flex-1 overflow-y-auto pb-6">
+      <div className="flex-1 pb-6">
         {isLoading ? (
           <div className="flex items-center justify-center h-full min-h-[50vh]">
             <Spinner />
@@ -120,11 +127,11 @@ export default function OrdersPage() {
 
                   {order.items &&
                     order.items.length > 0 &&
-                    order.items[0]?.menuItem?.image && (
+                    order.items[0]?.menuItem?.imageUrl && (
                       <div
                         className="h-16 w-16 bg-slate-100 dark:bg-slate-700 rounded-lg bg-cover bg-center shrink-0 ml-4"
                         style={{
-                          backgroundImage: `url('${order.items[0].menuItem.image}')`,
+                          backgroundImage: `url('${order.items[0].menuItem.imageUrl}')`,
                         }}
                       ></div>
                     )}
@@ -169,7 +176,7 @@ export default function OrdersPage() {
             ))}
           </section>
         )}
-      </main>
+      </div>
     </div>
   );
 }

@@ -79,7 +79,7 @@ export default function ItemDetailsPage() {
     category?.addons?.filter((a) => selectedAddons[a.id]) || [];
   const addonCost = activeAddonsList.reduce((sum, a) => sum + a.price, 0);
 
-  const basePrice = selectedVariant ? selectedVariant.price : item.price || 0;
+  const basePrice = selectedVariant ? selectedVariant.price : (item.variants?.length > 0 ? Math.min(...item.variants.map((v) => v.price)) : 0);
 
   const totalItemCost = (basePrice + addonCost) * quantity;
 
@@ -102,7 +102,7 @@ export default function ItemDetailsPage() {
   };
 
   return (
-    <div className="relative flex min-h-[calc(100vh-76px)] w-full flex-col overflow-x-hidden pb-32 bg-background-light dark:bg-background-dark">
+    <div className="relative flex w-full flex-col overflow-x-hidden pb-32">
       {/* Top App Bar */}
       <div className="sticky top-0 z-50 flex items-center bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md p-4 justify-between border-b border-primary/10">
         <button
@@ -127,7 +127,7 @@ export default function ItemDetailsPage() {
           <div
             className="w-full bg-center bg-no-repeat bg-cover flex flex-col justify-end overflow-hidden aspect-[4/3] sm:rounded-xl shadow-lg bg-slate-200 dark:bg-slate-800"
             style={
-              item.image ? { backgroundImage: `url('${item.image}')` } : {}
+              item.imageUrl ? { backgroundImage: `url('${item.imageUrl}')` } : {}
             }
           ></div>
         </div>

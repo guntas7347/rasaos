@@ -14,7 +14,7 @@ export default function CartPage() {
   const finalTotal = showtax ? cartTotal + tax : cartTotal;
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-76px)] bg-background-light dark:bg-background-dark">
+    <div className="flex flex-col">
       {/* Header */}
       <header className="sticky top-0 z-20 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 pt-6 pb-4">
         <div className="flex items-center justify-between">
@@ -34,7 +34,7 @@ export default function CartPage() {
         </div>
       </header>
 
-      <main className="flex-1 px-4 space-y-6 pt-4 pb-32">
+      <div className="flex-1 px-4 space-y-6 pt-4 pb-32">
         {cart.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 opacity-60">
             <p>Your cart is empty.</p>
@@ -46,7 +46,7 @@ export default function CartPage() {
               const { menuItems } = useAppContext();
               const menuItem = menuItems.find((m) => m.id === item.menuItemId);
               const image =
-                menuItem?.image || "https://via.placeholder.com/150";
+                menuItem?.imageUrl || "https://via.placeholder.com/150";
 
               return (
                 <div
@@ -147,7 +147,7 @@ export default function CartPage() {
             </div>
           </div>
         )}
-      </main>
+      </div>
 
       {/* Checkout Footer relative to container (bottom nav manages absolute bottom) */}
       {cart.length > 0 && (

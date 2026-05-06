@@ -26,8 +26,8 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [orderSuccess, setOrderSuccess] = useState(false);
 
-  const showtax = restaurant?.taxMode === "EXCLUSIVE";
-  const taxAndFees = showtax
+  const showTax = restaurant?.taxMode === "EXCLUSIVE";
+  const taxAndFees = showTax
     ? (cartTotal * (restaurant?.taxRate || 0)) / 100
     : 0;
 
@@ -90,7 +90,7 @@ export default function CheckoutPage() {
 
   if (orderSuccess) {
     return (
-      <div className="flex min-h-[calc(100vh-76px)] items-center justify-center bg-background-light dark:bg-background-dark">
+      <div className="flex items-center justify-center py-20">
         <div className="text-center p-8 animate-in zoom-in duration-300">
           <div className="size-20 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
             <Send size={40} className="ml-1" />
@@ -105,7 +105,7 @@ export default function CheckoutPage() {
   }
 
   return (
-    <div className="relative flex min-h-[calc(100vh-76px)] w-full flex-col max-w-[480px] mx-auto bg-background-light dark:bg-background-dark shadow-xl overflow-x-hidden">
+    <div className="relative flex w-full flex-col max-w-md mx-auto shadow-xl overflow-x-hidden">
       {/* Header */}
       <div className="sticky top-0 z-10 flex items-center bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md p-4 border-b border-primary/10">
         <button
@@ -119,7 +119,7 @@ export default function CheckoutPage() {
         </h2>
       </div>
 
-      <div className="flex-1 overflow-y-auto pb-32">
+      <div className="flex-1 pb-32">
         {/* Order Summary Preview */}
         <div className="px-4 pt-6 pb-2">
           <div className="bg-primary/5 dark:bg-primary/10 rounded-xl p-4 border border-primary/10">
@@ -293,13 +293,15 @@ export default function CheckoutPage() {
               {formatCurrency(cartTotal)}
             </span>
           </div>
-          <div className="flex justify-between text-sm text-slate-500 dark:text-slate-400">
-            <span>Tax &amp; Fees</span>
-            <span>
-              <CurrencyIcon />
-              {formatCurrency(taxAndFees)}
-            </span>
-          </div>
+          {showTax && (
+            <div className="flex justify-between text-sm text-slate-500 dark:text-slate-400">
+              <span>Tax &amp; Fees</span>
+              <span>
+                <CurrencyIcon />
+                {formatCurrency(taxAndFees)}
+              </span>
+            </div>
+          )}
           <div className="flex justify-between text-lg font-bold pt-2">
             <span>Total Amount</span>
             <span>
@@ -311,7 +313,7 @@ export default function CheckoutPage() {
       </div>
 
       {/* Sticky Footer with Primary Action */}
-      <div className="fixed bottom-[76px] left-0 right-0 max-w-[480px] mx-auto p-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 z-10">
+      <div className="fixed bottom-[76px] left-1/2 -translate-x-1/2 w-full max-w-md p-4 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 z-10">
         <button
           onClick={handlePlaceOrder}
           disabled={!isValid || isSubmitting}

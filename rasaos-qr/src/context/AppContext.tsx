@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useCallback } from "react";
 import type { ReactNode } from "react";
+import { useLiveQuery } from "dexie-react-hooks";
+import { db } from "../lib/dexie/dexie";
 
 export type Variant = {
   id: string;
@@ -110,32 +112,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [menu, setMenu] = useState<Menu | null>(null);
   const [tableNumber, setTableNumber] = useState<string | null>(null);
 
-  // Computed flat lists mimicking previous setup
-  const categories = menu
-    ? menu.categories.map((c) => ({
-        ...c,
-        // Add legacy fields for backward compatibility with UI
-        itemCount: c.items.length,
-        image:
-          "https://lh3.googleusercontent.com/aida-public/AB6AXuB9KTFRw0p2QCcZ2eYZI5d4Z48YSfsH8jsU-P4A_V_MGvl9MW3KJ_zAIHaiY8GzahKYTBfGBH25zOrJ8TzhRivmQFZWOqcDgLILMBRa6ZptaxuZfAqn5iHgtG4tTJ87hAmgOooP5WCIT5elnzJmkK64f4PD-cZj4ZIIEGDjdRN_UfVPQyBVH_Ddhbn0x8f0ZBc7LJpTqNkCp98K_OZrKSu46lm-kqkSnFFpmgQL-6MKvPWAhasILrxDEMIbVnOihrrebIqrG_1OPfs",
-      }))
-    : [];
+  const categories = menu ? menu.categories : [];
+  const menuItems = categories.flatMap((c) => c.items);
 
-  const menuItems = categories.flatMap((c) =>
-    c.items.map((item) => ({
-      ...item,
-      // Provide a legacy image mapping and base price (lowest variant price as fallback)
-      image:
-        item.imageUrl ||
-        "https://lh3.googleusercontent.com/aida-public/AB6AXuAkcojwr_D_m6cBU1ellz9g3sfwzRYJdjXKmf7rn6wYIPXt3yESkSxWHcQ9jMDrtAbKoDZvAhMG6hS_V3VDc0CIXfyO3cndKcpXUjmqN9jdZRnemq2F1gnJfZA9K1cJusr7_Z6FqrxWTF5xxSl0LunAphhOM0513Sf4apEeVCGxjSlzxjUInz1T3ga0eV_P5xyMjcRb1gqXcz-3qsAfJa4P5ukrgqHZLvXXfUqZo_fl65nOUKkuE9R8mnoeevEBKO0RzRg0Y3VY59I",
-      price:
-        item.variants?.length > 0
-          ? Math.min(...item.variants.map((v) => v.price))
-          : 0,
-    })),
-  );
-
-  const [cart, setCart] = useState<CartItemType[]>([]);
+  const cart = useLiveQuery(() => db.cart.toArray()) || [];
 
   // Function to load the restaurant data if missing
   const fetchRestaurantData = useCallback(
@@ -153,6 +133,17 @@ export function AppProvider({ children }: { children: ReactNode }) {
         const data = res.data;
         setRestaurant(data.restaurant);
         setMenu(data.menu || null);
+
+        // Save to Dexie recentRestaurants
+        if (data.restaurant) {
+          await db.recentRestaurants.put({
+            id: data.restaurant.id,
+            slug: data.restaurant.slug,
+            name: data.restaurant.name,
+            lastVisited: Date.now(),
+          });
+        }
+
         return true;
       } catch (err) {
         setError(err instanceof Error ? err.message : "Unknown error");
@@ -165,13 +156,12 @@ export function AppProvider({ children }: { children: ReactNode }) {
     [restaurant?.slug],
   );
 
-  const addToCart = (
+  const addToCart = async (
     item: MenuItem,
     quantity = 1,
     variantId?: string,
     addons: SelectedAddon[] = [],
   ) => {
-    // Base cart calculation
     const variant = variantId
       ? item.variants.find((v) => v.id === variantId)
       : item.variants[0] || null;
@@ -180,62 +170,50 @@ export function AppProvider({ children }: { children: ReactNode }) {
     const addonTotal = addons.reduce((sum, a) => sum + a.price, 0);
     const totalItemPrice = basePrice + addonTotal;
 
-    setCart((prev) => {
-      // Logic for strict cart deduplication if items match exactly (same variant, same addons)
-      // Here we simplify by generating a unique ID per cart ad, but if needed we could match configurations
+    const existingCart = await db.cart.toArray();
+    const configKey = `${item.id}-${variantId}-${addons
+      .map((a) => a.addonId)
+      .sort()
+      .join(",")}`;
 
-      const configKey = `${item.id}-${variantId}-${addons
+    const existingItem = existingCart.find((ci) => {
+      const existingKey = `${ci.menuItemId}-${ci.variantId}-${(
+        ci.selectedAddons || []
+      )
         .map((a) => a.addonId)
         .sort()
         .join(",")}`;
+      return existingKey === configKey;
+    });
 
-      // Let's see if this exact configuration exists
-      const existingConfigIndex = prev.findIndex((ci) => {
-        const existingKey = `${ci.menuItemId}-${ci.variantId}-${(
-          ci.selectedAddons || []
-        )
-          .map((a) => a.addonId)
-          .sort()
-          .join(",")}`;
-        return existingKey === configKey;
+    if (existingItem) {
+      await db.cart.update(existingItem.id, {
+        quantity: existingItem.quantity + quantity,
       });
-
-      if (existingConfigIndex >= 0) {
-        const next = [...prev];
-        next[existingConfigIndex] = {
-          ...next[existingConfigIndex],
-          quantity: next[existingConfigIndex].quantity + quantity,
-        };
-        return next;
-      }
-
-      return [
-        ...prev,
-        {
-          id: Math.random().toString(36).substr(2, 9),
-          menuItemId: item.id,
-          variantId: variant?.id,
-          name: item.name,
-          variantName,
-          selectedAddons: addons,
-          price: totalItemPrice,
-          quantity,
-        },
-      ];
-    });
+    } else {
+      await db.cart.add({
+        id: Math.random().toString(36).substr(2, 9),
+        menuItemId: item.id,
+        variantId: variant?.id,
+        name: item.name,
+        variantName,
+        selectedAddons: addons,
+        price: totalItemPrice,
+        quantity,
+      });
+    }
   };
 
-  const removeFromCart = (cartItemId: string) => {
-    setCart((prev) => prev.filter((ci) => ci.id !== cartItemId));
+  const removeFromCart = async (cartItemId: string) => {
+    await db.cart.delete(cartItemId);
   };
 
-  const updateQuantity = (cartItemId: string, quantity: number) => {
-    setCart((prev) => {
-      if (quantity <= 0) return prev.filter((ci) => ci.id !== cartItemId);
-      return prev.map((ci) =>
-        ci.id === cartItemId ? { ...ci, quantity } : ci,
-      );
-    });
+  const updateQuantity = async (cartItemId: string, quantity: number) => {
+    if (quantity <= 0) {
+      await db.cart.delete(cartItemId);
+    } else {
+      await db.cart.update(cartItemId, { quantity });
+    }
   };
 
   const cartTotal = cart.reduce(

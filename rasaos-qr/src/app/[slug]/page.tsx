@@ -45,7 +45,7 @@ export default function RestaurantPage() {
   }
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col">
       {/* Header Section */}
       <header className="sticky top-0 z-40 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md px-4 py-4 flex items-center justify-between border-b border-primary/10">
         <div className="flex items-center gap-3">
@@ -74,7 +74,7 @@ export default function RestaurantPage() {
         </div>
       </header>
 
-      <main className="pb-24 flex-1 overflow-y-auto">
+      <div className="flex-1">
         {/* Hero / Promotion Section */}
         <div className="px-4 pt-6 pb-2">
           <div className="relative w-full h-40 rounded-2xl overflow-hidden shadow-lg shadow-primary/10">
@@ -132,14 +132,14 @@ export default function RestaurantPage() {
 
                 <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full border border-white/30">
                   <span className="text-white text-xs font-bold">
-                    {category.itemCount} Items
+                    {category.items?.length || 0} Items
                   </span>
                 </div>
               </div>
             ))}
           </div>
         </div>
-      </main>
+      </div>
 
       <SearchModal
         isOpen={isSearchOpen}

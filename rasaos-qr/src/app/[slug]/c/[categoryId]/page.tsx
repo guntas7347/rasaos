@@ -37,7 +37,7 @@ export default function CategoryItemList() {
   }
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-76px)] bg-background-light dark:bg-background-dark">
+    <div className="flex flex-col">
       {/* Header Section */}
       <header className="sticky top-0 z-10 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-primary/10">
         <div className="flex items-center p-4 justify-between">
@@ -71,13 +71,15 @@ export default function CategoryItemList() {
       </header>
 
       {/* Content Area */}
-      <main className="flex-1 px-4 py-2 space-y-3 pb-24">
+      <div className="flex-1 px-4 py-2 space-y-3">
         {items.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-40 opacity-60">
             <p>No items found in this category.</p>
           </div>
         ) : (
-          items.map((item) => (
+          items.map((item) => {
+            const basePrice = item.variants?.length > 0 ? Math.min(...item.variants.map((v) => v.price)) : 0;
+            return (
             <div
               key={item.id}
               className="group relative flex items-center gap-4 bg-white dark:bg-white/5 p-3 rounded-xl border border-primary/5 shadow-sm"
@@ -86,7 +88,7 @@ export default function CategoryItemList() {
                 <Link to={`/${slug}/i/${item.id}`}>
                   <div
                     className="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-24 shadow-sm"
-                    style={{ backgroundImage: `url('${item.image}')` }}
+                    style={{ backgroundImage: `url('${item.imageUrl || ''}')` }}
                   ></div>
                 </Link>
                 {item.recommended && (
@@ -112,7 +114,7 @@ export default function CategoryItemList() {
                 <div className="flex items-center justify-between mt-auto pt-2">
                   <p className="text-primary font-bold text-lg">
                     <CurrencyIcon />
-                    {item?.price ? formatCurrency(item.price) : "0.00"}
+                    {basePrice ? formatCurrency(basePrice) : "0.00"}
                   </p>
                   <Link
                     to={`/${slug}/i/${item.id}`}
@@ -123,9 +125,9 @@ export default function CategoryItemList() {
                 </div>
               </div>
             </div>
-          ))
+          )})
         )}
-      </main>
+      </div>
 
       <SearchModal
         isOpen={isSearchOpen}
