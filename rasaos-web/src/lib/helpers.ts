@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 
 interface CallServerOptions extends RequestInit {
   data?: any;
+  timeout?: number;
 }
 
 export interface ApiResponse<T = any> {
@@ -10,17 +11,31 @@ export interface ApiResponse<T = any> {
   data: T;
   message: string;
   status?: number;
+  toastError?: boolean;
 }
 
 export const callServer = async <T = any>(
   endpoint: string,
   options: CallServerOptions = {},
+  toastError = true,
 ): Promise<ApiResponse<T>> => {
-  const { data, headers, ...restOptions } = options;
+  const {
+    data,
+    headers,
+    timeout = 10000, // 10s default timeout
+    ...restOptions
+  } = options;
+
+  const controller = new AbortController();
+
+  const timeoutId = setTimeout(() => {
+    controller.abort();
+  }, timeout);
 
   const config: RequestInit = {
     ...restOptions,
     credentials: "include",
+    signal: controller.signal,
     headers: {
       "Content-Type": "application/json",
       ...headers,
@@ -34,22 +49,33 @@ export const callServer = async <T = any>(
   try {
     const response = await fetch(`${API_URL}${endpoint}`, config);
 
+    clearTimeout(timeoutId);
+
     let result: any;
+
     try {
       result = await response.json();
     } catch {
-      const message = "Invalid JSON response";
-      toast.error(message);
-      return { success: false, data: null as any, message };
-    }
+      const message = "Error connecting to server";
 
-    if (!response.ok || (result && result.success === false)) {
-      // Backend might return error in result.error or result.message
-      // Only toast if status is not 404, as 404s might be expected in some places
-      const message = result.error || result.message || "An error occurred";
-      if (response.status !== 404) {
+      if (toastError) {
         toast.error(message);
       }
+
+      return {
+        success: false,
+        data: null as any,
+        message,
+      };
+    }
+
+    if (!response.ok || result?.success === false) {
+      const message = result?.error || result?.message || "An error occurred";
+
+      if (response.status !== 404 && toastError) {
+        toast.error(message);
+      }
+
       return {
         success: false,
         data: null as any,
@@ -58,12 +84,13 @@ export const callServer = async <T = any>(
       };
     }
 
-    // If backend is already standardized
-    if (result && typeof result.success === "boolean") {
-      return { ...result, status: response.status } as ApiResponse<T>;
+    if (typeof result?.success === "boolean") {
+      return {
+        ...result,
+        status: response.status,
+      } as ApiResponse<T>;
     }
 
-    // Wrap non-standardized responses
     return {
       success: true,
       data: result as T,
@@ -71,8 +98,21 @@ export const callServer = async <T = any>(
       status: response.status,
     };
   } catch (error: any) {
-    const message = error.message || "Network error";
-    toast.error(message);
-    return { success: false, data: null as any, message };
+    clearTimeout(timeoutId);
+
+    const message =
+      error.name === "AbortError"
+        ? "Request timeout"
+        : error.message || "Network error";
+
+    if (toastError) {
+      toast.error(message);
+    }
+
+    return {
+      success: false,
+      data: null as any,
+      message,
+    };
   }
 };

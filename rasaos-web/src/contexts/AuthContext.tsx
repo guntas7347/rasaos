@@ -4,11 +4,12 @@ import {
   useState,
   useEffect,
   type ReactNode,
+  useRef,
 } from "react";
 import { callServer } from "../lib/helpers";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
-import { db } from "../lib/dexie/dexie";
+import { clearDB, db } from "../lib/dexie/dexie";
 
 export interface User {
   id: string;
@@ -39,6 +40,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const hasFetchedRef = useRef(false);
+
   const [user, setUser] = useState<User | null>(null);
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [menu, setMenu] = useState<any>(null);
@@ -46,6 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const loadFromCache = async () => {
     const cached = await db.auth.get("main");
@@ -109,12 +113,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch (err: any) {
       // If cache exists → do not hard fail
       const cached = await db.auth.get("main");
+      toast.error(err.message || "Something went wrong");
+      setError(err.message || "Something went wrong");
 
       if (!cached) {
         setUser(null);
         setRestaurant(null);
         setMenu([]);
-        navigate("/login");
+        // Only navigate to login if we are actually on a protected route
+        const isProtectedPath =
+          location.pathname.startsWith("/restaurant") ||
+          location.pathname.startsWith("/admin");
+        if (isProtectedPath) {
+          navigate("/login");
+        }
       }
     } finally {
       setIsLoading(false);
@@ -122,15 +134,52 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    fetchAuthData();
+    const isProtectedPath =
+      location.pathname.startsWith("/restaurant") ||
+      location.pathname.startsWith("/admin");
+
+    if (!isProtectedPath) {
+      setIsLoading(false);
+      return;
+    }
+
+    if (!hasFetchedRef.current) {
+      hasFetchedRef.current = true;
+      fetchAuthData();
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []); // Re-verify briefly on navigation, or just empty array
+  }, [location.pathname]);
 
   const logout = async () => {
-    await callServer("/auth/logout", { method: "POST" });
-    setUser(null);
-    setRestaurant(null);
-    navigate("/login");
+    const confirm = window.confirm("Are you sure you want to logout?");
+    if (!confirm) return;
+    try {
+      toast.loading("Logging out...", {
+        id: "auth",
+      });
+      const res = await callServer(
+        "/auth/logout",
+        {
+          method: "POST",
+          timeout: 3000,
+        },
+        false,
+      );
+      if (!res.success) throw new Error(res.message);
+      setUser(null);
+      setRestaurant(null);
+      toast.success("Logged out successfully", {
+        id: "auth",
+      });
+    } catch (error: any) {
+      toast.error("Bad Logout", {
+        id: "auth",
+      });
+    } finally {
+      await clearDB();
+      navigate("/login");
+    }
   };
 
   return (

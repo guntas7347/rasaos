@@ -36,5 +36,7 @@ class AppDB extends Dexie {
 export const db = new AppDB();
 
 export async function clearDB() {
-  await db.delete();
+  await db.transaction("rw", db.tables, async () => {
+    await Promise.all(db.tables.map((table) => table.clear()));
+  });
 }

@@ -52,7 +52,7 @@ export function BulkUploadModal({
       onSuccess();
       onClose();
     }
-    
+
     setIsLoading(false);
   };
 
@@ -83,8 +83,16 @@ export function BulkUploadModal({
             className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg text-neutral-900 dark:text-white placeholder-neutral-400 font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/50 resize-none"
           />
           <p className="text-xs text-neutral-500 mt-1">
-            Ensure the JSON maps to your backend's expected bulk schema
-            structures.
+            Paste menu JSON or generate it using AI from a menu image or text.
+            <a
+              className="ml-1 underline text-blue-600 hover:text-blue-800 cursor-pointer"
+              onClick={() => {
+                navigator.clipboard.writeText(aiprompt);
+                toast.success("Prompt copied to clipboard");
+              }}
+            >
+              Click here to copy prompt
+            </a>
           </p>
         </div>
 
@@ -112,3 +120,49 @@ export function BulkUploadModal({
     </BaseModal>
   );
 }
+
+const aiprompt = `Convert this restaurant menu into valid JSON for menu import.
+
+The user may provide:
+- Plain text menu
+- Menu screenshots
+- Menu photos
+- PDF menu
+
+Rules:
+- Return ONLY valid JSON
+- No markdown
+- If menu input is not provided, reply "Please provide menu in text, image, or pdf."
+- No explanations
+- Follow the exact structure below
+- price must be an integer in paisa
+- Example:
+  ₹299 = 29900
+  ₹99 = 9900
+- Keep imageUrl empty if unavailable
+- Use variants only when multiple sizes/options exist
+
+JSON Structure:
+
+[
+  {
+    "name": "Category Name",
+    "order": 1,
+    "imageUrl": "",
+    "items": [
+      {
+        "name": "Item Name",
+        "description": "Description",
+        "imageUrl": "",
+        "variants": [
+          {
+            "name": "Regular",
+            "price": 29900
+          }
+        ]
+      }
+    ]
+  }
+]
+
+Generate JSON from this menu:`;

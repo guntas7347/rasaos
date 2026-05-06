@@ -21,6 +21,7 @@ import MenuManagementPage from "./app/restaurant/menu/page";
 import CreateOrderPage from "./app/restaurant/orders/new/page";
 import ViewOrdersPage from "./app/restaurant/orders/page";
 import SettingsPage from "./app/restaurant/settings/page";
+import VerifyPage from "./app/verify/page";
 
 const AdminLayout = lazy(() => import("./app/admin/layout"));
 const AdminPage = lazy(() => import("./app/admin/page"));
@@ -63,6 +64,7 @@ const App = () => {
               />
             </Route>
             <Route path="signup" element={<SignupPage />} />
+            <Route path="verify" element={<VerifyPage />} />
 
             <Route path="restaurant">
               <Route element={<RestaurantLayout />}>

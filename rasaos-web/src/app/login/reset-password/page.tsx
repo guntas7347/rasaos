@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Lock, Eye, EyeOff, Check, X, ArrowRight } from "lucide-react";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { API_URL } from "../../../lib/env";
+import { callServer } from "../../../lib/helpers";
 import toast from "react-hot-toast";
 
 export default function ResetPasswordPage() {
@@ -25,34 +25,17 @@ export default function ResetPasswordPage() {
         return;
       }
 
-      try {
-        const response = await fetch(
-          `${API_URL}/auth/reset-password/validate`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ uuid }),
-          },
-        );
+      const response = await callServer("/auth/reset-password/validate", {
+        method: "POST",
+        data: { uuid },
+      });
 
-        if (!response.ok) {
-          let errData;
-          try {
-            errData = await response.json();
-          } catch (e) {}
-          throw new Error(
-            errData?.error || "This link may have expired or is invalid.",
-          );
-        }
-
+      if (response.success) {
         setIsValidUuid(true);
-      } catch (error: any) {
-        setErrorMessage(error.message || "Failed to validate reset link.");
-      } finally {
-        setIsLoading(false);
+      } else {
+        setErrorMessage(response.message || "This link may have expired or is invalid.");
       }
+      setIsLoading(false);
     };
 
     validateToken();
@@ -73,29 +56,16 @@ export default function ResetPasswordPage() {
 
     setIsSubmitting(true);
 
-    try {
-      const response = await fetch(`${API_URL}/auth/reset-password/confirm`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ uuid, newPassword: password }),
-      });
+    const response = await callServer("/auth/reset-password/confirm", {
+      method: "POST",
+      data: { uuid, newPassword: password },
+    });
 
-      if (!response.ok) {
-        let errData;
-        try {
-          errData = await response.json();
-        } catch (err) {}
-        throw new Error(errData?.error || "Failed to reset password.");
-      }
+    setIsSubmitting(false);
 
+    if (response.success) {
       toast.success("Password successfully reset! You can now log in.");
       navigate("/login");
-    } catch (err: any) {
-      toast.error(err.message || "Failed to reset password. Please try again.");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 

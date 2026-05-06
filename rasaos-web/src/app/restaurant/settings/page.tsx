@@ -120,15 +120,16 @@ export default function SettingsPage() {
             <label className="text-sm font-medium text-neutral-700 dark:text-neutral-300 block">
               Currency
             </label>
-            <input
+
+            <select
               name="currency"
-              type="text"
-              maxLength={3}
               value={formData.currency}
               onChange={handleChange}
-              className="block w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200 uppercase"
-              placeholder="USD"
-            />
+              className="block w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl text-neutral-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
+            >
+              <option value="INR">Rupee (₹)</option>
+              <option value="USD">Dollar ($)</option>
+            </select>
           </div>
 
           <div className="space-y-1">

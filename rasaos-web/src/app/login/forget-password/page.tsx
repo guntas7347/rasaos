@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Mail, ArrowRight, Lock } from "lucide-react";
-import { Link } from "react-router-dom";
-import { API_URL } from "../../../lib/env";
+import { callServer } from "../../../lib/helpers";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 export default function ForgetPasswordPage() {
   const [email, setEmail] = useState("");
@@ -14,32 +14,15 @@ export default function ForgetPasswordPage() {
     if (!email) return;
 
     setIsLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/auth/reset-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email }),
-      });
+    const response = await callServer("/auth/reset-password", {
+      method: "POST",
+      data: { email },
+    });
 
-      if (!response.ok) {
-        let errorMsg = "Failed to request password reset";
-        try {
-          const errData = await response.json();
-          if (errData.error) errorMsg = errData.error;
-        } catch (err) {}
-        throw new Error(errorMsg);
-      }
-
+    setIsLoading(false);
+    if (response.success) {
       toast.success("Password reset link sent!");
       setIsSuccess(true);
-    } catch (err: any) {
-      toast.error(
-        err.message || "Failed to process request. Please try again.",
-      );
-    } finally {
-      setIsLoading(false);
     }
   };
 

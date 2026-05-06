@@ -13,14 +13,14 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
     <>
       {/* Mobile Backdrop */}
       {isOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/50 backdrop-blur-sm z-20 md:hidden"
           onClick={onClose}
         />
       )}
 
       {/* Sidebar */}
-      <aside 
+      <aside
         className={`fixed md:static inset-y-0 left-0 z-30 flex flex-col w-64 border-r border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 transition-transform duration-300 md:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         }`}
@@ -34,7 +34,7 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
               Admin
             </span>
           </div>
-          <button 
+          <button
             className="md:hidden p-1 rounded-md text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-800"
             onClick={onClose}
           >
@@ -43,8 +43,8 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3 space-y-1">
-          <Link 
-            to="/admin" 
+          <Link
+            to="/admin"
             onClick={onClose}
             className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 font-medium transition-colors"
           >
@@ -54,8 +54,8 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
           <div className="pt-4 pb-1 px-3 text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">
             Management
           </div>
-          <Link 
-            to="/admin/restaurants" 
+          <Link
+            to="/admin/restaurants"
             onClick={onClose}
             className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-600 dark:text-neutral-400 font-medium transition-colors"
           >
@@ -65,12 +65,12 @@ export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {
         </nav>
 
         <div className="p-4 border-t border-neutral-200 dark:border-neutral-800">
-          <button 
-            onClick={() => navigate('/login')}
+          <button
+            onClick={() => navigate("/login")}
             className="flex items-center gap-3 w-full px-3 py-2 text-left rounded-lg text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
           >
             <LogOut size={18} />
-            Sign Out
+            Go to Login Page
           </button>
         </div>
       </aside>
