@@ -1,12 +1,8 @@
 import { Router } from "express";
 import {
-  createMenu,
   getMenu,
   getPublicMenuBySlug,
   getPublicMenuBySlugSchema,
-  createMenuSchema,
-  updateMenuSchema,
-  updateMenu,
   deleteMenu,
   createCategory,
   updateCategory,
@@ -43,10 +39,8 @@ router.use(authenticate, requireTenant);
 
 // Menu
 router.get("/", getMenu);
-router.post("/", validateRequest(createMenuSchema), createMenu);
-router.patch("/", validateRequest(updateMenuSchema), updateMenu);
-router.delete("/", deleteMenu);
-router.post("/:menuId/bulk", validateRequest(bulkAddMenuSchema), bulkAddMenu);
+router.post("/bulk", validateRequest(bulkAddMenuSchema), bulkAddMenu);
+router.delete("/reset", deleteMenu);
 
 // Categories
 router.post(

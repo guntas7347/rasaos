@@ -20,3 +20,5 @@ export function error(
     message,
   });
 }
+
+export const uuid = () => crypto.randomUUID();

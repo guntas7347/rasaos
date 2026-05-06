@@ -30,10 +30,8 @@ export type ItemMinAggregateOutputType = {
   name: string | null
   description: string | null
   imageUrl: string | null
-  isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
-  deletedAt: Date | null
 }
 
 export type ItemMaxAggregateOutputType = {
@@ -42,10 +40,8 @@ export type ItemMaxAggregateOutputType = {
   name: string | null
   description: string | null
   imageUrl: string | null
-  isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
-  deletedAt: Date | null
 }
 
 export type ItemCountAggregateOutputType = {
@@ -54,10 +50,8 @@ export type ItemCountAggregateOutputType = {
   name: number
   description: number
   imageUrl: number
-  isActive: number
   createdAt: number
   updatedAt: number
-  deletedAt: number
   _all: number
 }
 
@@ -68,10 +62,8 @@ export type ItemMinAggregateInputType = {
   name?: true
   description?: true
   imageUrl?: true
-  isActive?: true
   createdAt?: true
   updatedAt?: true
-  deletedAt?: true
 }
 
 export type ItemMaxAggregateInputType = {
@@ -80,10 +72,8 @@ export type ItemMaxAggregateInputType = {
   name?: true
   description?: true
   imageUrl?: true
-  isActive?: true
   createdAt?: true
   updatedAt?: true
-  deletedAt?: true
 }
 
 export type ItemCountAggregateInputType = {
@@ -92,10 +82,8 @@ export type ItemCountAggregateInputType = {
   name?: true
   description?: true
   imageUrl?: true
-  isActive?: true
   createdAt?: true
   updatedAt?: true
-  deletedAt?: true
   _all?: true
 }
 
@@ -177,16 +165,14 @@ export type ItemGroupByOutputType = {
   name: string
   description: string | null
   imageUrl: string | null
-  isActive: boolean
   createdAt: Date
   updatedAt: Date
-  deletedAt: Date | null
   _count: ItemCountAggregateOutputType | null
   _min: ItemMinAggregateOutputType | null
   _max: ItemMaxAggregateOutputType | null
 }
 
-type GetItemGroupByPayload<T extends ItemGroupByArgs> = Prisma.PrismaPromise<
+export type GetItemGroupByPayload<T extends ItemGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ItemGroupByOutputType, T['by']> &
       {
@@ -210,10 +196,8 @@ export type ItemWhereInput = {
   name?: Prisma.StringFilter<"Item"> | string
   description?: Prisma.StringNullableFilter<"Item"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Item"> | string | null
-  isActive?: Prisma.BoolFilter<"Item"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   variants?: Prisma.VariantListRelationFilter
 }
@@ -224,10 +208,8 @@ export type ItemOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   category?: Prisma.CategoryOrderByWithRelationInput
   variants?: Prisma.VariantOrderByRelationAggregateInput
 }
@@ -241,10 +223,8 @@ export type ItemWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Item"> | string
   description?: Prisma.StringNullableFilter<"Item"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Item"> | string | null
-  isActive?: Prisma.BoolFilter<"Item"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
   category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   variants?: Prisma.VariantListRelationFilter
 }, "id">
@@ -255,10 +235,8 @@ export type ItemOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   imageUrl?: Prisma.SortOrderInput | Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ItemCountOrderByAggregateInput
   _max?: Prisma.ItemMaxOrderByAggregateInput
   _min?: Prisma.ItemMinOrderByAggregateInput
@@ -273,10 +251,8 @@ export type ItemScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Item"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
   imageUrl?: Prisma.StringNullableWithAggregatesFilter<"Item"> | string | null
-  isActive?: Prisma.BoolWithAggregatesFilter<"Item"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Item"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Item"> | Date | string | null
 }
 
 export type ItemCreateInput = {
@@ -284,10 +260,8 @@ export type ItemCreateInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   category: Prisma.CategoryCreateNestedOneWithoutItemsInput
   variants?: Prisma.VariantCreateNestedManyWithoutItemInput
 }
@@ -298,10 +272,8 @@ export type ItemUncheckedCreateInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   variants?: Prisma.VariantUncheckedCreateNestedManyWithoutItemInput
 }
 
@@ -310,10 +282,8 @@ export type ItemUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   category?: Prisma.CategoryUpdateOneRequiredWithoutItemsNestedInput
   variants?: Prisma.VariantUpdateManyWithoutItemNestedInput
 }
@@ -324,10 +294,8 @@ export type ItemUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   variants?: Prisma.VariantUncheckedUpdateManyWithoutItemNestedInput
 }
 
@@ -337,10 +305,8 @@ export type ItemCreateManyInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
 }
 
 export type ItemUpdateManyMutationInput = {
@@ -348,10 +314,8 @@ export type ItemUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ItemUncheckedUpdateManyInput = {
@@ -360,10 +324,8 @@ export type ItemUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ItemListRelationFilter = {
@@ -382,10 +344,8 @@ export type ItemCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrder
 }
 
 export type ItemMaxOrderByAggregateInput = {
@@ -394,10 +354,8 @@ export type ItemMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrder
 }
 
 export type ItemMinOrderByAggregateInput = {
@@ -406,10 +364,8 @@ export type ItemMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   imageUrl?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrder
 }
 
 export type ItemScalarRelationFilter = {
@@ -478,10 +434,8 @@ export type ItemCreateWithoutCategoryInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   variants?: Prisma.VariantCreateNestedManyWithoutItemInput
 }
 
@@ -490,10 +444,8 @@ export type ItemUncheckedCreateWithoutCategoryInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   variants?: Prisma.VariantUncheckedCreateNestedManyWithoutItemInput
 }
 
@@ -532,10 +484,8 @@ export type ItemScalarWhereInput = {
   name?: Prisma.StringFilter<"Item"> | string
   description?: Prisma.StringNullableFilter<"Item"> | string | null
   imageUrl?: Prisma.StringNullableFilter<"Item"> | string | null
-  isActive?: Prisma.BoolFilter<"Item"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Item"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Item"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"Item"> | Date | string | null
 }
 
 export type ItemCreateWithoutVariantsInput = {
@@ -543,10 +493,8 @@ export type ItemCreateWithoutVariantsInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   category: Prisma.CategoryCreateNestedOneWithoutItemsInput
 }
 
@@ -556,10 +504,8 @@ export type ItemUncheckedCreateWithoutVariantsInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
 }
 
 export type ItemCreateOrConnectWithoutVariantsInput = {
@@ -583,10 +529,8 @@ export type ItemUpdateWithoutVariantsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   category?: Prisma.CategoryUpdateOneRequiredWithoutItemsNestedInput
 }
 
@@ -596,10 +540,8 @@ export type ItemUncheckedUpdateWithoutVariantsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type ItemCreateManyCategoryInput = {
@@ -607,10 +549,8 @@ export type ItemCreateManyCategoryInput = {
   name: string
   description?: string | null
   imageUrl?: string | null
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
 }
 
 export type ItemUpdateWithoutCategoryInput = {
@@ -618,10 +558,8 @@ export type ItemUpdateWithoutCategoryInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   variants?: Prisma.VariantUpdateManyWithoutItemNestedInput
 }
 
@@ -630,10 +568,8 @@ export type ItemUncheckedUpdateWithoutCategoryInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   variants?: Prisma.VariantUncheckedUpdateManyWithoutItemNestedInput
 }
 
@@ -642,10 +578,8 @@ export type ItemUncheckedUpdateManyWithoutCategoryInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   imageUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -685,10 +619,8 @@ export type ItemSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name?: boolean
   description?: boolean
   imageUrl?: boolean
-  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   variants?: boolean | Prisma.Item$variantsArgs<ExtArgs>
   _count?: boolean | Prisma.ItemCountOutputTypeDefaultArgs<ExtArgs>
@@ -700,10 +632,8 @@ export type ItemSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   description?: boolean
   imageUrl?: boolean
-  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
@@ -713,10 +643,8 @@ export type ItemSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   description?: boolean
   imageUrl?: boolean
-  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["item"]>
 
@@ -726,13 +654,11 @@ export type ItemSelectScalar = {
   name?: boolean
   description?: boolean
   imageUrl?: boolean
-  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
 }
 
-export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "name" | "description" | "imageUrl" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["item"]>
+export type ItemOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "categoryId" | "name" | "description" | "imageUrl" | "createdAt" | "updatedAt", ExtArgs["result"]["item"]>
 export type ItemInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   variants?: boolean | Prisma.Item$variantsArgs<ExtArgs>
@@ -757,10 +683,8 @@ export type $ItemPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: string
     description: string | null
     imageUrl: string | null
-    isActive: boolean
     createdAt: Date
     updatedAt: Date
-    deletedAt: Date | null
   }, ExtArgs["result"]["item"]>
   composites: {}
 }
@@ -1191,10 +1115,8 @@ export interface ItemFieldRefs {
   readonly name: Prisma.FieldRef<"Item", 'String'>
   readonly description: Prisma.FieldRef<"Item", 'String'>
   readonly imageUrl: Prisma.FieldRef<"Item", 'String'>
-  readonly isActive: Prisma.FieldRef<"Item", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Item", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Item", 'DateTime'>
-  readonly deletedAt: Prisma.FieldRef<"Item", 'DateTime'>
 }
     
 
@@ -1391,6 +1313,11 @@ export type ItemFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Items.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Items.
+   */
   distinct?: Prisma.ItemScalarFieldEnum | Prisma.ItemScalarFieldEnum[]
 }
 

@@ -53,7 +53,7 @@ enum TaxMode {
 /////////////////////////////////////////////////
 
 model User {
-  id           String  @id @default(cuid())
+  id           String  @id @default(uuid())
   restaurantId String?
   email        String  @unique
   password     String
@@ -72,7 +72,7 @@ model User {
 }
 
 model Restaurant {
-  id        String  @id @default(cuid())
+  id        String  @id @default(uuid())
   name      String
   slug      String  @unique
   isActive  Boolean @default(true)
@@ -96,12 +96,15 @@ model Restaurant {
 /////////////////////////////////////////////////
 
 model SubscriptionPeriod {
-  id           String @id @default(cuid())
+  id           String @id @default(uuid())
   restaurantId String
 
   plan        String
   periodStart DateTime
   periodEnd   DateTime
+
+  amount Int?
+  remark String?
 
   createdAt DateTime @default(now())
 
@@ -116,13 +119,11 @@ model SubscriptionPeriod {
 /////////////////////////////////////////////////
 
 model Menu {
-  id           String  @id @default(cuid())
-  restaurantId String  @unique
-  isActive     Boolean @default(true)
+  id           String @id @default(uuid())
+  restaurantId String @unique
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   restaurant Restaurant @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
   categories Category[]
@@ -131,15 +132,14 @@ model Menu {
 }
 
 model Category {
-  id       String  @id @default(cuid())
+  id       String  @id @default(uuid())
   menuId   String
   name     String
   order    Int?
   imageUrl String?
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   menu  Menu   @relation(fields: [menuId], references: [id], onDelete: Cascade)
   items Item[]
@@ -148,16 +148,14 @@ model Category {
 }
 
 model Item {
-  id          String  @id @default(cuid())
+  id          String  @id @default(uuid())
   categoryId  String
   name        String
   description String?
   imageUrl    String?
-  isActive    Boolean @default(true)
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   category Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   variants Variant[]
@@ -166,14 +164,13 @@ model Item {
 }
 
 model Variant {
-  id     String @id @default(cuid())
+  id     String @id @default(uuid())
   itemId String
   name   String
   price  Int
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
@@ -185,7 +182,7 @@ model Variant {
 /////////////////////////////////////////////////
 
 model Order {
-  id           String @id @default(cuid())
+  id           String @id @default(uuid())
   restaurantId String
 
   type   OrderType
@@ -217,7 +214,7 @@ model Order {
 }
 
 model OrderItem {
-  id      String @id @default(cuid())
+  id      String @id @default(uuid())
   orderId String
 
   variantName  String
@@ -238,7 +235,7 @@ model OrderItem {
 /////////////////////////////////////////////////
 
 model Payment {
-  id      String  @id @default(cuid())
+  id      String  @id @default(uuid())
   orderId String? @unique
 
   amount   Int

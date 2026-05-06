@@ -2,8 +2,7 @@ import { Request, Response } from "express";
 import { z } from "zod";
 import { prisma } from "../../lib/prisma";
 import { AuthRequest } from "../../middlewares/auth.middleware";
-import { success, error } from "../../lib/helpers";
-import crypto from "crypto";
+import { success, error, uuid } from "../../lib/helpers";
 
 export const createOrderSchema = z.object({
   body: z.object({
@@ -55,7 +54,7 @@ export const createOrder = async (req: Request, res: Response) => {
       let customerId = req.cookies?.customerId;
 
       if (!customerId) {
-        customerId = crypto.randomUUID();
+        customerId = uuid();
       }
 
       // -------------------------
@@ -69,7 +68,6 @@ export const createOrder = async (req: Request, res: Response) => {
         const variant = await tx.variant.findFirst({
           where: {
             id: itemRequest.variantId,
-            deletedAt: null,
             item: {
               category: {
                 menu: { restaurantId },

@@ -118,6 +118,8 @@ export const SubscriptionPeriodScalarFieldEnum = {
   plan: 'plan',
   periodStart: 'periodStart',
   periodEnd: 'periodEnd',
+  amount: 'amount',
+  remark: 'remark',
   createdAt: 'createdAt'
 } as const
 
@@ -127,10 +129,8 @@ export type SubscriptionPeriodScalarFieldEnum = (typeof SubscriptionPeriodScalar
 export const MenuScalarFieldEnum = {
   id: 'id',
   restaurantId: 'restaurantId',
-  isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  updatedAt: 'updatedAt'
 } as const
 
 export type MenuScalarFieldEnum = (typeof MenuScalarFieldEnum)[keyof typeof MenuScalarFieldEnum]
@@ -143,8 +143,7 @@ export const CategoryScalarFieldEnum = {
   order: 'order',
   imageUrl: 'imageUrl',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  updatedAt: 'updatedAt'
 } as const
 
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
@@ -156,10 +155,8 @@ export const ItemScalarFieldEnum = {
   name: 'name',
   description: 'description',
   imageUrl: 'imageUrl',
-  isActive: 'isActive',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  updatedAt: 'updatedAt'
 } as const
 
 export type ItemScalarFieldEnum = (typeof ItemScalarFieldEnum)[keyof typeof ItemScalarFieldEnum]
@@ -171,8 +168,7 @@ export const VariantScalarFieldEnum = {
   name: 'name',
   price: 'price',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  deletedAt: 'deletedAt'
+  updatedAt: 'updatedAt'
 } as const
 
 export type VariantScalarFieldEnum = (typeof VariantScalarFieldEnum)[keyof typeof VariantScalarFieldEnum]

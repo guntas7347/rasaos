@@ -1,12 +1,16 @@
 import { Request, Response } from "express";
-import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { z } from "zod";
 import { prisma } from "../../lib/prisma";
 import { env } from "../../config/env";
-import { success, error } from "../../lib/helpers";
+import { success, error, uuid } from "../../lib/helpers";
 import { sendEmail } from "../../lib/nodemailer";
+import {
+  resetPasswordEmail,
+  verificationEmail,
+  welcomeEmail,
+} from "../../lib/htmlTemplates";
 
 export const signupSchema = z.object({
   body: z.object({
@@ -41,7 +45,7 @@ export const signup = async (req: Request, res: Response) => {
     from: env.GMAIL_FROM,
     to: email,
     subject: "Verify Email to Complete Registration",
-    text: `Click the following link to complete your registration: ${verificationLinkUrl}`,
+    html: verificationEmail({ verificationLinkUrl }),
   });
 
   return success(res, null, "Verification link sent to email");
@@ -127,12 +131,23 @@ export const register = async (req: Request, res: Response) => {
       where: { slug: restaurantSlug },
     });
     if (existingRestaurant) {
-      restaurantSlug = `${restaurantSlug}-${crypto.randomBytes(4).toString("hex")}`;
+      restaurantSlug = `${restaurantSlug}-${uuid()}`;
       isSlugChanged = true;
     }
 
+    const slugify = (value: string) =>
+      value
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+
+    restaurantSlug = slugify(restaurantSlug);
+
     const restaurantName = "My Restaurant";
-    const rawPassword = crypto.randomBytes(32).toString("hex");
+    const rawPassword = uuid();
     const hashedPassword = await bcrypt.hash(rawPassword, 10);
 
     const result = await prisma.$transaction(async (tx) => {
@@ -161,24 +176,22 @@ export const register = async (req: Request, res: Response) => {
         },
       });
 
+      await tx.menu.create({
+        data: {
+          restaurantId: restaurant.id,
+        },
+      });
+
       return { user, restaurant };
     });
 
     const feUrl = env.FE_URL || "http://localhost:5174";
-    const slugMessage = isSlugChanged
-      ? `Note: The slug you chose was already taken, so we automatically assigned you a new one: ${restaurantSlug}`
-      : `Your slug is: ${restaurantSlug}`;
 
     sendEmail({
       from: env.GMAIL_FROM,
       to: email,
       subject: "Registration Successful",
-      text: `Your registration is complete!
-Email: ${email}
-${slugMessage}
-
-To login, please reset your password first.
-After resetting your password and logging in, please complete your profile at ${feUrl}/restaurant/settings`,
+      html: welcomeEmail({ email, restaurantSlug, isSlugChanged, feUrl }),
     });
 
     res.status(201);
@@ -221,7 +234,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     );
   }
 
-  const resetLink = crypto.randomUUID();
+  const resetLink = uuid();
   const resetlinkdate = new Date();
 
   await prisma.user.update({
@@ -235,7 +248,7 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     from: env.GMAIL_FROM,
     to: email,
     subject: "Reset Password",
-    text: `Reset link: ${resetLinkUrl}`,
+    html: resetPasswordEmail({ resetLinkUrl }),
   });
 
   return success(res, null, "Reset link generated successfully");

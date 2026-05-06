@@ -20,8 +20,18 @@ export type SubscriptionPeriodModel = runtime.Types.Result.DefaultSelection<Pris
 
 export type AggregateSubscriptionPeriod = {
   _count: SubscriptionPeriodCountAggregateOutputType | null
+  _avg: SubscriptionPeriodAvgAggregateOutputType | null
+  _sum: SubscriptionPeriodSumAggregateOutputType | null
   _min: SubscriptionPeriodMinAggregateOutputType | null
   _max: SubscriptionPeriodMaxAggregateOutputType | null
+}
+
+export type SubscriptionPeriodAvgAggregateOutputType = {
+  amount: number | null
+}
+
+export type SubscriptionPeriodSumAggregateOutputType = {
+  amount: number | null
 }
 
 export type SubscriptionPeriodMinAggregateOutputType = {
@@ -30,6 +40,8 @@ export type SubscriptionPeriodMinAggregateOutputType = {
   plan: string | null
   periodStart: Date | null
   periodEnd: Date | null
+  amount: number | null
+  remark: string | null
   createdAt: Date | null
 }
 
@@ -39,6 +51,8 @@ export type SubscriptionPeriodMaxAggregateOutputType = {
   plan: string | null
   periodStart: Date | null
   periodEnd: Date | null
+  amount: number | null
+  remark: string | null
   createdAt: Date | null
 }
 
@@ -48,10 +62,20 @@ export type SubscriptionPeriodCountAggregateOutputType = {
   plan: number
   periodStart: number
   periodEnd: number
+  amount: number
+  remark: number
   createdAt: number
   _all: number
 }
 
+
+export type SubscriptionPeriodAvgAggregateInputType = {
+  amount?: true
+}
+
+export type SubscriptionPeriodSumAggregateInputType = {
+  amount?: true
+}
 
 export type SubscriptionPeriodMinAggregateInputType = {
   id?: true
@@ -59,6 +83,8 @@ export type SubscriptionPeriodMinAggregateInputType = {
   plan?: true
   periodStart?: true
   periodEnd?: true
+  amount?: true
+  remark?: true
   createdAt?: true
 }
 
@@ -68,6 +94,8 @@ export type SubscriptionPeriodMaxAggregateInputType = {
   plan?: true
   periodStart?: true
   periodEnd?: true
+  amount?: true
+  remark?: true
   createdAt?: true
 }
 
@@ -77,6 +105,8 @@ export type SubscriptionPeriodCountAggregateInputType = {
   plan?: true
   periodStart?: true
   periodEnd?: true
+  amount?: true
+  remark?: true
   createdAt?: true
   _all?: true
 }
@@ -119,6 +149,18 @@ export type SubscriptionPeriodAggregateArgs<ExtArgs extends runtime.Types.Extens
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: SubscriptionPeriodAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: SubscriptionPeriodSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: SubscriptionPeriodMinAggregateInputType
@@ -149,6 +191,8 @@ export type SubscriptionPeriodGroupByArgs<ExtArgs extends runtime.Types.Extensio
   take?: number
   skip?: number
   _count?: SubscriptionPeriodCountAggregateInputType | true
+  _avg?: SubscriptionPeriodAvgAggregateInputType
+  _sum?: SubscriptionPeriodSumAggregateInputType
   _min?: SubscriptionPeriodMinAggregateInputType
   _max?: SubscriptionPeriodMaxAggregateInputType
 }
@@ -159,13 +203,17 @@ export type SubscriptionPeriodGroupByOutputType = {
   plan: string
   periodStart: Date
   periodEnd: Date
+  amount: number | null
+  remark: string | null
   createdAt: Date
   _count: SubscriptionPeriodCountAggregateOutputType | null
+  _avg: SubscriptionPeriodAvgAggregateOutputType | null
+  _sum: SubscriptionPeriodSumAggregateOutputType | null
   _min: SubscriptionPeriodMinAggregateOutputType | null
   _max: SubscriptionPeriodMaxAggregateOutputType | null
 }
 
-type GetSubscriptionPeriodGroupByPayload<T extends SubscriptionPeriodGroupByArgs> = Prisma.PrismaPromise<
+export type GetSubscriptionPeriodGroupByPayload<T extends SubscriptionPeriodGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SubscriptionPeriodGroupByOutputType, T['by']> &
       {
@@ -189,6 +237,8 @@ export type SubscriptionPeriodWhereInput = {
   plan?: Prisma.StringFilter<"SubscriptionPeriod"> | string
   periodStart?: Prisma.DateTimeFilter<"SubscriptionPeriod"> | Date | string
   periodEnd?: Prisma.DateTimeFilter<"SubscriptionPeriod"> | Date | string
+  amount?: Prisma.IntNullableFilter<"SubscriptionPeriod"> | number | null
+  remark?: Prisma.StringNullableFilter<"SubscriptionPeriod"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPeriod"> | Date | string
   restaurant?: Prisma.XOR<Prisma.RestaurantScalarRelationFilter, Prisma.RestaurantWhereInput>
 }
@@ -199,6 +249,8 @@ export type SubscriptionPeriodOrderByWithRelationInput = {
   plan?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
+  amount?: Prisma.SortOrderInput | Prisma.SortOrder
+  remark?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   restaurant?: Prisma.RestaurantOrderByWithRelationInput
 }
@@ -212,6 +264,8 @@ export type SubscriptionPeriodWhereUniqueInput = Prisma.AtLeast<{
   plan?: Prisma.StringFilter<"SubscriptionPeriod"> | string
   periodStart?: Prisma.DateTimeFilter<"SubscriptionPeriod"> | Date | string
   periodEnd?: Prisma.DateTimeFilter<"SubscriptionPeriod"> | Date | string
+  amount?: Prisma.IntNullableFilter<"SubscriptionPeriod"> | number | null
+  remark?: Prisma.StringNullableFilter<"SubscriptionPeriod"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPeriod"> | Date | string
   restaurant?: Prisma.XOR<Prisma.RestaurantScalarRelationFilter, Prisma.RestaurantWhereInput>
 }, "id">
@@ -222,10 +276,14 @@ export type SubscriptionPeriodOrderByWithAggregationInput = {
   plan?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
+  amount?: Prisma.SortOrderInput | Prisma.SortOrder
+  remark?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   _count?: Prisma.SubscriptionPeriodCountOrderByAggregateInput
+  _avg?: Prisma.SubscriptionPeriodAvgOrderByAggregateInput
   _max?: Prisma.SubscriptionPeriodMaxOrderByAggregateInput
   _min?: Prisma.SubscriptionPeriodMinOrderByAggregateInput
+  _sum?: Prisma.SubscriptionPeriodSumOrderByAggregateInput
 }
 
 export type SubscriptionPeriodScalarWhereWithAggregatesInput = {
@@ -237,6 +295,8 @@ export type SubscriptionPeriodScalarWhereWithAggregatesInput = {
   plan?: Prisma.StringWithAggregatesFilter<"SubscriptionPeriod"> | string
   periodStart?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionPeriod"> | Date | string
   periodEnd?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionPeriod"> | Date | string
+  amount?: Prisma.IntNullableWithAggregatesFilter<"SubscriptionPeriod"> | number | null
+  remark?: Prisma.StringNullableWithAggregatesFilter<"SubscriptionPeriod"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"SubscriptionPeriod"> | Date | string
 }
 
@@ -245,6 +305,8 @@ export type SubscriptionPeriodCreateInput = {
   plan: string
   periodStart: Date | string
   periodEnd: Date | string
+  amount?: number | null
+  remark?: string | null
   createdAt?: Date | string
   restaurant: Prisma.RestaurantCreateNestedOneWithoutSubscriptionHistoryInput
 }
@@ -255,6 +317,8 @@ export type SubscriptionPeriodUncheckedCreateInput = {
   plan: string
   periodStart: Date | string
   periodEnd: Date | string
+  amount?: number | null
+  remark?: string | null
   createdAt?: Date | string
 }
 
@@ -263,6 +327,8 @@ export type SubscriptionPeriodUpdateInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutSubscriptionHistoryNestedInput
 }
@@ -273,6 +339,8 @@ export type SubscriptionPeriodUncheckedUpdateInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -282,6 +350,8 @@ export type SubscriptionPeriodCreateManyInput = {
   plan: string
   periodStart: Date | string
   periodEnd: Date | string
+  amount?: number | null
+  remark?: string | null
   createdAt?: Date | string
 }
 
@@ -290,6 +360,8 @@ export type SubscriptionPeriodUpdateManyMutationInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -299,6 +371,8 @@ export type SubscriptionPeriodUncheckedUpdateManyInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -318,7 +392,13 @@ export type SubscriptionPeriodCountOrderByAggregateInput = {
   plan?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  remark?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type SubscriptionPeriodAvgOrderByAggregateInput = {
+  amount?: Prisma.SortOrder
 }
 
 export type SubscriptionPeriodMaxOrderByAggregateInput = {
@@ -327,6 +407,8 @@ export type SubscriptionPeriodMaxOrderByAggregateInput = {
   plan?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  remark?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
 }
 
@@ -336,7 +418,13 @@ export type SubscriptionPeriodMinOrderByAggregateInput = {
   plan?: Prisma.SortOrder
   periodStart?: Prisma.SortOrder
   periodEnd?: Prisma.SortOrder
+  amount?: Prisma.SortOrder
+  remark?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+}
+
+export type SubscriptionPeriodSumOrderByAggregateInput = {
+  amount?: Prisma.SortOrder
 }
 
 export type SubscriptionPeriodCreateNestedManyWithoutRestaurantInput = {
@@ -381,11 +469,21 @@ export type SubscriptionPeriodUncheckedUpdateManyWithoutRestaurantNestedInput = 
   deleteMany?: Prisma.SubscriptionPeriodScalarWhereInput | Prisma.SubscriptionPeriodScalarWhereInput[]
 }
 
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type SubscriptionPeriodCreateWithoutRestaurantInput = {
   id?: string
   plan: string
   periodStart: Date | string
   periodEnd: Date | string
+  amount?: number | null
+  remark?: string | null
   createdAt?: Date | string
 }
 
@@ -394,6 +492,8 @@ export type SubscriptionPeriodUncheckedCreateWithoutRestaurantInput = {
   plan: string
   periodStart: Date | string
   periodEnd: Date | string
+  amount?: number | null
+  remark?: string | null
   createdAt?: Date | string
 }
 
@@ -432,6 +532,8 @@ export type SubscriptionPeriodScalarWhereInput = {
   plan?: Prisma.StringFilter<"SubscriptionPeriod"> | string
   periodStart?: Prisma.DateTimeFilter<"SubscriptionPeriod"> | Date | string
   periodEnd?: Prisma.DateTimeFilter<"SubscriptionPeriod"> | Date | string
+  amount?: Prisma.IntNullableFilter<"SubscriptionPeriod"> | number | null
+  remark?: Prisma.StringNullableFilter<"SubscriptionPeriod"> | string | null
   createdAt?: Prisma.DateTimeFilter<"SubscriptionPeriod"> | Date | string
 }
 
@@ -440,6 +542,8 @@ export type SubscriptionPeriodCreateManyRestaurantInput = {
   plan: string
   periodStart: Date | string
   periodEnd: Date | string
+  amount?: number | null
+  remark?: string | null
   createdAt?: Date | string
 }
 
@@ -448,6 +552,8 @@ export type SubscriptionPeriodUpdateWithoutRestaurantInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -456,6 +562,8 @@ export type SubscriptionPeriodUncheckedUpdateWithoutRestaurantInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -464,6 +572,8 @@ export type SubscriptionPeriodUncheckedUpdateManyWithoutRestaurantInput = {
   plan?: Prisma.StringFieldUpdateOperationsInput | string
   periodStart?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   periodEnd?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  amount?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  remark?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -475,6 +585,8 @@ export type SubscriptionPeriodSelect<ExtArgs extends runtime.Types.Extensions.In
   plan?: boolean
   periodStart?: boolean
   periodEnd?: boolean
+  amount?: boolean
+  remark?: boolean
   createdAt?: boolean
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscriptionPeriod"]>
@@ -485,6 +597,8 @@ export type SubscriptionPeriodSelectCreateManyAndReturn<ExtArgs extends runtime.
   plan?: boolean
   periodStart?: boolean
   periodEnd?: boolean
+  amount?: boolean
+  remark?: boolean
   createdAt?: boolean
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscriptionPeriod"]>
@@ -495,6 +609,8 @@ export type SubscriptionPeriodSelectUpdateManyAndReturn<ExtArgs extends runtime.
   plan?: boolean
   periodStart?: boolean
   periodEnd?: boolean
+  amount?: boolean
+  remark?: boolean
   createdAt?: boolean
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["subscriptionPeriod"]>
@@ -505,10 +621,12 @@ export type SubscriptionPeriodSelectScalar = {
   plan?: boolean
   periodStart?: boolean
   periodEnd?: boolean
+  amount?: boolean
+  remark?: boolean
   createdAt?: boolean
 }
 
-export type SubscriptionPeriodOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "restaurantId" | "plan" | "periodStart" | "periodEnd" | "createdAt", ExtArgs["result"]["subscriptionPeriod"]>
+export type SubscriptionPeriodOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "restaurantId" | "plan" | "periodStart" | "periodEnd" | "amount" | "remark" | "createdAt", ExtArgs["result"]["subscriptionPeriod"]>
 export type SubscriptionPeriodInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
 }
@@ -530,6 +648,8 @@ export type $SubscriptionPeriodPayload<ExtArgs extends runtime.Types.Extensions.
     plan: string
     periodStart: Date
     periodEnd: Date
+    amount: number | null
+    remark: string | null
     createdAt: Date
   }, ExtArgs["result"]["subscriptionPeriod"]>
   composites: {}
@@ -960,6 +1080,8 @@ export interface SubscriptionPeriodFieldRefs {
   readonly plan: Prisma.FieldRef<"SubscriptionPeriod", 'String'>
   readonly periodStart: Prisma.FieldRef<"SubscriptionPeriod", 'DateTime'>
   readonly periodEnd: Prisma.FieldRef<"SubscriptionPeriod", 'DateTime'>
+  readonly amount: Prisma.FieldRef<"SubscriptionPeriod", 'Int'>
+  readonly remark: Prisma.FieldRef<"SubscriptionPeriod", 'String'>
   readonly createdAt: Prisma.FieldRef<"SubscriptionPeriod", 'DateTime'>
 }
     
@@ -1157,6 +1279,11 @@ export type SubscriptionPeriodFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` SubscriptionPeriods.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of SubscriptionPeriods.
+   */
   distinct?: Prisma.SubscriptionPeriodScalarFieldEnum | Prisma.SubscriptionPeriodScalarFieldEnum[]
 }
 

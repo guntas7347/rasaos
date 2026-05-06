@@ -27,28 +27,22 @@ export type AggregateMenu = {
 export type MenuMinAggregateOutputType = {
   id: string | null
   restaurantId: string | null
-  isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
-  deletedAt: Date | null
 }
 
 export type MenuMaxAggregateOutputType = {
   id: string | null
   restaurantId: string | null
-  isActive: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
-  deletedAt: Date | null
 }
 
 export type MenuCountAggregateOutputType = {
   id: number
   restaurantId: number
-  isActive: number
   createdAt: number
   updatedAt: number
-  deletedAt: number
   _all: number
 }
 
@@ -56,28 +50,22 @@ export type MenuCountAggregateOutputType = {
 export type MenuMinAggregateInputType = {
   id?: true
   restaurantId?: true
-  isActive?: true
   createdAt?: true
   updatedAt?: true
-  deletedAt?: true
 }
 
 export type MenuMaxAggregateInputType = {
   id?: true
   restaurantId?: true
-  isActive?: true
   createdAt?: true
   updatedAt?: true
-  deletedAt?: true
 }
 
 export type MenuCountAggregateInputType = {
   id?: true
   restaurantId?: true
-  isActive?: true
   createdAt?: true
   updatedAt?: true
-  deletedAt?: true
   _all?: true
 }
 
@@ -156,16 +144,14 @@ export type MenuGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type MenuGroupByOutputType = {
   id: string
   restaurantId: string
-  isActive: boolean
   createdAt: Date
   updatedAt: Date
-  deletedAt: Date | null
   _count: MenuCountAggregateOutputType | null
   _min: MenuMinAggregateOutputType | null
   _max: MenuMaxAggregateOutputType | null
 }
 
-type GetMenuGroupByPayload<T extends MenuGroupByArgs> = Prisma.PrismaPromise<
+export type GetMenuGroupByPayload<T extends MenuGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<MenuGroupByOutputType, T['by']> &
       {
@@ -186,10 +172,8 @@ export type MenuWhereInput = {
   NOT?: Prisma.MenuWhereInput | Prisma.MenuWhereInput[]
   id?: Prisma.StringFilter<"Menu"> | string
   restaurantId?: Prisma.StringFilter<"Menu"> | string
-  isActive?: Prisma.BoolFilter<"Menu"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Menu"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Menu"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"Menu"> | Date | string | null
   restaurant?: Prisma.XOR<Prisma.RestaurantScalarRelationFilter, Prisma.RestaurantWhereInput>
   categories?: Prisma.CategoryListRelationFilter
 }
@@ -197,10 +181,8 @@ export type MenuWhereInput = {
 export type MenuOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   restaurant?: Prisma.RestaurantOrderByWithRelationInput
   categories?: Prisma.CategoryOrderByRelationAggregateInput
 }
@@ -211,10 +193,8 @@ export type MenuWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.MenuWhereInput | Prisma.MenuWhereInput[]
   OR?: Prisma.MenuWhereInput[]
   NOT?: Prisma.MenuWhereInput | Prisma.MenuWhereInput[]
-  isActive?: Prisma.BoolFilter<"Menu"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Menu"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Menu"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableFilter<"Menu"> | Date | string | null
   restaurant?: Prisma.XOR<Prisma.RestaurantScalarRelationFilter, Prisma.RestaurantWhereInput>
   categories?: Prisma.CategoryListRelationFilter
 }, "id" | "restaurantId">
@@ -222,10 +202,8 @@ export type MenuWhereUniqueInput = Prisma.AtLeast<{
 export type MenuOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.MenuCountOrderByAggregateInput
   _max?: Prisma.MenuMaxOrderByAggregateInput
   _min?: Prisma.MenuMinOrderByAggregateInput
@@ -237,18 +215,14 @@ export type MenuScalarWhereWithAggregatesInput = {
   NOT?: Prisma.MenuScalarWhereWithAggregatesInput | Prisma.MenuScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Menu"> | string
   restaurantId?: Prisma.StringWithAggregatesFilter<"Menu"> | string
-  isActive?: Prisma.BoolWithAggregatesFilter<"Menu"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Menu"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Menu"> | Date | string
-  deletedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Menu"> | Date | string | null
 }
 
 export type MenuCreateInput = {
   id?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   restaurant: Prisma.RestaurantCreateNestedOneWithoutMenuInput
   categories?: Prisma.CategoryCreateNestedManyWithoutMenuInput
 }
@@ -256,19 +230,15 @@ export type MenuCreateInput = {
 export type MenuUncheckedCreateInput = {
   id?: string
   restaurantId: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutMenuInput
 }
 
 export type MenuUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutMenuNestedInput
   categories?: Prisma.CategoryUpdateManyWithoutMenuNestedInput
 }
@@ -276,37 +246,29 @@ export type MenuUpdateInput = {
 export type MenuUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutMenuNestedInput
 }
 
 export type MenuCreateManyInput = {
   id?: string
   restaurantId: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
 }
 
 export type MenuUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type MenuUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type MenuNullableScalarRelationFilter = {
@@ -317,28 +279,22 @@ export type MenuNullableScalarRelationFilter = {
 export type MenuCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrder
 }
 
 export type MenuMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrder
 }
 
 export type MenuMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   restaurantId?: Prisma.SortOrder
-  isActive?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  deletedAt?: Prisma.SortOrder
 }
 
 export type MenuScalarRelationFilter = {
@@ -394,19 +350,15 @@ export type MenuUpdateOneRequiredWithoutCategoriesNestedInput = {
 
 export type MenuCreateWithoutRestaurantInput = {
   id?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   categories?: Prisma.CategoryCreateNestedManyWithoutMenuInput
 }
 
 export type MenuUncheckedCreateWithoutRestaurantInput = {
   id?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   categories?: Prisma.CategoryUncheckedCreateNestedManyWithoutMenuInput
 }
 
@@ -428,38 +380,30 @@ export type MenuUpdateToOneWithWhereWithoutRestaurantInput = {
 
 export type MenuUpdateWithoutRestaurantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   categories?: Prisma.CategoryUpdateManyWithoutMenuNestedInput
 }
 
 export type MenuUncheckedUpdateWithoutRestaurantInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   categories?: Prisma.CategoryUncheckedUpdateManyWithoutMenuNestedInput
 }
 
 export type MenuCreateWithoutCategoriesInput = {
   id?: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
   restaurant: Prisma.RestaurantCreateNestedOneWithoutMenuInput
 }
 
 export type MenuUncheckedCreateWithoutCategoriesInput = {
   id?: string
   restaurantId: string
-  isActive?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
-  deletedAt?: Date | string | null
 }
 
 export type MenuCreateOrConnectWithoutCategoriesInput = {
@@ -480,20 +424,16 @@ export type MenuUpdateToOneWithWhereWithoutCategoriesInput = {
 
 export type MenuUpdateWithoutCategoriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   restaurant?: Prisma.RestaurantUpdateOneRequiredWithoutMenuNestedInput
 }
 
 export type MenuUncheckedUpdateWithoutCategoriesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   restaurantId?: Prisma.StringFieldUpdateOperationsInput | string
-  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  deletedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -530,10 +470,8 @@ export type MenuCountOutputTypeCountCategoriesArgs<ExtArgs extends runtime.Types
 export type MenuSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   restaurantId?: boolean
-  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Menu$categoriesArgs<ExtArgs>
   _count?: boolean | Prisma.MenuCountOutputTypeDefaultArgs<ExtArgs>
@@ -542,33 +480,27 @@ export type MenuSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 export type MenuSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   restaurantId?: boolean
-  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["menu"]>
 
 export type MenuSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   restaurantId?: boolean
-  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["menu"]>
 
 export type MenuSelectScalar = {
   id?: boolean
   restaurantId?: boolean
-  isActive?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  deletedAt?: boolean
 }
 
-export type MenuOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "restaurantId" | "isActive" | "createdAt" | "updatedAt" | "deletedAt", ExtArgs["result"]["menu"]>
+export type MenuOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "restaurantId" | "createdAt" | "updatedAt", ExtArgs["result"]["menu"]>
 export type MenuInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   restaurant?: boolean | Prisma.RestaurantDefaultArgs<ExtArgs>
   categories?: boolean | Prisma.Menu$categoriesArgs<ExtArgs>
@@ -590,10 +522,8 @@ export type $MenuPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     restaurantId: string
-    isActive: boolean
     createdAt: Date
     updatedAt: Date
-    deletedAt: Date | null
   }, ExtArgs["result"]["menu"]>
   composites: {}
 }
@@ -1021,10 +951,8 @@ export interface Prisma__MenuClient<T, Null = never, ExtArgs extends runtime.Typ
 export interface MenuFieldRefs {
   readonly id: Prisma.FieldRef<"Menu", 'String'>
   readonly restaurantId: Prisma.FieldRef<"Menu", 'String'>
-  readonly isActive: Prisma.FieldRef<"Menu", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Menu", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Menu", 'DateTime'>
-  readonly deletedAt: Prisma.FieldRef<"Menu", 'DateTime'>
 }
     
 
@@ -1221,6 +1149,11 @@ export type MenuFindManyArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    * Skip the first `n` Menus.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Menus.
+   */
   distinct?: Prisma.MenuScalarFieldEnum | Prisma.MenuScalarFieldEnum[]
 }
 

@@ -4,10 +4,6 @@ import { prisma } from "../../lib/prisma";
 import { AuthRequest } from "../../middlewares/auth.middleware";
 import { success, error } from "../../lib/helpers";
 
-export const createMenuSchema = z.object({
-  body: z.object({}).optional(),
-});
-
 export const getPublicMenuBySlugSchema = z.object({
   params: z.object({
     slug: z.string().min(1),
@@ -15,33 +11,29 @@ export const getPublicMenuBySlugSchema = z.object({
 });
 
 export const getMenu = async (req: AuthRequest, res: Response) => {
-  const menu = await prisma.menu.findUnique({
-    where: {
-      restaurantId: req.user!.restaurantId!,
-    },
-    include: {
-      categories: {
-        where: { deletedAt: null },
-        orderBy: { order: "asc" },
-        include: {
-          items: {
-            where: { deletedAt: null },
-            include: {
-              variants: {
-                where: { deletedAt: null },
+  try {
+    const menu = await prisma.menu.findUnique({
+      where: {
+        restaurantId: req.user!.restaurantId!,
+      },
+      include: {
+        categories: {
+          orderBy: { order: "asc" },
+          include: {
+            items: {
+              include: {
+                variants: true,
               },
             },
           },
         },
       },
-    },
-  });
+    });
 
-  if (!menu || menu.deletedAt) {
-    return error(res, 404, "Menu not found");
+    return success(res, menu);
+  } catch (err) {
+    return error(res, 500, "Failed to fetch menu");
   }
-
-  return success(res, menu);
 };
 
 export const getPublicMenuBySlug = async (req: Request, res: Response) => {
@@ -66,25 +58,17 @@ export const getPublicMenuBySlug = async (req: Request, res: Response) => {
       },
       include: {
         categories: {
-          where: { deletedAt: null },
           orderBy: { order: "asc" },
           include: {
             items: {
-              where: { deletedAt: null, isActive: true },
               include: {
-                variants: {
-                  where: { deletedAt: null },
-                },
+                variants: true,
               },
             },
           },
         },
       },
     });
-
-    if (menu?.deletedAt || !menu?.isActive) {
-      return error(res, 404, "Menu not found");
-    }
 
     return success(res, {
       restaurant: {
@@ -101,83 +85,19 @@ export const getPublicMenuBySlug = async (req: Request, res: Response) => {
   }
 };
 
-export const createMenu = async (req: AuthRequest, res: Response) => {
-  try {
-    const existing = await prisma.menu.findUnique({
-      where: { restaurantId: req.user!.restaurantId! },
-    });
-
-    if (existing && !existing.deletedAt) {
-      return error(res, 400, "Menu already exists for this restaurant");
-    }
-
-    if (existing && existing.deletedAt) {
-      const restored = await prisma.menu.update({
-        where: { id: existing.id },
-        data: { deletedAt: null, isActive: true },
-      });
-      return success(res, restored);
-    }
-
-    const menu = await prisma.menu.create({
-      data: {
-        restaurantId: req.user!.restaurantId!,
-      },
-    });
-    res.status(201);
-    return success(res, menu);
-  } catch (err) {
-    return error(res, 500, "Failed to create menu");
-  }
-};
-
-export const updateMenuSchema = z.object({
-  body: z.object({
-    isActive: z.boolean().optional(),
-  }),
-});
-
-export const updateMenu = async (req: AuthRequest, res: Response) => {
-  try {
-    const { isActive } = req.body;
-
-    const menu = await prisma.menu.findUnique({
-      where: { restaurantId: req.user!.restaurantId! },
-    });
-
-    if (!menu || menu.deletedAt) {
-      return error(res, 404, "Menu not found");
-    }
-
-    const updated = await prisma.menu.update({
-      where: { id: menu.id },
-      data: { isActive },
-    });
-
-    return success(res, updated);
-  } catch (err) {
-    return error(res, 500, "Failed to update menu");
-  }
-};
-
 export const deleteMenu = async (req: AuthRequest, res: Response) => {
   try {
-    const menu = await prisma.menu.findUnique({
-      where: { restaurantId: req.user!.restaurantId! },
+    await prisma.category.deleteMany({
+      where: {
+        menu: {
+          restaurantId: req.user!.restaurantId!,
+        },
+      },
     });
 
-    if (!menu || menu.deletedAt) {
-      return error(res, 404, "Menu not found");
-    }
-
-    await prisma.menu.update({
-      where: { id: menu.id },
-      data: { deletedAt: new Date(), isActive: false },
-    });
-
-    return success(res, null, "Menu deleted successfully");
+    return success(res, null, "Menu cleared successfully");
   } catch (err) {
-    return error(res, 500, "Failed to delete menu");
+    return error(res, 500, "Failed to clear menu");
   }
 };
 
@@ -211,7 +131,6 @@ export const createCategory = async (req: AuthRequest, res: Response) => {
       where: {
         id: menuId,
         restaurantId: req.user!.restaurantId!,
-        deletedAt: null,
       },
     });
 
@@ -238,7 +157,6 @@ export const updateCategory = async (req: AuthRequest, res: Response) => {
       where: {
         id,
         menu: { restaurantId: req.user!.restaurantId! },
-        deletedAt: null,
       },
     });
 
@@ -264,7 +182,6 @@ export const deleteCategory = async (req: AuthRequest, res: Response) => {
       where: {
         id,
         menu: { restaurantId: req.user!.restaurantId! },
-        deletedAt: null,
       },
     });
 
@@ -272,9 +189,8 @@ export const deleteCategory = async (req: AuthRequest, res: Response) => {
       return error(res, 404, "Category not found");
     }
 
-    await prisma.category.update({
+    await prisma.category.delete({
       where: { id },
-      data: { deletedAt: new Date() },
     });
 
     return success(res, null, "Category deleted successfully");
@@ -313,7 +229,6 @@ export const createItem = async (req: AuthRequest, res: Response) => {
       where: {
         id: categoryId,
         menu: { restaurantId: req.user!.restaurantId! },
-        deletedAt: null,
       },
     });
 
@@ -340,7 +255,6 @@ export const updateItem = async (req: AuthRequest, res: Response) => {
       where: {
         id,
         category: { menu: { restaurantId: req.user!.restaurantId! } },
-        deletedAt: null,
       },
     });
 
@@ -350,7 +264,7 @@ export const updateItem = async (req: AuthRequest, res: Response) => {
 
     const updated = await prisma.item.update({
       where: { id },
-      data: { name, description, isActive, imageUrl },
+      data: { name, description, imageUrl },
     });
     return success(res, updated);
   } catch (err) {
@@ -366,7 +280,6 @@ export const deleteItem = async (req: AuthRequest, res: Response) => {
       where: {
         id,
         category: { menu: { restaurantId: req.user!.restaurantId! } },
-        deletedAt: null,
       },
     });
 
@@ -374,9 +287,8 @@ export const deleteItem = async (req: AuthRequest, res: Response) => {
       return error(res, 404, "Item not found");
     }
 
-    await prisma.item.update({
+    await prisma.item.delete({
       where: { id },
-      data: { deletedAt: new Date() },
     });
 
     return success(res, null, "Item deleted successfully");
@@ -412,7 +324,6 @@ export const createVariant = async (req: AuthRequest, res: Response) => {
       where: {
         id: itemId,
         category: { menu: { restaurantId: req.user!.restaurantId! } },
-        deletedAt: null,
       },
     });
 
@@ -439,7 +350,6 @@ export const updateVariant = async (req: AuthRequest, res: Response) => {
       where: {
         id,
         item: { category: { menu: { restaurantId: req.user!.restaurantId! } } },
-        deletedAt: null,
       },
     });
 
@@ -465,7 +375,6 @@ export const deleteVariant = async (req: AuthRequest, res: Response) => {
       where: {
         id,
         item: { category: { menu: { restaurantId: req.user!.restaurantId! } } },
-        deletedAt: null,
       },
     });
 
@@ -473,9 +382,8 @@ export const deleteVariant = async (req: AuthRequest, res: Response) => {
       return error(res, 404, "Variant not found");
     }
 
-    await prisma.variant.update({
+    await prisma.variant.delete({
       where: { id },
-      data: { deletedAt: new Date() },
     });
 
     return success(res, null, "Variant deleted successfully");
@@ -489,9 +397,6 @@ export const deleteVariant = async (req: AuthRequest, res: Response) => {
 // =======================
 
 export const bulkAddMenuSchema = z.object({
-  params: z.object({
-    menuId: z.string().uuid(),
-  }),
   body: z.array(
     z.object({
       name: z.string().min(1),
@@ -520,20 +425,13 @@ export const bulkAddMenuSchema = z.object({
 
 export const bulkAddMenu = async (req: AuthRequest, res: Response) => {
   try {
-    const menuId = req.params.menuId as string;
     const categories = req.body;
 
     const menu = await prisma.menu.findFirst({
       where: {
-        id: menuId,
         restaurantId: req.user!.restaurantId!,
-        deletedAt: null,
       },
     });
-
-    if (!menu) {
-      return error(res, 404, "Menu not found");
-    }
 
     const createdCategories = await prisma.$transaction(
       async (tx) => {
@@ -541,7 +439,7 @@ export const bulkAddMenu = async (req: AuthRequest, res: Response) => {
         for (const cat of categories) {
           const category = await tx.category.create({
             data: {
-              menuId,
+              menuId: menu.id,
               name: cat.name,
               order: cat.order,
               imageUrl: cat.imageUrl,
