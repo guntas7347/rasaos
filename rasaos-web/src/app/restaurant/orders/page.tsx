@@ -9,6 +9,8 @@ import { OrderCard } from "../../../components/order/OrderCard";
 import { OrderDetailsModal } from "../../../components/order/OrderDetailsModal";
 import { OrderFiltersModal } from "../../../components/order/OrderFiltersModal";
 import { db } from "../../../lib/dexie/dexie";
+import { OrderService } from "../../../lib/dexie/order-service";
+import { SyncService } from "../../../lib/dexie/sync-service";
 
 export default function ViewOrdersPage() {
   const { restaurant } = useAuth();
@@ -45,8 +47,8 @@ export default function ViewOrdersPage() {
       collection = collection.filter(
         (o) =>
           o.id === orderIdFilter ||
-          o.server_id === orderIdFilter ||
-          o.client_id === orderIdFilter,
+          o.serverOrderId === orderIdFilter ||
+          o.clientOrderId === orderIdFilter,
       );
     }
 
@@ -71,6 +73,7 @@ export default function ViewOrdersPage() {
     if (response.success) {
       const data = response.data;
       let parsedOrders: any[] = [];
+
       if (Array.isArray(data)) {
         parsedOrders = data;
       } else if (data && typeof data === "object") {
@@ -87,15 +90,40 @@ export default function ViewOrdersPage() {
         .filter((o) => o && o.id)
         .map((o) => ({
           ...o,
-          client_id: o.client_id || o.id,
+          clientOrderId: o.clientOrderId || o.id,
         }));
+
+      // ==========================================
+      // NEW SMART UPSERT LOGIC (Replaces bulkPut)
+      // ==========================================
       if (validOrders.length > 0) {
         try {
-          await db.orders.bulkPut(validOrders);
+          await db.transaction("rw", db.orders, async () => {
+            for (const srvOrder of validOrders) {
+              // 1. Look for an existing local order using the stable clientOrderId
+              const existing = await db.orders
+                .where("clientOrderId")
+                .equals(srvOrder.clientOrderId)
+                .first();
+
+              // 2. If it exists but has a temporary local ID, delete the local one
+              if (existing && existing.id !== srvOrder.id) {
+                await db.orders.delete(existing.id);
+              }
+
+              // 3. Save the official server record
+              await db.orders.put({
+                ...srvOrder,
+                syncStatus: "SYNCED",
+                syncError: null,
+              });
+            }
+          });
         } catch (error) {
-          console.error("Dexie bulkPut failed", error);
+          console.error("Dexie smart sync failed", error);
         }
       }
+      // ==========================================
 
       await loadOrdersFromDB();
       toast.success("Orders synced", { id: toastId });
@@ -122,81 +150,50 @@ export default function ViewOrdersPage() {
   };
 
   const updateOrderStatus = async (
-    orderId: string,
-    updates: { status?: string; paymentStatus?: string },
+    clientOrderId: string,
+    updates: {
+      status?: string;
+      paymentStatus?: string;
+    },
   ) => {
-    const response = await callServer(`/order/${orderId}/status`, {
-      method: "PATCH",
-      data: updates,
-    });
+    try {
+      if (!updates.status) return;
 
-    if (response.success) {
-      toast.success("Order updated successfully");
-
-      try {
-        const existingOrder = await db.orders.get(orderId);
-        if (existingOrder) {
-          const newOrder = { ...existingOrder };
-          if (updates.status) newOrder.status = updates.status;
-          if (updates.paymentStatus) {
-            if (!newOrder.payment)
-              newOrder.payment = {
-                provider: "CASH",
-                status: updates.paymentStatus,
-              };
-            else
-              newOrder.payment = {
-                ...newOrder.payment,
-                status: updates.paymentStatus,
-              };
-          }
-          await db.orders.put(newOrder);
-        }
-      } catch (e) {
-        console.error("Failed to update dexie", e);
-      }
-
-      setOrders((prevOrders) =>
-        prevOrders.map((order) => {
-          if (order.id === orderId) {
-            const newOrder = { ...order };
-            if (updates.status) newOrder.status = updates.status;
-            if (updates.paymentStatus) {
-              if (!newOrder.payment)
-                newOrder.payment = {
-                  provider: "CASH",
-                  status: updates.paymentStatus,
-                };
-              else
-                newOrder.payment = {
-                  ...newOrder.payment,
-                  status: updates.paymentStatus,
-                };
-            }
-            return newOrder;
-          }
-          return order;
-        }),
+      // 1. UPDATE LOCAL DB IMMEDIATELY
+      await OrderService.updateStatus(
+        clientOrderId,
+        updates.status,
+        updates.paymentStatus,
       );
 
-      setSelectedOrder((prev: any) => {
-        if (!prev || prev.id !== orderId) return prev;
-        const newOrder = { ...prev };
-        if (updates.status) newOrder.status = updates.status;
-        if (updates.paymentStatus) {
-          if (!newOrder.payment)
-            newOrder.payment = {
-              provider: "CASH",
-              status: updates.paymentStatus,
-            };
-          else
-            newOrder.payment = {
-              ...newOrder.payment,
-              status: updates.paymentStatus,
-            };
-        }
-        return newOrder;
-      });
+      // 2. OPTIMISTIC UI UPDATE
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.clientOrderId === clientOrderId
+            ? { ...order, status: updates.status, syncStatus: "LOCAL_ONLY" }
+            : order,
+        ),
+      );
+
+      toast.success(
+        navigator.onLine ? "Status updated. Syncing..." : "Updated offline",
+      );
+
+      // 3. BACKGROUND SYNC
+      if (navigator.onLine) {
+        SyncService.syncOrder(clientOrderId).then((res) => {
+          if (res?.success) {
+            toast.success("Order synced");
+            loadOrdersFromDB(); // Refresh local UI with server timestamps
+          } else {
+            toast.error("Sync failed, will retry later");
+            loadOrdersFromDB(); // Refresh to show FAILED status
+          }
+        });
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Failed to update order locally");
     }
   };
 
@@ -208,7 +205,7 @@ export default function ViewOrdersPage() {
     });
 
     if (response.success) {
-      toast.success("Order deleted successfully");
+      toast.success(response.message || "Success");
 
       try {
         await db.orders.delete(orderId);

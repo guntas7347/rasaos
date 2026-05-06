@@ -18,11 +18,11 @@ export default function AdminRestaurantsPage() {
 
   useEffect(() => {
     const fetchRestaurants = async () => {
-      const res = await callServer("/admin/restaurants");
-      if (res.success) {
-        setRestaurants(res.data);
+      const response = await callServer("/admin/restaurants");
+      if (response.success) {
+        setRestaurants(response.data);
       } else {
-        setError(res.message);
+        setError(response.message);
       }
       setIsLoading(false);
     };

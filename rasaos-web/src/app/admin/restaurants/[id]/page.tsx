@@ -51,15 +51,14 @@ export default function AdminRestaurantDetailsPage() {
 
   useEffect(() => {
     const fetchDetails = async () => {
-      const res = await callServer(`/admin/restaurant/${id}`);
-      if (res.success) {
-        const resData = res.data;
+      const response = await callServer(`/admin/restaurant/${id}`);
+      if (response.success) {
+        const resData = response.data;
         console.log(resData);
-        setData(resData);
         setEditName(resData.name);
         setEditSlug(resData.slug);
       } else {
-        setError(res.message);
+        setError(response.message);
       }
       setIsLoading(false);
     };
@@ -69,7 +68,7 @@ export default function AdminRestaurantDetailsPage() {
   const handleAddSubscription = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmittingSub(true);
-    const res = await callServer(`/admin/subscription/${id}`, {
+    const response = await callServer(`/admin/subscription/${id}`, {
       method: "POST",
       data: {
         plan: newPlan,
@@ -78,8 +77,8 @@ export default function AdminRestaurantDetailsPage() {
       },
     });
 
-    if (res.success) {
-      toast.success("Subscription added successfully");
+    if (response.success) {
+      toast.success(response.message || "Success");
       window.location.reload();
     } else {
       setIsSubmittingSub(false);
@@ -91,13 +90,13 @@ export default function AdminRestaurantDetailsPage() {
       "Are you sure you want to delete this subscription?",
     );
     if (!confirm) return;
-    
-    const res = await callServer(`/admin/subscription/${subscriptionId}`, {
+
+    const response = await callServer(`/admin/subscription/${subscriptionId}`, {
       method: "DELETE",
     });
 
-    if (res.success) {
-      toast.success("Subscription deleted successfully");
+    if (response.success) {
+      toast.success(response.message || "Success");
       window.location.reload();
     }
   };
@@ -105,7 +104,7 @@ export default function AdminRestaurantDetailsPage() {
   const handleUpdateDetails = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmittingEdit(true);
-    const res = await callServer(`/admin/restaurant/${id}`, {
+    const response = await callServer(`/admin/restaurant/${id}`, {
       method: "POST",
       data: {
         name: editName,
@@ -113,8 +112,8 @@ export default function AdminRestaurantDetailsPage() {
       },
     });
 
-    if (res.success) {
-      toast.success("Restaurant updated successfully");
+    if (response.success) {
+      toast.success(response.message || "Success");
       window.location.reload();
     } else {
       setIsSubmittingEdit(false);

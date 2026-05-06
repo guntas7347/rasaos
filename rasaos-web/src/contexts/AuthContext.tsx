@@ -158,7 +158,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       toast.loading("Logging out...", {
         id: "auth",
       });
-      const res = await callServer(
+      const response = await callServer(
         "/auth/logout",
         {
           method: "POST",
@@ -166,7 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
         false,
       );
-      if (!res.success) throw new Error(res.message);
+      if (!response.success) throw new Error(response.message);
       setUser(null);
       setRestaurant(null);
       toast.success("Logged out successfully", {

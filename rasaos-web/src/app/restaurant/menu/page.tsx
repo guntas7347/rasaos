@@ -10,7 +10,6 @@ import {
   Trash2,
   ChevronRight,
   ChevronDown,
-  Power,
 } from "lucide-react";
 
 import { CategoryModal } from "../../../components/menu/CategoryModal";
@@ -20,7 +19,7 @@ import { BulkUploadModal } from "../../../components/menu/BulkUploadModal";
 import { CurrencyIcon } from "../../../components/ui/CurrencyIcon";
 
 export default function MenuManagementPage() {
-  const { menu: initialMenu } = useAuth();
+  const { menu: initialMenu, refreshContext } = useAuth();
   const [menu, setMenu] = useState<any>(initialMenu);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -72,8 +71,8 @@ export default function MenuManagementPage() {
     });
 
     if (response.success) {
-      toast.success("Menu created successfully");
-      fetchMenuData();
+      toast.success(response.message || "Success");
+      refreshContext();
     } else {
       setIsLoading(false);
     }
@@ -82,28 +81,13 @@ export default function MenuManagementPage() {
   const handleDeleteMenu = async () => {
     if (!window.confirm(`Are you sure you want to delete your menu?`)) return;
 
-    const response = await callServer("/menu", {
+    const response = await callServer("/menu/reset", {
       method: "DELETE",
     });
 
     if (response.success) {
-      toast.success(`Menu deleted successfully`);
-      fetchMenuData();
-    }
-  };
-
-  const handleToggleMenuStatus = async () => {
-    if (!menu) return;
-    const response = await callServer("/menu", {
-      method: "PATCH",
-      data: { isActive: !menu.isActive },
-    });
-
-    if (response.success) {
-      toast.success(
-        `Menu ${menu.isActive ? "deactivated" : "activated"} successfully`,
-      );
-      fetchMenuData();
+      toast.success(response.message || "Success");
+      refreshContext();
     }
   };
 
@@ -120,7 +104,7 @@ export default function MenuManagementPage() {
     });
 
     if (response.success) {
-      toast.success(`${entityName} deleted successfully`);
+      toast.success(response.message || "Success");
       fetchMenuData();
     }
   };
@@ -154,16 +138,6 @@ export default function MenuManagementPage() {
             Build and manage your restaurant's digital menu.
           </p>
         </div>
-
-        {(!menu || menu.isDeleted) && (
-          <button
-            onClick={handleCreateMenu}
-            className="flex items-center gap-2 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-colors active:scale-95"
-          >
-            <Plus size={18} />
-            Create Menu
-          </button>
-        )}
       </div>
 
       {/* Main Content */}
@@ -176,16 +150,9 @@ export default function MenuManagementPage() {
             No Menu Found
           </h3>
           <p className="text-neutral-500 dark:text-neutral-400 max-w-sm mb-8">
-            Get started by creating your menu. You can add categories, items,
-            variants, and add-ons.
+            Please Hard Refresh the page (ctrl + F5 or Cmd + Shift + R). If the
+            issue persists, contact support.
           </p>
-          <button
-            onClick={handleCreateMenu}
-            className="flex items-center gap-2 px-6 py-2.5 bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-medium rounded-xl hover:bg-neutral-800 dark:hover:bg-neutral-100 transition-colors"
-          >
-            <Plus size={18} />
-            Create Menu
-          </button>
         </div>
       ) : (
         <div className="space-y-6">
@@ -196,11 +163,7 @@ export default function MenuManagementPage() {
                 <h3 className="text-lg font-bold text-neutral-900 dark:text-white">
                   Restaurant Menu
                 </h3>
-                <span
-                  className={`text-xs font-medium px-2.5 py-1 rounded-full ml-2 ${menu.isActive ? "bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400" : "bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400"}`}
-                >
-                  {menu.isActive ? "Active" : "Inactive"}
-                </span>
+
                 <span className="text-xs font-medium px-2.5 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full">
                   {menu.categories?.length || 0} Categories
                 </span>
@@ -223,13 +186,7 @@ export default function MenuManagementPage() {
                 >
                   <Plus size={16} /> Add Category
                 </button>
-                <button
-                  onClick={handleToggleMenuStatus}
-                  className={`p-1.5 rounded-lg transition-colors ${menu.isActive ? "text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-500/10" : "text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-500/10"}`}
-                  title={menu.isActive ? "Deactivate Menu" : "Activate Menu"}
-                >
-                  <Power size={16} />
-                </button>
+
                 <button
                   onClick={handleDeleteMenu}
                   className="p-1.5 text-red-400 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
@@ -330,11 +287,6 @@ export default function MenuManagementPage() {
                                         <h6 className="font-semibold text-neutral-900 dark:text-white">
                                           {item.name}
                                         </h6>
-                                        {!item.isActive && (
-                                          <span className="px-2 py-0.5 text-[10px] uppercase font-bold bg-neutral-100 text-neutral-500 rounded-md">
-                                            Draft
-                                          </span>
-                                        )}
                                       </div>
                                       {item.description && (
                                         <p className="text-sm text-neutral-500 mt-1 line-clamp-2">
@@ -451,7 +403,7 @@ export default function MenuManagementPage() {
         onClose={() => setIsCategoryModalOpen(false)}
         categoryToEdit={categoryToEdit}
         menuId={menu?.id}
-        onSuccess={fetchMenuData}
+        onSuccess={refreshContext}
       />
 
       <ItemModal
@@ -459,7 +411,7 @@ export default function MenuManagementPage() {
         onClose={() => setIsItemModalOpen(false)}
         itemToEdit={itemToEdit}
         categoryId={selectedCategoryId}
-        onSuccess={fetchMenuData}
+        onSuccess={refreshContext}
       />
 
       <VariantModal
@@ -467,7 +419,7 @@ export default function MenuManagementPage() {
         onClose={() => setIsVariantModalOpen(false)}
         variantToEdit={variantToEdit}
         itemId={selectedItemId}
-        onSuccess={fetchMenuData}
+        onSuccess={refreshContext}
       />
 
       <BulkUploadModal

@@ -11,7 +11,13 @@ interface VariantModalProps {
   onSuccess: () => void;
 }
 
-export function VariantModal({ isOpen, onClose, variantToEdit, itemId, onSuccess }: VariantModalProps) {
+export function VariantModal({
+  isOpen,
+  onClose,
+  variantToEdit,
+  itemId,
+  onSuccess,
+}: VariantModalProps) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState<number | "">("");
   const [isLoading, setIsLoading] = useState(false);
@@ -41,33 +47,33 @@ export function VariantModal({ isOpen, onClose, variantToEdit, itemId, onSuccess
     setIsLoading(true);
 
     const isEditing = !!variantToEdit;
-    const url = isEditing 
-      ? `/menu/variants/${variantToEdit.id}` 
+    const url = isEditing
+      ? `/menu/variants/${variantToEdit.id}`
       : `/menu/variants`;
 
     const method = isEditing ? "PATCH" : "POST";
-    const payload = isEditing 
+    const payload = isEditing
       ? { name, price: Number(price) }
       : { itemId, name, price: Number(price) };
 
     const response = await callServer(url, {
       method,
-      data: payload
+      data: payload,
     });
 
     if (response.success) {
-      toast.success(`Variant ${isEditing ? "updated" : "created"} successfully!`);
+      toast.success(response.message || "Success");
       onSuccess();
       onClose();
     }
-    
+
     setIsLoading(false);
   };
 
   return (
-    <BaseModal 
-      isOpen={isOpen} 
-      onClose={onClose} 
+    <BaseModal
+      isOpen={isOpen}
+      onClose={onClose}
       title={variantToEdit ? "Edit Variant" : "Add Variant"}
     >
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -95,12 +101,14 @@ export function VariantModal({ isOpen, onClose, variantToEdit, itemId, onSuccess
             required
             min={0}
             value={price}
-            onChange={(e) => setPrice(e.target.value === "" ? "" : Number(e.target.value))}
+            onChange={(e) =>
+              setPrice(e.target.value === "" ? "" : Number(e.target.value))
+            }
             placeholder="e.g. 1500 for 15.00"
             className="w-full px-3 py-2 bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 rounded-lg text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50"
           />
         </div>
-        
+
         <div className="pt-2 flex justify-end gap-3">
           <button
             type="button"
@@ -116,8 +124,10 @@ export function VariantModal({ isOpen, onClose, variantToEdit, itemId, onSuccess
           >
             {isLoading ? (
               <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+            ) : variantToEdit ? (
+              "Save Changes"
             ) : (
-              variantToEdit ? "Save Changes" : "Create"
+              "Create"
             )}
           </button>
         </div>

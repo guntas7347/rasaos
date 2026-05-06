@@ -39,7 +39,7 @@ export default function LoginPage() {
 
     if (response.success) {
       await refreshContext();
-      toast.success("Welcome back!");
+      toast.success(response.message || "Success");
       const userData = response.data?.user || response.data;
       if (userData?.role === "ADMIN") {
         navigate("/admin");

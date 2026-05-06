@@ -22,21 +22,21 @@ const VerifyPage = () => {
         return;
       }
 
-      const res = await callServer(`/auth/register/${token}`, {
+      const response = await callServer(`/auth/register/${token}`, {
         method: "POST",
       });
 
-      if (res.success) {
+      if (response.success) {
         setStatus("success");
         setMessage("Account verified successfully! Redirecting to login...");
-        toast.success("Account verified successfully");
+        toast.success(response.message || "Success");
         setTimeout(() => {
           navigate("/login");
         }, 3000);
       } else {
         setStatus("error");
         setMessage(
-          res.message || "Verification failed. The link may be expired.",
+          response.message || "Verification failed. The link may be expired.",
         );
       }
     };

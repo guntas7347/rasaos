@@ -9,7 +9,7 @@ export default function ResetPasswordPage() {
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(true);
-  const [isValidUuid, setIsValidUuid] = useState(false);
+  const [isValiduuid, setIsValiduuid] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const [password, setPassword] = useState("");
@@ -31,9 +31,11 @@ export default function ResetPasswordPage() {
       });
 
       if (response.success) {
-        setIsValidUuid(true);
+        setIsValiduuid(true);
       } else {
-        setErrorMessage(response.message || "This link may have expired or is invalid.");
+        setErrorMessage(
+          response.message || "This link may have expired or is invalid.",
+        );
       }
       setIsLoading(false);
     };
@@ -64,7 +66,7 @@ export default function ResetPasswordPage() {
     setIsSubmitting(false);
 
     if (response.success) {
-      toast.success("Password successfully reset! You can now log in.");
+      toast.success(response.message || "Success");
       navigate("/login");
     }
   };
@@ -99,7 +101,7 @@ export default function ResetPasswordPage() {
                 Validating link...
               </p>
             </div>
-          ) : !isValidUuid ? (
+          ) : !isValiduuid ? (
             <div className="text-center space-y-6 text-sm">
               <div className="bg-red-50 dark:bg-red-900/20 text-red-800 dark:text-red-300 p-4 rounded-xl border border-red-200 dark:border-red-800/50 flex flex-col items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/40 flex items-center justify-center">

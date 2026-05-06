@@ -1,4 +1,20 @@
-import { Clock, Box, Tag, CreditCard } from "lucide-react";
+import {
+  Clock,
+  Box,
+  Tag,
+  CreditCard,
+  CloudOff,
+  RefreshCw,
+  AlertCircle,
+  CheckCircle2,
+  Utensils,
+  ShoppingBag,
+  Truck,
+  XCircle,
+  Bell,
+  ChefHat,
+  Clock4,
+} from "lucide-react";
 import { CurrencyIcon } from "../ui/CurrencyIcon";
 import { getStatusColor } from "./utils";
 
@@ -21,16 +37,75 @@ export function OrderCard({
             <span className="text-xs font-mono font-bold text-neutral-500 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-md">
               #{order.id.slice(0, 8)}
             </span>
+            <div className="flex items-center justify-center">
+              {order.syncStatus === "LOCAL_ONLY" && (
+                <CloudOff
+                  size={14}
+                  className="text-neutral-400"
+                  title="Saved locally (Offline)"
+                />
+              )}
+              {order.syncStatus === "SYNCING" && (
+                <RefreshCw
+                  size={14}
+                  className="text-blue-500 animate-spin"
+                  title="Syncing to server..."
+                />
+              )}
+              {order.syncStatus === "FAILED" && (
+                <AlertCircle
+                  size={14}
+                  className="text-red-500"
+                  title="Sync failed. Will retry."
+                />
+              )}
+              {(!order.syncStatus || order.syncStatus === "SYNCED") && (
+                <CheckCircle2
+                  size={14}
+                  className="text-green-500"
+                  title="Synced to server"
+                />
+              )}
+            </div>
+            {/* Status Badge */}
             <span
-              className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider ${getStatusColor(
+              className={`text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider flex items-center gap-1 ${getStatusColor(
                 order.status,
               )}`}
             >
-              {order.status}
+              {(() => {
+                switch (order.status) {
+                  case "PENDING":
+                    return <Clock4 size={10} />;
+                  case "PREPARING":
+                    return <ChefHat size={10} />;
+                  case "READY":
+                    return <Bell size={10} />;
+                  case "COMPLETED":
+                    return <CheckCircle2 size={10} />;
+                  case "CANCELLED":
+                    return <XCircle size={10} />;
+                  default:
+                    return null;
+                }
+              })()}
             </span>
+
+            {/* Order Type Badge */}
             {order.type && (
-              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-400">
-                {order.type.replace("_", " ")}
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider bg-purple-100 text-purple-800 dark:bg-purple-900/40 dark:text-purple-400 flex items-center gap-1">
+                {(() => {
+                  switch (order.type) {
+                    case "DINE_IN":
+                      return <Utensils size={10} />;
+                    case "TAKEAWAY":
+                      return <ShoppingBag size={10} />;
+                    case "DELIVERY":
+                      return <Truck size={10} />;
+                    default:
+                      return null;
+                  }
+                })()}
               </span>
             )}
           </div>
@@ -43,7 +118,7 @@ export function OrderCard({
         <div className="text-right">
           <div className="text-lg font-bold text-neutral-900 dark:text-white flex items-center justify-end">
             <CurrencyIcon size={18} className="mr-0.5" />
-            {(order.totalAmount / 100).toFixed(2)}
+            {((order.totalAmount || 0) / 100).toFixed(2)}{" "}
           </div>
           {order.payment && (
             <div className="flex items-center justify-end gap-1 text-[10px] font-semibold text-neutral-500 uppercase mt-0.5">
@@ -75,15 +150,20 @@ export function OrderCard({
                     x
                   </span>
                   <span
-                    className="font-medium text-neutral-800 dark:text-neutral-200 line-clamp-1 break-all pr-2"
-                    title={item.variantName}
+                    className="font-medium text-neutral-800 dark:text-neutral-200 line-clamp-1 break-all pr-2 flex-1"
+                    title={`${item.itemName}${item.variantName ? ` (${item.variantName})` : ""}`}
                   >
-                    {item.variantName}
+                    {item.itemName}
+                    {item.variantName && (
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400 font-normal ml-1">
+                        ({item.variantName})
+                      </span>
+                    )}
                   </span>
                 </div>
                 <span className="font-medium text-neutral-600 dark:text-neutral-400 shrink-0 flex items-center">
                   <CurrencyIcon size={14} className="mr-0.5" />
-                  {((item.variantPrice * item.quantity) / 100).toFixed(2)}
+                  {((item.unitPrice * item.quantity) / 100).toFixed(2)}{" "}
                 </span>
               </div>
             ))}

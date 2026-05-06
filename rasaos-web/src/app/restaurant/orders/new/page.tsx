@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { useAuth } from "../../../../contexts/AuthContext";
-import { callServer } from "../../../../lib/helpers";
+import { v4 as uuid } from "uuid";
 import toast from "react-hot-toast";
 import {
   Plus,
@@ -15,6 +15,8 @@ import {
   Check,
 } from "lucide-react";
 import { CurrencyIcon } from "../../../../components/ui/CurrencyIcon";
+import { OrderService } from "../../../../lib/dexie/order-service";
+import { SyncService } from "../../../../lib/dexie/sync-service";
 
 export type AdjustmentType = "DISCOUNT" | "FEE" | "SURCHARGE";
 export type AdjustmentMode = "FIXED" | "PERCENTAGE";
@@ -182,37 +184,38 @@ export default function CreateOrderPage() {
   }, [cartItems, adjustments]);
 
   const handleCreateOrder = async () => {
-    if (cartItems.length === 0) {
-      toast.error("Cart is empty");
-      return;
-    }
+    if (cartItems.length === 0) return toast.error("Cart is empty");
 
+    const clientOrderId = uuid();
     const orderPayload = {
-      items: cartItems.map((item) => ({
-        itemId: item.itemId,
-        variantId: item.variantId,
-        quantity: item.quantity,
-      })),
+      clientOrderId,
+      type: "DINE_IN",
+      items: cartItems.map((i) => ({ ...i, unitPrice: i.price })),
       adjustments: adjustments.map((a) => ({
-        label: a.label,
-        type: a.type,
-        mode: a.mode,
+        ...a,
         value: a.mode === "FIXED" ? a.value * 100 : a.value,
       })),
     };
 
-    setIsSubmitting(true);
-    const response = await callServer("/order/staff", {
-      method: "POST",
-      data: orderPayload,
-    });
+    try {
+      setIsSubmitting(true);
 
-    if (response.success) {
-      toast.success("Order Created successfully!");
+      // 1. Save Locally (Immediate)
+      await OrderService.saveNewOrder(orderPayload);
+
+      // 2. Clear UI Immediately
+      toast.success("Order saved locally");
       setCartItems([]);
       setAdjustments([]);
+
+      // 3. Trigger Sync (Background)
+      // We don't 'await' this if we want true local-first responsiveness
+      SyncService.syncOrder(clientOrderId);
+    } catch (err) {
+      toast.error("Critical error saving order locally");
+    } finally {
+      setIsSubmitting(false);
     }
-    setIsSubmitting(false);
   };
 
   return (

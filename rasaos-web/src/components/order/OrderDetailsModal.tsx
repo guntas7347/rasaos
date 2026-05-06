@@ -208,12 +208,17 @@ export function OrderDetailsModal({
                       {item.quantity}x
                     </span>
                     <span className="font-medium text-neutral-900 dark:text-white max-w-[200px] break-words">
-                      {item.variantName}
+                      {item.itemName}
+                      {item.variantName && (
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400 font-normal block mt-0.5">
+                          Variant: {item.variantName}
+                        </span>
+                      )}
                     </span>
                   </div>
                   <span className="font-medium text-neutral-900 dark:text-white shrink-0 flex items-center">
                     <CurrencyIcon size={14} className="mr-0.5" />
-                    {((item.variantPrice * item.quantity) / 100).toFixed(2)}
+                    {((item.unitPrice * item.quantity) / 100).toFixed(2)}{" "}
                   </span>
                 </div>
               ))}
@@ -342,7 +347,7 @@ export function OrderDetailsModal({
             <span>Total</span>
             <span className="flex items-center">
               <CurrencyIcon size={18} className="mr-0.5" />
-              {(selectedOrder.totalAmount / 100).toFixed(2)}
+              {((selectedOrder.totalAmount || 0) / 100).toFixed(2)}{" "}
             </span>
           </div>
         </div>

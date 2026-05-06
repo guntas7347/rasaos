@@ -48,9 +48,7 @@ export function ItemModal({
     setIsLoading(true);
 
     const isEditing = !!itemToEdit;
-    const url = isEditing
-      ? `/menu/items/${itemToEdit.id}`
-      : `/menu/items`;
+    const url = isEditing ? `/menu/items/${itemToEdit.id}` : `/menu/items`;
 
     const method = isEditing ? "PATCH" : "POST";
     const payload = isEditing
@@ -63,7 +61,7 @@ export function ItemModal({
     });
 
     if (response.success) {
-      toast.success(`Item ${isEditing ? "updated" : "created"} successfully!`);
+      toast.success(response.message || "Success");
       onSuccess();
       onClose();
     }

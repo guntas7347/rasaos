@@ -56,7 +56,7 @@ export default function SettingsPage() {
     });
 
     if (response.success) {
-      toast.success("Settings updated successfully!");
+      toast.success(response.message || "Success");
       await refreshContext();
     }
 

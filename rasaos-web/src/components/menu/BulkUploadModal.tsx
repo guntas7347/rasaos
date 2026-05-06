@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { BaseModal } from "../ui/BaseModal";
 import toast from "react-hot-toast";
 import { callServer } from "../../lib/helpers";
+import { localSuccess } from "../ui/ToasterProvider";
 
 interface BulkUploadModalProps {
   isOpen: boolean;
@@ -13,7 +14,6 @@ interface BulkUploadModalProps {
 export function BulkUploadModal({
   isOpen,
   onClose,
-  menuId,
   onSuccess,
 }: BulkUploadModalProps) {
   const [jsonText, setJsonText] = useState("");
@@ -21,10 +21,6 @@ export function BulkUploadModal({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!menuId) {
-      toast.error("Menu ID is missing");
-      return;
-    }
 
     if (!jsonText.trim()) {
       toast.error("Please enter JSON data");
@@ -41,14 +37,14 @@ export function BulkUploadModal({
 
     setIsLoading(true);
 
-    const response = await callServer(`/menu/${menuId}/bulk`, {
+    const response = await callServer(`/menu/bulk`, {
       method: "POST",
       data: parsedData,
     });
 
     if (response.success) {
-      toast.success("Bulk upload successful!");
-      setJsonText(""); // Clear on success
+      toast.success(response.message || "Success");
+      setJsonText("");
       onSuccess();
       onClose();
     }
@@ -88,7 +84,7 @@ export function BulkUploadModal({
               className="ml-1 underline text-blue-600 hover:text-blue-800 cursor-pointer"
               onClick={() => {
                 navigator.clipboard.writeText(aiprompt);
-                toast.success("Prompt copied to clipboard");
+                localSuccess("AI prompt copied to clipboard");
               }}
             >
               Click here to copy prompt
@@ -130,7 +126,7 @@ The user may provide:
 - PDF menu
 
 Rules:
-- Return ONLY valid JSON
+- Return ONLY valid JSON in code block, nothing else
 - No markdown
 - If menu input is not provided, reply "Please provide menu in text, image, or pdf."
 - No explanations

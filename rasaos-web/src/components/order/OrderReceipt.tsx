@@ -59,15 +59,21 @@ export const OrderReceipt = React.forwardRef<HTMLDivElement, OrderReceiptProps>(
             <div key={idx} className="flex justify-between text-xs">
               <div className="flex gap-1 w-full pr-4">
                 <span className="font-bold">{item.quantity}x</span>
-                <span className="break-words">{item.variantName}</span>
+                <span className="break-words block">
+                  {item.itemName}
+                  {item.variantName && (
+                    <span className="block text-[10px] text-gray-600 mt-0.5">
+                      ({item.variantName})
+                    </span>
+                  )}
+                </span>
               </div>
               <span className="shrink-0">
-                {((item.variantPrice * item.quantity) / 100).toFixed(2)}
+                {((item.unitPrice * item.quantity) / 100).toFixed(2)}
               </span>
             </div>
           ))}
         </div>
-
         <div className="border-t border-black border-dashed pt-2 space-y-1 text-xs">
           <div className="flex justify-between">
             <span>Subtotal</span>

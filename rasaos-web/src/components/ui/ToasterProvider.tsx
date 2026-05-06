@@ -1,4 +1,4 @@
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 export function ToasterProvider() {
   return (
@@ -34,3 +34,11 @@ export function ToasterProvider() {
     />
   );
 }
+
+export const localSuccess = (message: string) =>
+  toast.success(message, {
+    iconTheme: {
+      primary: "#5063cd",
+      secondary: "#ffffff",
+    },
+  });

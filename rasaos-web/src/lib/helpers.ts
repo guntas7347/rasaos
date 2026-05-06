@@ -116,3 +116,130 @@ export const callServer = async <T = any>(
     };
   }
 };
+
+// [
+//   {
+//     name: "Starters",
+//     order: 1,
+//     imageUrl: "",
+//     items: [
+//       {
+//         name: "Paneer Tikka",
+//         description: "Cottage cheese cubes marinated with spices and grilled.",
+//         imageUrl: "",
+//         variants: [
+//           {
+//             name: "Regular",
+//             price: 24900,
+//           },
+//         ],
+//       },
+//       {
+//         name: "Chicken Wings",
+//         description: "Spicy crispy chicken wings served with dip.",
+//         imageUrl: "",
+//         variants: [
+//           {
+//             name: "6 Pieces",
+//             price: 29900,
+//           },
+//           {
+//             name: "12 Pieces",
+//             price: 54900,
+//           },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     name: "Main Course",
+//     order: 2,
+//     imageUrl: "",
+//     items: [
+//       {
+//         name: "Butter Chicken",
+//         description: "Creamy tomato-based chicken curry.",
+//         imageUrl: "",
+//         variants: [
+//           {
+//             name: "Half",
+//             price: 34900,
+//           },
+//           {
+//             name: "Full",
+//             price: 64900,
+//           },
+//         ],
+//       },
+//       {
+//         name: "Veg Biryani",
+//         description: "Fragrant basmati rice cooked with vegetables and spices.",
+//         imageUrl: "",
+//         variants: [
+//           {
+//             name: "Regular",
+//             price: 27900,
+//           },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     name: "Beverages",
+//     order: 3,
+//     imageUrl: "",
+//     items: [
+//       {
+//         name: "Cold Coffee",
+//         description: "Chilled creamy coffee served with ice cream.",
+//         imageUrl: "",
+//         variants: [
+//           {
+//             name: "Regular",
+//             price: 14900,
+//           },
+//         ],
+//       },
+//       {
+//         name: "Fresh Lime Soda",
+//         description: "Refreshing lime soda sweet or salted.",
+//         imageUrl: "",
+//         variants: [
+//           {
+//             name: "Regular",
+//             price: 9900,
+//           },
+//         ],
+//       },
+//     ],
+//   },
+//   {
+//     name: "Desserts",
+//     order: 4,
+//     imageUrl: "",
+//     items: [
+//       {
+//         name: "Gulab Jamun",
+//         description: "Soft milk dumplings soaked in sugar syrup.",
+//         imageUrl: "",
+//         variants: [
+//           {
+//             name: "2 Pieces",
+//             price: 8900,
+//           },
+//         ],
+//       },
+//       {
+//         name: "Chocolate Brownie",
+//         description: "Warm chocolate brownie served with vanilla ice cream.",
+//         imageUrl: "",
+//         variants: [
+//           {
+//             name: "Regular",
+//             price: 19900,
+//           },
+//         ],
+//       },
+//     ],
+//   },
+// ];

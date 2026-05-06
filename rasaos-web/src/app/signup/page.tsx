@@ -13,14 +13,16 @@ export default function SignupPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const slugify = (value: string) => value.replace(/^-|-$/g, "");
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
 
     const formattedValue = value
       .toLowerCase()
-      .replace(/\s+/g, "-") // convert spaces to hyphen
-      .replace(/[^a-z0-9-]/g, "") // allow only lowercase, numbers, hyphen
-      .replace(/-{2,}/g, "-"); // prevent consecutive hyphens
+      .replace(/\s+/g, "-")
+      .replace(/[^a-z0-9-]/g, "")
+      .replace(/-+/g, "-");
 
     setFormData((prev) => ({
       ...prev,
@@ -48,7 +50,7 @@ export default function SignupPage() {
 
     if (response.success) {
       setIsSuccess(true);
-      toast.success("Verification email sent!");
+      toast.success(response.message || "Success");
     }
   };
 
@@ -136,7 +138,7 @@ export default function SignupPage() {
                   </div>
                   <p className="text-[10px] text-neutral-500 mt-1 ml-1">
                     This will be your unique URL: rasaos.com/
-                    <b>{formData.restaurantSlug || "your-slug"}</b>
+                    <b>{slugify(formData.restaurantSlug) || "your-slug"}</b>
                   </p>
                 </div>
               </div>

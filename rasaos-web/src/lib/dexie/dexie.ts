@@ -8,14 +8,74 @@ export interface AuthCache {
   updatedAt: number;
 }
 
-export interface Order {
-  id: string;
-  client_id?: string;
-  server_id?: string;
-  createdAt: string;
-  status: string;
+export type OrderSyncStatus = "LOCAL_ONLY" | "SYNCING" | "SYNCED" | "FAILED";
+
+export interface OrderPayloadItem {
+  itemId?: string;
+  variantId?: string;
+
+  itemName: string;
+  variantName?: string;
+
+  // integer paise/cents only
+  unitPrice: number;
+
+  quantity: number;
+}
+
+export interface OrderAdjustment {
+  label: string;
+
+  type: "DISCOUNT" | "FEE" | "SURCHARGE";
+
+  mode: "FIXED" | "PERCENTAGE";
+
+  // integer paise/cents for FIXED
+  value: number;
+}
+
+export interface OrderPayload {
+  clientOrderId: string;
+
   type?: string;
-  [key: string]: any;
+
+  customerName?: string;
+  customerMobile?: string;
+  tableNumber?: string;
+  note?: string;
+
+  items: OrderPayloadItem[];
+
+  adjustments?: OrderAdjustment[];
+}
+
+export interface Order {
+  // local dexie id
+  id: string;
+
+  // stable sync identity
+  clientOrderId: string;
+
+  // postgres/server order id
+  serverOrderId?: string;
+
+  createdAt: string;
+
+  updatedAt?: string;
+
+  status: string;
+
+  type?: string;
+
+  syncStatus: OrderSyncStatus;
+
+  syncAttempts?: number;
+
+  lastSyncAttempt?: string;
+
+  syncError?: string | null;
+
+  payload: OrderPayload;
 }
 
 class AppDB extends Dexie {
@@ -27,7 +87,8 @@ class AppDB extends Dexie {
 
     this.version(1).stores({
       auth: "key, updatedAt",
-      orders: "client_id, server_id, createdAt, status, type",
+      orders:
+        "id, clientOrderId, serverOrderId, syncStatus, createdAt, status, type",
       meta: "key",
     });
   }
@@ -40,3 +101,10 @@ export async function clearDB() {
     await Promise.all(db.tables.map((table) => table.clear()));
   });
 }
+
+const destroyDB = async () => {
+  await db.delete();
+  window.location.reload();
+};
+
+// destroyDB();
