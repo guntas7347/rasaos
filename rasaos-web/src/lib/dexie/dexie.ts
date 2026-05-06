@@ -76,6 +76,13 @@ export interface Order {
   syncError?: string | null;
 
   payload: OrderPayload;
+  items?: any[];
+  subtotal?: number;
+  totalAmount?: number;
+  customerName?: string;
+  tableNumber?: string;
+  pricingBreakdown?: any;
+  payment?: any;
 }
 
 class AppDB extends Dexie {
@@ -102,9 +109,9 @@ export async function clearDB() {
   });
 }
 
-const destroyDB = async () => {
-  await db.delete();
-  window.location.reload();
-};
+// const destroyDB = async () => {
+//   await db.delete();
+//   window.location.reload();
+// };
 
 // destroyDB();

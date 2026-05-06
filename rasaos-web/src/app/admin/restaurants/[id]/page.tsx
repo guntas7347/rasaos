@@ -32,7 +32,7 @@ export default function AdminRestaurantDetailsPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [data, setData] = useState<RestaurantData | null>(null);
+  const [data] = useState<RestaurantData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

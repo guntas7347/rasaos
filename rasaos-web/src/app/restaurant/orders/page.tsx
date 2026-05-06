@@ -33,7 +33,6 @@ export default function ViewOrdersPage() {
 
     if (dateFilter) {
       collection = collection.filter((o) => {
-        if (o.date) return o.date === dateFilter;
         if (o.createdAt) {
           return (
             new Date(o.createdAt).toISOString().split("T")[0] === dateFilter

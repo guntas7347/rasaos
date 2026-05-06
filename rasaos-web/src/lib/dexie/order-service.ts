@@ -49,12 +49,19 @@ export const OrderService = {
     paymentStatus?: string,
   ) {
     const now = new Date().toISOString();
-    await db.orders.where("clientOrderId").equals(clientOrderId).modify({
-      status,
-      updatedAt: now,
-      syncStatus: "LOCAL_ONLY",
-      "payload.paymentStatus": paymentStatus,
-    });
+    await db.orders
+      .where("clientOrderId")
+      .equals(clientOrderId)
+      .modify((order) => {
+        order.status = status;
+        order.updatedAt = now;
+        order.syncStatus = "LOCAL_ONLY";
+
+        // Update nested payment status safely
+        if ((order as any).payload) {
+          (order as any).payload.paymentStatus = paymentStatus;
+        }
+      });
   },
 
   /**

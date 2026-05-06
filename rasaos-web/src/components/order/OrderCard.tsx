@@ -39,32 +39,24 @@ export function OrderCard({
             </span>
             <div className="flex items-center justify-center">
               {order.syncStatus === "LOCAL_ONLY" && (
-                <CloudOff
-                  size={14}
-                  className="text-neutral-400"
-                  title="Saved locally (Offline)"
-                />
+                <span title="Saved locally (Offline)">
+                  <CloudOff size={14} className="text-neutral-400" />
+                </span>
               )}
               {order.syncStatus === "SYNCING" && (
-                <RefreshCw
-                  size={14}
-                  className="text-blue-500 animate-spin"
-                  title="Syncing to server..."
-                />
+                <span title="Syncing to server...">
+                  <RefreshCw size={14} className="text-blue-500 animate-spin" />
+                </span>
               )}
               {order.syncStatus === "FAILED" && (
-                <AlertCircle
-                  size={14}
-                  className="text-red-500"
-                  title="Sync failed. Will retry."
-                />
+                <span title="Sync failed. Will retry.">
+                  <AlertCircle size={14} className="text-red-500" />
+                </span>
               )}
               {(!order.syncStatus || order.syncStatus === "SYNCED") && (
-                <CheckCircle2
-                  size={14}
-                  className="text-green-500"
-                  title="Synced to server"
-                />
+                <span title="Synced to server">
+                  <CheckCircle2 size={14} className="text-green-500" />
+                </span>
               )}
             </div>
             {/* Status Badge */}

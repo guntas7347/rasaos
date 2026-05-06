@@ -63,21 +63,6 @@ export default function MenuManagementPage() {
     setIsLoading(false);
   };
 
-  // Menu Actions
-  const handleCreateMenu = async () => {
-    setIsLoading(true);
-    const response = await callServer("/menu", {
-      method: "POST",
-    });
-
-    if (response.success) {
-      toast.success(response.message || "Success");
-      refreshContext();
-    } else {
-      setIsLoading(false);
-    }
-  };
-
   const handleDeleteMenu = async () => {
     if (!window.confirm(`Are you sure you want to delete your menu?`)) return;
 
