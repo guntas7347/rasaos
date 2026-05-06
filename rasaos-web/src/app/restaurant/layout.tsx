@@ -12,7 +12,6 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Sidebar } from "../../components/ui/Sidebar";
-import toast from "react-hot-toast";
 
 export default function RestaurantLayout() {
   const { restaurant, logout } = useAuth();
