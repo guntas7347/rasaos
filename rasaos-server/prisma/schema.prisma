@@ -53,7 +53,7 @@ enum TaxMode {
 /////////////////////////////////////////////////
 
 model User {
-  id           String  @id @default(uuid())
+  id           String  @id @default(cuid())
   restaurantId String?
   email        String  @unique
   password     String
@@ -72,7 +72,7 @@ model User {
 }
 
 model Restaurant {
-  id        String  @id @default(uuid())
+  id        String  @id @default(cuid())
   name      String
   slug      String  @unique
   isActive  Boolean @default(true)
@@ -96,7 +96,7 @@ model Restaurant {
 /////////////////////////////////////////////////
 
 model SubscriptionPeriod {
-  id           String @id @default(uuid())
+  id           String @id @default(cuid())
   restaurantId String
 
   plan        String
@@ -116,7 +116,7 @@ model SubscriptionPeriod {
 /////////////////////////////////////////////////
 
 model Menu {
-  id           String  @id @default(uuid())
+  id           String  @id @default(cuid())
   restaurantId String  @unique
   isActive     Boolean @default(true)
 
@@ -131,7 +131,7 @@ model Menu {
 }
 
 model Category {
-  id       String  @id @default(uuid())
+  id       String  @id @default(cuid())
   menuId   String
   name     String
   order    Int?
@@ -148,7 +148,7 @@ model Category {
 }
 
 model Item {
-  id          String  @id @default(uuid())
+  id          String  @id @default(cuid())
   categoryId  String
   name        String
   description String?
@@ -166,7 +166,7 @@ model Item {
 }
 
 model Variant {
-  id     String @id @default(uuid())
+  id     String @id @default(cuid())
   itemId String
   name   String
   price  Int
@@ -185,7 +185,7 @@ model Variant {
 /////////////////////////////////////////////////
 
 model Order {
-  id           String @id @default(uuid())
+  id           String @id @default(cuid())
   restaurantId String
 
   type   OrderType
@@ -217,7 +217,7 @@ model Order {
 }
 
 model OrderItem {
-  id      String @id @default(uuid())
+  id      String @id @default(cuid())
   orderId String
 
   variantName  String
@@ -238,7 +238,7 @@ model OrderItem {
 /////////////////////////////////////////////////
 
 model Payment {
-  id      String  @id @default(uuid())
+  id      String  @id @default(cuid())
   orderId String? @unique
 
   amount   Int

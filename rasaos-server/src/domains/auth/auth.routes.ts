@@ -13,13 +13,14 @@ import {
   validatePasswordResetLinkSchema,
   resetPassword,
   resetPasswordSchema,
+  logout,
 } from "./auth.controller";
 import { validateRequest } from "../../middlewares/validateRequest";
 import { authenticate } from "../../middlewares/auth.middleware";
 
 const router = Router();
 
-router.post("/register", validateRequest(registerSchema), register);
+router.post("/register/:jwt", validateRequest(registerSchema), register);
 router.post("/signup", validateRequest(signupSchema), signup);
 router.post("/login", validateRequest(loginSchema), login);
 router.get("/me", authenticate, getMe);
@@ -38,5 +39,7 @@ router.post(
   validateRequest(resetPasswordSchema),
   resetPassword,
 );
+
+router.post("/logout", logout);
 
 export default router;

@@ -6,49 +6,45 @@ import { z } from "zod";
 import { prisma } from "../../lib/prisma";
 import { env } from "../../config/env";
 import { success, error } from "../../lib/helpers";
+import { sendEmail } from "../../lib/nodemailer";
 
 export const signupSchema = z.object({
   body: z.object({
     email: z.string().email(),
-    password: z.string().min(6),
-    restaurantId: z.string().uuid(),
+    restaurantSlug: z.string().min(2),
   }),
 });
 
 export const signup = async (req: Request, res: Response) => {
-  const { email, password, restaurantId } = req.body;
+  const { email, restaurantSlug } = req.body;
 
   const existingUser = await prisma.user.findUnique({ where: { email } });
   if (existingUser) {
     return error(res, 400, "Email already exists");
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await prisma.user.create({
-    data: {
+  const verificationToken = jwt.sign(
+    {
       email,
-      password: hashedPassword,
-      role: "OWNER",
-      restaurantId,
+      restaurantSlug,
+      type: "email_verification",
     },
-  });
-
-  const token = jwt.sign(
-    { id: user.id, role: user.role, restaurantId: user.restaurantId },
     env.JWT_SECRET,
-    { expiresIn: "1d" },
+    {
+      expiresIn: "15m",
+    },
   );
 
-  res.status(201);
-  return success(res, {
-    token,
-    user: {
-      id: user.id,
-      email: user.email,
-      role: user.role,
-      restaurantId: user.restaurantId,
-    },
+  const verificationLinkUrl = `${env.FE_URL}/verify?token=${verificationToken}`;
+
+  sendEmail({
+    from: env.GMAIL_FROM,
+    to: email,
+    subject: "Verify Email to Complete Registration",
+    text: `Click the following link to complete your registration: ${verificationLinkUrl}`,
   });
+
+  return success(res, null, "Verification link sent to email");
 };
 
 export const loginSchema = z.object({
@@ -104,31 +100,40 @@ export const getMe = async (req: Request, res: Response) => {
 };
 
 export const registerSchema = z.object({
-  body: z.object({
-    email: z.string().email(),
-    password: z.string().min(6),
-    restaurantName: z.string().min(2),
-    restaurantSlug: z.string().min(2),
+  params: z.object({
+    jwt: z.string(),
   }),
 });
 
 export const register = async (req: Request, res: Response) => {
-  const { email, password, restaurantName, restaurantSlug } = req.body;
+  const { jwt: token } = req.params;
 
   try {
+    const decoded = jwt.verify(token as string, env.JWT_SECRET) as any;
+
+    if (decoded.type !== "email_verification") {
+      return error(res, 400, "Invalid verification token");
+    }
+
+    let { email, restaurantSlug } = decoded;
+
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
       return error(res, 400, "Email already exists");
     }
 
+    let isSlugChanged = false;
     const existingRestaurant = await prisma.restaurant.findUnique({
       where: { slug: restaurantSlug },
     });
     if (existingRestaurant) {
-      return error(res, 400, "Restaurant slug already exists");
+      restaurantSlug = `${restaurantSlug}-${crypto.randomBytes(4).toString("hex")}`;
+      isSlugChanged = true;
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const restaurantName = "My Restaurant";
+    const rawPassword = crypto.randomBytes(32).toString("hex");
+    const hashedPassword = await bcrypt.hash(rawPassword, 10);
 
     const result = await prisma.$transaction(async (tx) => {
       const restaurant = await tx.restaurant.create({
@@ -159,19 +164,25 @@ export const register = async (req: Request, res: Response) => {
       return { user, restaurant };
     });
 
-    const token = jwt.sign(
-      {
-        id: result.user.id,
-        role: result.user.role,
-        restaurantId: result.restaurant.id,
-      },
-      env.JWT_SECRET,
-      { expiresIn: "1d" },
-    );
+    const feUrl = env.FE_URL || "http://localhost:5174";
+    const slugMessage = isSlugChanged
+      ? `Note: The slug you chose was already taken, so we automatically assigned you a new one: ${restaurantSlug}`
+      : `Your slug is: ${restaurantSlug}`;
+
+    sendEmail({
+      from: env.GMAIL_FROM,
+      to: email,
+      subject: "Registration Successful",
+      text: `Your registration is complete!
+Email: ${email}
+${slugMessage}
+
+To login, please reset your password first.
+After resetting your password and logging in, please complete your profile at ${feUrl}/restaurant/settings`,
+    });
 
     res.status(201);
     return success(res, {
-      token,
       user: {
         id: result.user.id,
         email: result.user.email,
@@ -182,6 +193,12 @@ export const register = async (req: Request, res: Response) => {
     });
   } catch (err) {
     console.error(err);
+    if (err instanceof jwt.TokenExpiredError) {
+      return error(res, 400, "Verification token expired");
+    }
+    if (err instanceof jwt.JsonWebTokenError) {
+      return error(res, 400, "Invalid verification token");
+    }
     return error(res, 500, "Failed to register");
   }
 };
@@ -212,9 +229,14 @@ export const requestPasswordReset = async (req: Request, res: Response) => {
     data: { resetLink, resetlinkdate },
   });
 
-  const resetLinkUrl = `http://localhost:5174/login/reset-password/${resetLink}`;
+  const resetLinkUrl = `${env.FE_URL}/login/reset-password/${resetLink}`;
 
-  console.log(resetLinkUrl);
+  sendEmail({
+    from: env.GMAIL_FROM,
+    to: email,
+    subject: "Reset Password",
+    text: `Reset link: ${resetLinkUrl}`,
+  });
 
   return success(res, null, "Reset link generated successfully");
 };
@@ -266,4 +288,9 @@ export const resetPassword = async (req: Request, res: Response) => {
   });
 
   return success(res, null, "Password has been reset successfully");
+};
+
+export const logout = async (req: Request, res: Response) => {
+  res.clearCookie("token");
+  return success(res, null, "Logged out successfully");
 };
