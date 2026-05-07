@@ -11,13 +11,14 @@ import {
   Menu as Hamburger,
   Sun,
   Moon,
+  RefreshCw,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Sidebar } from "../../components/ui/Sidebar";
 import { useTheme } from "../../hooks/useTheme";
 
 export default function RestaurantLayout() {
-  const { restaurant, logout } = useAuth();
+  const { restaurant, logout, isLoading, refreshContext } = useAuth();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
 
@@ -60,7 +61,6 @@ export default function RestaurantLayout() {
         <header className="h-16 flex items-center justify-between px-4 border-b border-neutral-200 dark:border-neutral-800 bg-white/80 dark:bg-neutral-950/80 backdrop-blur-md sticky top-0 z-30 md:px-8 shadow-sm">
           {/* LEFT */}
           <div className="flex items-center gap-4">
-            {/* Mobile hamburger */}
             <button
               className="md:hidden p-2 -ml-2 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-colors"
               onClick={() => setIsMobileOpen(true)}
@@ -70,7 +70,6 @@ export default function RestaurantLayout() {
                 className="text-neutral-600 dark:text-neutral-400"
               />
             </button>
-
             <div className="flex flex-col">
               <h2 className="text-sm font-bold text-neutral-900 dark:text-white">
                 Restaurant Portal
@@ -94,7 +93,19 @@ export default function RestaurantLayout() {
               className="p-2.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all"
             >
               <ShoppingCart size={20} />
-            </Link>
+            </Link>{" "}
+            <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-800 mx-1 hidden sm:block" />
+            <button
+              onClick={() => refreshContext("fresh")}
+              className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-colors shadow-sm"
+              disabled={isLoading}
+            >
+              <RefreshCw
+                size={16}
+                className={isLoading ? "animate-spin" : ""}
+              />
+              <span className="hidden sm:inline">Sync</span>
+            </button>{" "}
             <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-800 mx-1 hidden sm:block" />
             {theme && (
               <button

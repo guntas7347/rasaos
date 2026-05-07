@@ -33,7 +33,7 @@ interface AuthContextType {
   menu: any | null;
   isLoading: boolean;
   error: string | null;
-  refreshContext: () => Promise<void>;
+  refreshContext: (type?: "fresh" | "cacheOnly" | "freshOnly") => Promise<void>;
   logout: () => void;
 }
 
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [restaurant, setRestaurant] = useState<Restaurant | null>(null);
   const [menu, setMenu] = useState<any>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const navigate = useNavigate();
@@ -60,12 +60,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setMenu(cached.menu);
   };
 
-  const fetchAuthData = async () => {
+  const fetchAuthData = async (
+    type: "fresh" | "cacheOnly" | "freshOnly" = "cacheOnly",
+  ) => {
     setIsLoading(true);
     setError(null);
 
     // 1. Instant load from cache
-    await loadFromCache();
+    if (type === "cacheOnly" || type === "fresh") {
+      await loadFromCache();
+      if (type === "cacheOnly") {
+        setIsLoading(false);
+        return;
+      }
+    }
 
     try {
       // 2. Fetch fresh data
