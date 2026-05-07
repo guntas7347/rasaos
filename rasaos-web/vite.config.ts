@@ -73,7 +73,7 @@ export default defineConfig({
             type: "image/png",
           },
         ],
-        start_url: "/restaurant",
+        start_url: "/restaurant/orders",
         display: "standalone",
         background_color: "#ffffff",
         theme_color: "#000000",

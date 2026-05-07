@@ -9,13 +9,17 @@ import {
   ShoppingCart,
   ListOrdered,
   Menu as Hamburger,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Sidebar } from "../../components/ui/Sidebar";
+import { useTheme } from "../../hooks/useTheme";
 
 export default function RestaurantLayout() {
   const { restaurant, logout } = useAuth();
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   const navItems = [
     { title: "Dashboard", href: "/restaurant", icon: LayoutDashboard },
@@ -80,14 +84,34 @@ export default function RestaurantLayout() {
           {/* RIGHT */}
           <div className="flex items-center gap-2 sm:gap-3">
             <Link
+              to="/restaurant/orders"
+              className="p-2.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all"
+            >
+              <ListOrdered size={20} />
+            </Link>
+            <Link
+              to="/restaurant/orders/new"
+              className="p-2.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all"
+            >
+              <ShoppingCart size={20} />
+            </Link>
+            <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-800 mx-1 hidden sm:block" />
+            {theme && (
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-400 transition-colors"
+                title="Toggle theme"
+              >
+                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+            )}{" "}
+            <Link
               to="/restaurant/settings"
               className="p-2.5 text-neutral-500 hover:text-neutral-900 dark:hover:text-white hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-xl transition-all"
             >
               <Settings size={20} />
             </Link>
-
             <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-800 mx-1 hidden sm:block" />
-
             <button
               onClick={logout}
               className="group flex items-center gap-2 px-3 py-2 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-xl text-sm font-semibold transition-all"
@@ -96,14 +120,14 @@ export default function RestaurantLayout() {
                 size={18}
                 className="group-hover:-translate-x-1 transition-transform"
               />
-              <span className="hidden sm:inline">Sign Out</span>
+              <span className="hidden sm:inline">Logout</span>
             </button>
           </div>
         </header>
 
         {/* Content */}
         <main className="flex-1 overflow-y-auto bg-neutral-50/50 dark:bg-neutral-900/50">
-          <div className="p-4 sm:p-6 lg:p-10 max-w-7xl mx-auto min-h-full">
+          <div className="px-4 sm:px-6 lg:p-10 mx-auto min-h-full">
             <Outlet />
           </div>
         </main>

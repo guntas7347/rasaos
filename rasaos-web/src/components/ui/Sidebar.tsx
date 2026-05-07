@@ -23,7 +23,7 @@ export function Sidebar({
   isMobileOpen,
   setIsMobileOpen,
 }: SidebarProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const location = useLocation();
 
   return (
