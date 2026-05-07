@@ -22,7 +22,7 @@ class AppDB extends Dexie {
   cart!: Table<CartItemType>;
 
   constructor() {
-    super("rasaos_v2");
+    super("rasaos");
 
     this.version(1).stores({
       recentRestaurants: "slug, lastVisited",
