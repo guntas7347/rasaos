@@ -6,6 +6,7 @@ import { success } from "./lib/helpers";
 import { env } from "./config/env";
 
 const app = express();
+app.disable("x-powered-by");
 
 const allowedOrigins = env.CORS_ORIGINS;
 
@@ -37,6 +38,7 @@ app.use((req: Request, res: Response, next) => {
 });
 
 // Routes will be mounted here
+
 app.use("/auth", authRoutes);
 app.use("/restaurant", restaurantRoutes);
 app.use("/menu", menuRoutes);
@@ -45,6 +47,10 @@ app.use("/admin", adminRoutes);
 
 app.get("/health", (req: Request, res: Response) => {
   return success(res, { status: "ok" });
+});
+
+app.use((req, res) => {
+  res.status(404).end();
 });
 
 // Centralized Error Handling
