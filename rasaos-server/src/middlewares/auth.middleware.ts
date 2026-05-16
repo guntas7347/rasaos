@@ -18,19 +18,25 @@ export const authenticate = async (
     const token = req.cookies.token;
 
     if (!token) {
-      return error(res, 401, "Unauthorized: Missing or invalid session");
+      return error(res, 401, "Unauthorized", {
+        error: "token is missing",
+      });
     }
 
     const decoded = jwt.verify(token, env.JWT_SECRET) as { id: string };
 
     const user = await prisma.user.findUnique({ where: { id: decoded.id } });
     if (!user) {
-      return error(res, 401, "Unauthorized: User not found");
+      return error(res, 401, "Unauthorized", {
+        error: "user not found",
+      });
     }
 
     req.user = user;
     next();
   } catch (error) {
-    return error(res, 401, "Unauthorized: Invalid session");
+    return error(res, 401, "Unauthorized", {
+      error: "invalid session",
+    });
   }
 };
