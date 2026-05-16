@@ -48,7 +48,7 @@ export function OrderDetailsModal({
                   className="h-9 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white dark:bg-neutral-900 px-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                   value={selectedOrder.status}
                   onChange={(e) =>
-                    updateOrderStatus(selectedOrder.id, {
+                    updateOrderStatus(selectedOrder.clientOrderId, {
                       status: e.target.value,
                     })
                   }

@@ -1,5 +1,6 @@
-import { API_URL } from "./env";
 import toast from "react-hot-toast";
+import { clearDB } from "@/lib/dexie/db";
+import { API_URL } from "@/lib/env";
 
 interface CallServerOptions extends RequestInit {
   data?: any;
@@ -71,6 +72,14 @@ export const callServer = async <T = any>(
 
     if (!response.ok || result?.success === false) {
       const message = result?.error || result?.message || "An error occurred";
+
+      if (response.status === 401) {
+        await clearDB();
+        if (window.location.pathname !== "/login") {
+          toast.error("Session expired. Please log in again.");
+          window.location.href = "/login";
+        }
+      }
 
       if (response.status !== 404 && toastError) {
         toast.error(message);

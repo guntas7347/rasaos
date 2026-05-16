@@ -15,7 +15,7 @@ export default function LoginPage() {
   const [showNormalLogin, setShowNormalLogin] = useState(false);
 
   const navigate = useNavigate();
-  const { refreshContext } = useAuth();
+  const { refreshAuth } = useAuth();
 
   useEffect(() => {
     const checkSession = async () => {
@@ -38,7 +38,7 @@ export default function LoginPage() {
     });
 
     if (response.success) {
-      await refreshContext();
+      await refreshAuth();
       toast.success(response.message || "Success");
       const userData = response.data?.user || response.data;
       if (userData?.role === "ADMIN") {
@@ -52,7 +52,7 @@ export default function LoginPage() {
   };
 
   const handleContinueAsExisting = async () => {
-    await refreshContext();
+    await refreshAuth();
     if (existingUser?.role === "ADMIN") {
       navigate("/admin");
     } else {

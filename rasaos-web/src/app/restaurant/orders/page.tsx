@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect, useState, useMemo } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { callServer } from "../../../lib/helpers";
@@ -8,9 +6,10 @@ import { Loader2, ListOrdered, RefreshCw, Filter } from "lucide-react";
 import { OrderCard } from "../../../components/order/OrderCard";
 import { OrderDetailsModal } from "../../../components/order/OrderDetailsModal";
 import { OrderFiltersModal } from "../../../components/order/OrderFiltersModal";
-import { db } from "../../../lib/dexie/dexie";
-import { OrderService } from "../../../lib/dexie/order-service";
-import { SyncService } from "../../../lib/dexie/sync-service";
+import { db } from "../../../lib/dexie/db";
+import { updateOrderStatus } from "@/repositories/order.repo";
+import type { OrderStatus, PaymentStatus } from "@/types";
+import { localError, localSuccess } from "@/components/ui/ToasterProvider";
 
 export default function ViewOrdersPage() {
   const { restaurant } = useAuth();
@@ -148,51 +147,58 @@ export default function ViewOrdersPage() {
     }
   };
 
-  const updateOrderStatus = async (
+  const handleUpdateOrderStatus = async (
     clientOrderId: string,
     updates: {
-      status?: string;
-      paymentStatus?: string;
+      status?: OrderStatus;
+      paymentStatus?: PaymentStatus;
     },
   ) => {
     try {
-      if (!updates.status) return;
+      // 1. Find the current order so we don't lose existing data
+      const currentOrder = await db.orders
+        .where("clientOrderId") // or "id" if you used the local Dexie ID
+        .equals(clientOrderId)
+        .first();
 
-      // 1. UPDATE LOCAL DB IMMEDIATELY
-      await OrderService.updateStatus(
-        clientOrderId,
-        updates.status,
-        updates.paymentStatus,
-      );
+      console.log(currentOrder, clientOrderId, orders);
 
-      // 2. OPTIMISTIC UI UPDATE
+      if (!currentOrder) return;
+      if (!updates.status && !updates.paymentStatus) return;
+      const newStatus = updates.status || currentOrder.status;
+
+      await updateOrderStatus(clientOrderId, newStatus, updates.paymentStatus);
+
+      //UI UPDATE
       setOrders((prevOrders) =>
-        prevOrders.map((order) =>
-          order.clientOrderId === clientOrderId
-            ? { ...order, status: updates.status, syncStatus: "LOCAL_ONLY" }
-            : order,
-        ),
+        prevOrders.map((order) => {
+          if (order.clientOrderId !== clientOrderId) return order;
+
+          return {
+            ...order,
+            ...(updates.status !== undefined && { status: updates.status }),
+            ...(updates.paymentStatus !== undefined && {
+              paymentStatus: updates.paymentStatus,
+            }),
+            syncStatus: "LOCAL_ONLY",
+          };
+        }),
       );
 
-      toast.success(
-        navigator.onLine ? "Status updated. Syncing..." : "Updated offline",
-      );
+      localSuccess("Status updated.");
 
-      // 3. BACKGROUND SYNC
-      if (navigator.onLine) {
-        SyncService.syncOrder(clientOrderId).then((res) => {
-          if (res?.success) {
-            toast.success("Order synced");
-            loadOrdersFromDB(); // Refresh local UI with server timestamps
-          } else {
-            toast.error("Sync failed, will retry later");
-            loadOrdersFromDB(); // Refresh to show FAILED status
-          }
-        });
+      // UI modal update
+      if (selectedOrder?.clientOrderId === clientOrderId) {
+        setSelectedOrder((prev: any) => ({
+          ...prev,
+          ...(updates.status !== undefined && { status: updates.status }),
+          ...(updates.paymentStatus !== undefined && {
+            paymentStatus: updates.paymentStatus,
+          }),
+        }));
       }
     } catch (err: any) {
-      console.error(err);
-      toast.error("Failed to update order locally");
+      localError("Failed to update status");
     }
   };
 
@@ -374,7 +380,7 @@ export default function ViewOrdersPage() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         selectedOrder={selectedOrder}
-        updateOrderStatus={updateOrderStatus}
+        updateOrderStatus={handleUpdateOrderStatus}
         deleteOrder={deleteOrder}
       />
     </div>

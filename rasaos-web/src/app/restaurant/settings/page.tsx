@@ -1,12 +1,22 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../../../contexts/AuthContext";
 import { callServer } from "../../../lib/helpers";
 import toast from "react-hot-toast";
 import { Save, Building2, ShieldCheck, Calendar, Clock } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
-export default function SettingsPage() {
-  const { restaurant, refreshContext } = useAuth();
+// Define the shape of the incoming subscription data
+interface Subscription {
+  id: string;
+  plan: string;
+  status: "ACTIVE" | "EXPIRED" | "FUTURE";
+  periodStart: string; // Assuming ISO string from Prisma
+  periodEnd: string;
+}
 
+const SettingsPage = () => {
+  const { refreshAuth } = useAuth(); // To update the navbar/global context after saving
+
+  // Form state for editable fields
   const [formData, setFormData] = useState({
     name: "",
     slug: "",
@@ -14,20 +24,54 @@ export default function SettingsPage() {
     taxMode: "EXCLUSIVE",
     currency: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
+
+  const [originalData, setChanged] = useState({
+    name: "",
+    slug: "",
+    taxRate: "",
+    taxMode: "EXCLUSIVE",
+    currency: "",
+  });
+
+  // Read-only state for subscription history
+  const [subscriptions, setSubscriptions] = useState<Subscription[]>([]);
+
+  // Loading states
+  const [isFetching, setIsFetching] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // 1. STRICTLY ONLINE FETCH (Runs once on mount)
+  const fetchRestaurant = async () => {
+    setIsFetching(true);
+    const response = await callServer("/restaurant", {
+      method: "GET",
+    });
+
+    if (response.success) {
+      const data = response.data;
+      const payload = {
+        name: data.name || "",
+        slug: data.slug || "",
+        taxRate:
+          data.taxRate !== undefined && data.taxRate !== null
+            ? String(data.taxRate)
+            : "",
+        taxMode: data.taxMode || "EXCLUSIVE",
+        currency: data.currency || "",
+      };
+      setFormData(payload);
+      setChanged(payload);
+      setSubscriptions(data.subscriptionHistory || []);
+    } else {
+      toast.error(response.message || "Failed to load settings");
+    }
+
+    setIsFetching(false);
+  };
 
   useEffect(() => {
-    if (restaurant) {
-      setFormData({
-        name: restaurant.name || "",
-        slug: restaurant.slug || "",
-        taxRate:
-          restaurant.taxRate !== undefined ? String(restaurant.taxRate) : "",
-        taxMode: restaurant.taxMode || "EXCLUSIVE",
-        currency: restaurant.currency || "",
-      });
-    }
-  }, [restaurant]);
+    fetchRestaurant();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -40,28 +84,48 @@ export default function SettingsPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsSaving(true);
 
     const payload = {
       name: formData.name,
       slug: formData.slug,
-      taxRate: formData.taxRate ? Number(formData.taxRate) : undefined,
+      taxRate: formData.taxRate ? Number(formData.taxRate) : 0,
       taxMode: formData.taxMode,
       currency: formData.currency,
     };
 
     const response = await callServer("/restaurant", {
-      method: "POST",
+      method: "POST", // Or PUT, depending on your API setup
       data: payload,
     });
 
     if (response.success) {
-      toast.success(response.message || "Success");
-      await refreshContext();
+      toast.success(response.message || "Settings updated successfully");
+      // Update the global context silently so the navbar updates the restaurant name
+      await refreshAuth();
+    } else {
+      toast.error(response.message || "Failed to update settings");
     }
 
-    setIsLoading(false);
+    setIsSaving(false);
   };
+
+  const isChanged = () => {
+    return JSON.stringify(formData) !== JSON.stringify(originalData);
+  };
+
+  if (isFetching) {
+    return (
+      <div className="flex-1 flex items-center justify-center p-12">
+        <div className="flex flex-col items-center gap-4">
+          <div className="w-8 h-8 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+          <p className="text-sm font-medium text-neutral-500">
+            Loading settings...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -153,11 +217,21 @@ export default function SettingsPage() {
             </label>
             <input
               name="taxRate"
-              type="number"
-              step="0.01"
-              min="0"
+              type="text"
               value={formData.taxRate}
-              onChange={handleChange}
+              onChange={(e) => {
+                if (e.target.value === "") {
+                  handleChange(e);
+                  return;
+                }
+
+                const regex = /^\d*\.?\d*$/;
+                if (!regex.test(e.target.value)) {
+                  return;
+                }
+
+                handleChange(e);
+              }}
               className="block w-full px-4 py-2.5 bg-neutral-50 dark:bg-neutral-900/50 border border-neutral-200 dark:border-neutral-800 rounded-xl text-neutral-900 dark:text-white placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all duration-200"
               placeholder="e.g. 5.5"
             />
@@ -167,10 +241,10 @@ export default function SettingsPage() {
         <div className="flex justify-end pt-4">
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={isSaving || !isChanged()}
             className="flex items-center gap-2 py-2.5 px-6 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-neutral-950 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-200 active:scale-[0.98] shadow-sm shadow-blue-500/20"
           >
-            {isLoading ? (
+            {isSaving ? (
               <div className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
             ) : (
               <>
@@ -208,7 +282,7 @@ export default function SettingsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-200 dark:divide-neutral-800">
-              {restaurant?.subscriptionHistory?.length === 0 ? (
+              {subscriptions?.length === 0 ? (
                 <tr>
                   <td
                     colSpan={4}
@@ -218,48 +292,46 @@ export default function SettingsPage() {
                   </td>
                 </tr>
               ) : (
-                restaurant?.subscriptionHistory?.map(
-                  (sub: any, index: number) => (
-                    <tr
-                      key={index}
-                      className="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <ShieldCheck size={18} className="text-blue-500" />
-                          <span className="font-medium text-neutral-900 dark:text-white">
-                            {sub.plan}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span
-                          className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                            sub.status === "ACTIVE"
-                              ? "bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400"
-                              : sub.status === "FUTURE"
-                                ? "bg-blue-100 text-blue-800 dark:bg-blue-500/10 dark:text-blue-400"
-                                : "bg-red-100 text-red-800 dark:bg-red-500/10 dark:text-red-400"
-                          }`}
-                        >
-                          {sub.status}
+                subscriptions.map((sub: any, index: number) => (
+                  <tr
+                    key={index}
+                    className="hover:bg-neutral-50 dark:hover:bg-neutral-900/50 transition-colors"
+                  >
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck size={18} className="text-blue-500" />
+                        <span className="font-medium text-neutral-900 dark:text-white">
+                          {sub.plan}
                         </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300 text-sm">
-                          <Calendar size={14} />
-                          {new Date(sub.periodStart).toLocaleDateString()}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300 text-sm">
-                          <Clock size={14} />
-                          {new Date(sub.periodEnd).toLocaleDateString()}
-                        </div>
-                      </td>
-                    </tr>
-                  ),
-                )
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <span
+                        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                          sub.status === "ACTIVE"
+                            ? "bg-green-100 text-green-800 dark:bg-green-500/10 dark:text-green-400"
+                            : sub.status === "FUTURE"
+                              ? "bg-blue-100 text-blue-800 dark:bg-blue-500/10 dark:text-blue-400"
+                              : "bg-red-100 text-red-800 dark:bg-red-500/10 dark:text-red-400"
+                        }`}
+                      >
+                        {sub.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300 text-sm">
+                        <Calendar size={14} />
+                        {new Date(sub.periodStart).toLocaleDateString()}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-2 text-neutral-600 dark:text-neutral-300 text-sm">
+                        <Clock size={14} />
+                        {new Date(sub.periodEnd).toLocaleDateString()}
+                      </div>
+                    </td>
+                  </tr>
+                ))
               )}
             </tbody>
           </table>
@@ -267,4 +339,6 @@ export default function SettingsPage() {
       </div>
     </div>
   );
-}
+};
+
+export default SettingsPage;

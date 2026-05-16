@@ -1,7 +1,4 @@
-"use client";
-
 import { useState, useMemo } from "react";
-import { useAuth } from "../../../../contexts/AuthContext";
 import { v4 as uuid } from "uuid";
 import toast from "react-hot-toast";
 import {
@@ -14,9 +11,12 @@ import {
   ChevronRight,
   Check,
 } from "lucide-react";
-import { CurrencyIcon } from "../../../../components/ui/CurrencyIcon";
-import { OrderService } from "../../../../lib/dexie/order-service";
-import { SyncService } from "../../../../lib/dexie/sync-service";
+import { CurrencyIcon } from "@/components/ui/CurrencyIcon";
+import { createOrder } from "@/repositories/order.repo";
+import { localError, localSuccess } from "@/components/ui/ToasterProvider";
+import { calculateOrderTotals } from "@/lib/utils/orderMath";
+import { useLiveQuery } from "dexie-react-hooks";
+import { getFullMenu } from "@/repositories/menu.repo";
 
 export type AdjustmentType = "DISCOUNT" | "FEE" | "SURCHARGE";
 export type AdjustmentMode = "FIXED" | "PERCENTAGE";
@@ -40,7 +40,7 @@ export interface CartItem {
 }
 
 export default function CreateOrderPage() {
-  const { menu } = useAuth();
+  const menu = useLiveQuery(() => getFullMenu());
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -62,6 +62,13 @@ export default function CreateOrderPage() {
 
   // Selection State
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
+
+  // Calculations
+  const { subtotal, adjustmentTotal, finalTotal } = useMemo(() => {
+    return calculateOrderTotals(cartItems, adjustments);
+  }, [cartItems, adjustments]);
+
+  if (!menu) return <div>Loading Menu...</div>;
 
   // Cart Operations
   const handleAddItem = (item: any, variant?: any) => {
@@ -146,73 +153,51 @@ export default function CreateOrderPage() {
     setAdjustments(adjustments.filter((d) => d.id !== id));
   };
 
-  // Calculations
-  const { subtotal, adjustmentTotal, finalTotal } = useMemo(() => {
-    const sub = cartItems.reduce((acc, item) => {
-      const itemTotal = item.price;
-      return acc + itemTotal * item.quantity;
-    }, 0);
-
-    let currentLumpSum = sub;
-    let netAdjustmentAmount = 0; // Negative means discount, positive means surcharge
-
-    // Apply adjustments
-    adjustments.forEach((adj) => {
-      let adjAmount = 0;
-      if (adj.mode === "FIXED") {
-        adjAmount = adj.value * 100; // Assuming price is in cents
-      } else if (adj.mode === "PERCENTAGE") {
-        adjAmount = (currentLumpSum * adj.value) / 100;
-      }
-
-      if (adj.type === "DISCOUNT") {
-        if (adjAmount > currentLumpSum) adjAmount = currentLumpSum;
-        netAdjustmentAmount -= adjAmount;
-        currentLumpSum -= adjAmount;
-      } else {
-        // FEE or SURCHARGE
-        netAdjustmentAmount += adjAmount;
-        currentLumpSum += adjAmount;
-      }
-    });
-
-    return {
-      subtotal: sub,
-      adjustmentTotal: netAdjustmentAmount,
-      finalTotal: sub + netAdjustmentAmount,
-    };
-  }, [cartItems, adjustments]);
-
   const handleCreateOrder = async () => {
-    if (cartItems.length === 0) return toast.error("Cart is empty");
+    if (cartItems.length === 0) {
+      toast.error("Cart is empty");
+      return;
+    }
 
-    const clientOrderId = uuid();
-    const orderPayload = {
-      clientOrderId,
-      type: "DINE_IN",
-      items: cartItems.map((i) => ({ ...i, unitPrice: i.price })),
-      adjustments: adjustments.map((a) => ({
-        ...a,
-        value: a.mode === "FIXED" ? a.value * 100 : a.value,
-      })),
-    };
+    setIsSubmitting(true);
 
     try {
-      setIsSubmitting(true);
+      const clientOrderId = uuid();
 
-      // 1. Save Locally (Immediate)
-      await OrderService.saveNewOrder(orderPayload);
+      const orderPayload = {
+        clientOrderId,
+        type: "DINE_IN",
+        items: cartItems.map((item) => ({
+          itemId: item.itemId,
+          itemName: item.itemName,
+          variantId: item.variantId,
+          variantName: item.variantName,
+          unitPrice: item.price,
+          quantity: item.quantity,
+        })),
+        adjustments: adjustments.map((adj) => ({
+          label: adj.label,
+          type: adj.type,
+          mode: adj.mode,
+          value: adj.mode === "FIXED" ? adj.value * 100 : adj.value,
+        })),
+        // Pass the calculated totals!
+        subtotal: subtotal,
+        totalAmount: finalTotal,
+      };
+
+      // 1. Save Locally Only
+      await createOrder(orderPayload);
 
       // 2. Clear UI Immediately
-      toast.success("Order saved locally");
+      localSuccess("Order created successfully");
       setCartItems([]);
       setAdjustments([]);
 
-      // 3. Trigger Sync (Background)
-      // We don't 'await' this if we want true local-first responsiveness
-      SyncService.syncOrder(clientOrderId);
+      // No SyncService call here!
     } catch (err) {
-      toast.error("Critical error saving order locally");
+      console.error(err);
+      localError("Critical error saving order locally");
     } finally {
       setIsSubmitting(false);
     }
@@ -225,7 +210,7 @@ export default function CreateOrderPage() {
         <div className="flex flex-1 overflow-hidden">
           {/* Categories Sidebar */}
           <div className="w-48 bg-white dark:bg-neutral-950 border-r border-neutral-200 dark:border-neutral-800 overflow-y-auto">
-            {menu?.categories?.map((category: any) => (
+            {menu.map((category: any) => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category)}
@@ -241,7 +226,7 @@ export default function CreateOrderPage() {
                 )}
               </button>
             ))}
-            {!menu?.categories?.length && (
+            {!menu.length && (
               <div className="p-4 text-sm text-neutral-500 text-center">
                 No categories
               </div>

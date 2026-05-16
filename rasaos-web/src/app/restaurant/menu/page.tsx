@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../../contexts/AuthContext";
 import { callServer } from "../../../lib/helpers";
 import toast from "react-hot-toast";
@@ -17,11 +17,14 @@ import { ItemModal } from "../../../components/menu/ItemModal";
 import { VariantModal } from "../../../components/menu/VariantModal";
 import { BulkUploadModal } from "../../../components/menu/BulkUploadModal";
 import { CurrencyIcon } from "../../../components/ui/CurrencyIcon";
+import { db } from "@/lib/dexie/db";
+import { syncMenuToLocalCache } from "@/repositories/menu.repo";
 
 export default function MenuManagementPage() {
-  const { menu: initialMenu, refreshContext } = useAuth();
-  const [menu, setMenu] = useState<any>(initialMenu);
-  const [isLoading, setIsLoading] = useState(false);
+  const { refreshAuth } = useAuth();
+
+  const [menu, setMenu] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   // Modal States
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
@@ -52,29 +55,21 @@ export default function MenuManagementPage() {
     const response = await callServer("/menu");
 
     if (!response.success) {
-      if (response.status === 404) {
-        setMenu(null);
-      }
+      if (response.status === 404) setMenu(null);
       setIsLoading(false);
       return;
     }
 
-    setMenu(response.data?.data || response.data || null);
+    const menuTree = response.data?.data || response.data;
+    setMenu(menuTree);
     setIsLoading(false);
+
+    await syncMenuToLocalCache(menuTree);
   };
 
-  const handleDeleteMenu = async () => {
-    if (!window.confirm(`Are you sure you want to delete your menu?`)) return;
-
-    const response = await callServer("/menu/reset", {
-      method: "DELETE",
-    });
-
-    if (response.success) {
-      toast.success(response.message || "Success");
-      refreshContext();
-    }
-  };
+  useEffect(() => {
+    fetchMenuData();
+  }, []);
 
   const handleDelete = async (
     endpoint: string,
@@ -84,13 +79,38 @@ export default function MenuManagementPage() {
     if (!window.confirm(`Are you sure you want to delete this ${entityName}?`))
       return;
 
+    // We use a loading toast here because network requests take time
+    const toastId = toast.loading(`Deleting ${entityName}...`);
+
     const response = await callServer(`/menu/${endpoint}/${id}`, {
       method: "DELETE",
     });
 
     if (response.success) {
-      toast.success(response.message || "Success");
+      toast.success(response.message || "Deleted successfully", {
+        id: toastId,
+      });
+      // Re-fetch the server data, which also updates Dexie automatically!
       fetchMenuData();
+    } else {
+      toast.error(response.message || "Failed to delete", { id: toastId });
+    }
+  };
+
+  const handleDeleteMenu = async () => {
+    if (!window.confirm(`Are you sure you want to delete your ENTIRE menu?`))
+      return;
+
+    const toastId = toast.loading("Nuking menu...");
+    const response = await callServer("/menu/reset", { method: "DELETE" });
+
+    if (response.success) {
+      toast.success("Menu deleted", { id: toastId });
+      // Clear Dexie cache as well
+      await db.menu.clear();
+      setMenu(null);
+    } else {
+      toast.error(response.message || "Failed to delete", { id: toastId });
     }
   };
 
@@ -388,7 +408,7 @@ export default function MenuManagementPage() {
         onClose={() => setIsCategoryModalOpen(false)}
         categoryToEdit={categoryToEdit}
         menuId={menu?.id}
-        onSuccess={refreshContext}
+        onSuccess={refreshAuth}
       />
 
       <ItemModal
@@ -396,7 +416,7 @@ export default function MenuManagementPage() {
         onClose={() => setIsItemModalOpen(false)}
         itemToEdit={itemToEdit}
         categoryId={selectedCategoryId}
-        onSuccess={refreshContext}
+        onSuccess={refreshAuth}
       />
 
       <VariantModal
@@ -404,7 +424,7 @@ export default function MenuManagementPage() {
         onClose={() => setIsVariantModalOpen(false)}
         variantToEdit={variantToEdit}
         itemId={selectedItemId}
-        onSuccess={refreshContext}
+        onSuccess={refreshAuth}
       />
 
       <BulkUploadModal

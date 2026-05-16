@@ -35,10 +35,20 @@ export function ToasterProvider() {
   );
 }
 
-export const localSuccess = (message: string) =>
+export const localSuccess = (message: string, id?: string) =>
   toast.success(message, {
+    id: id || "",
     iconTheme: {
       primary: "#5063cd",
+      secondary: "#ffffff",
+    },
+  });
+
+export const localError = (message: string, id?: string) =>
+  toast.error(message, {
+    id: id || "",
+    iconTheme: {
+      primary: "#ef4444",
       secondary: "#ffffff",
     },
   });
